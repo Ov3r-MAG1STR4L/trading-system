@@ -99,6 +99,16 @@ def test_longueurs_incoherentes_refusees():
         backtest(df, serie(3), pd.Series(5.0, index=range(4)))
 
 
+def test_R_du_moteur_identique_a_risque_resultat_r():
+    from src.risque import resultat_r
+    df = marche_aleatoire()
+    s = strategie_honnete(df)
+    trades, _ = backtest(df, s["signal"], s["stop_dist"], Params(2.0))
+    assert len(trades) > 10
+    for t in trades.itertuples():
+        assert t.R == pytest.approx(resultat_r(t.entry, t.exit, t.stop))
+
+
 # ---------------- look-ahead ----------------
 
 def strategie_honnete(df):
