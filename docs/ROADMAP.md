@@ -7,7 +7,7 @@ Chaque version correspond à un tag Git (`git tag v0.x`).
 - [x] Structure du dépôt, `.gitignore`, `.env.example`, `requirements.txt`
 - [x] Règles de risque écrites
 - [x] Journal des 3 premières expériences
-- [ ] `scripts/check_env.py` passe sans erreur
+- [x] `scripts/check_env.py` passe sans erreur
 - [ ] Premier commit + dépôt GitHub privé
 - [ ] Tag `v0.1`
 

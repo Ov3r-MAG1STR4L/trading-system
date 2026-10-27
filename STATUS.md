@@ -25,11 +25,11 @@ Aucun script ne doit envoyer d'ordre, même sur le compte démo, avant l'étape 
 | Élément | État | Comment vérifier |
 |---|---|---|
 | Python 3.13 | ✅ trouvé (`AppData\Local\Programs\Python\Python313`) | `python --version` |
-| Paquets Python | ⏳ à vérifier | `python scripts/check_env.py` |
+| Paquets Python | ✅ numpy, pandas, MetaTrader5 | `python scripts/check_env.py` |
 | Git | ✅ trouvé (`C:\Program Files\Git`) | `git --version` |
 | GitHub CLI | ✅ trouvé | `gh --version` |
 | MetaTrader 5 | ✅ installé, compte démo créé | `python scripts/check_env.py` |
-| Python ↔ MT5 | ✅ a fonctionné (backtest v0.3) | `python scripts/check_env.py` |
+| Python ↔ MT5 | ✅ check_env.py OK (démo) | `python scripts/check_env.py` |
 | Dépôt GitHub | ⏳ à créer (privé) | `gh repo view` |
 
 ## Déjà fait (avant la structuration du projet)

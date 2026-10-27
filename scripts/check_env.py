@@ -10,6 +10,8 @@ Code de sortie 0 = tout est bon, 1 = au moins un problème.
 import sys
 import platform
 
+sys.stdout.reconfigure(encoding="utf-8")  # console Windows cp1252 : évite le crash sur ✅/❌
+
 ok = True
 
 
