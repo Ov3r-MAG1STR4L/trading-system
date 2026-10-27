@@ -159,13 +159,14 @@ def test_gap_pas_de_nouvelle_entree_a_la_reprise():
     trades, ev = run([PLAT, PLAT, PLAT, PLAT, PLAT], signal_idx=2, gaps_avant=(3,))
     assert trades.empty
     assert ev["statut"].tolist() == [STATUT_GAP] and not ev["position_ouverte"].iloc[0]
+    assert ev["entree_refusee"].iloc[0]  # le refus est journalisé
 
 
 def test_gap_position_conservee_et_marquee():
     trades, ev = run([PLAT, PLAT, PLAT, (101, 103, 100, 102), PLAT], signal_idx=1, gaps_avant=(3,))
     t = trades.iloc[0]
     assert t["raison"] == "fin_donnees"  # pas fermée automatiquement à la reprise
-    assert t["traverse_gap"] and ev["position_ouverte"].iloc[0]
+    assert t["traverse_gap"] and ev["position_ouverte"].iloc[0] and not ev["entree_refusee"].iloc[0]
 
 
 def test_gap_pas_un_prix_inchange_ni_un_rendement_nul():

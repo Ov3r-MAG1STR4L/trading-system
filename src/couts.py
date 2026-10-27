@@ -28,6 +28,7 @@ ROOT = Path(__file__).resolve().parent.parent
 SWAPS_CSV = ROOT / "reports" / "2026-10-28_v0.2_swaps" / "swaps.csv"
 JOURS = {"lundi": 0, "mardi": 1, "mercredi": 2, "jeudi": 3, "vendredi": 4, "samedi": 5, "dimanche": 6}
 MODE_POINTS = 1  # SYMBOL_SWAP_MODE_POINTS : seul mode convertible sans hypothèse de change
+SWAP_UNAVAILABLE = "SWAP_UNAVAILABLE"  # swap non convertible : état explicite, jamais remplacé par 0
 AVERTISSEMENT_SWAPS = ("Swaps : valeurs ACTUELLES du broker (récupérées le {date}) appliquées à tout l'historique. "
                        "Approximation : ce ne sont PAS les swaps observés à l'époque.")
 
@@ -105,7 +106,7 @@ def appliquer(trades: pd.DataFrame, bougies: pd.DataFrame, info: dict, h: Hypoth
     if out.empty:
         return out.assign(entree_exec=[], sortie_exec=[], spread_entree_pts=[], spread_sortie_pts=[],
                           plancher_utilise=[], cout_spread_R=[], cout_slippage_R=[], R_execution=[],
-                          nuits_swap=[], swap_R=[], R_net=[])
+                          nuits_swap=[], swap_R=[], statut_swap=[], R_net=[])
     point = info["point"]
     spread_par_date = bougies.set_index("time")["spread"]
     slip = h.slippage_points * point
@@ -128,13 +129,18 @@ def appliquer(trades: pd.DataFrame, bougies: pd.DataFrame, info: dict, h: Hypoth
         s_x = prix_execution(t.exit, d, "sortie", ss * point if d == -1 else 0.0, slip)
         cout_spread = (se if d == 1 else ss) * point / t.dist
         r_exec = (s_x - e_x) * d / t.dist
-        if h.swaps:
-            n = nuits_swap(t.entry_time, t.exit_time, info["triple_swap_jour"])
-            swap_r = n * swap_px_par_nuit(info, d) / t.dist if n else 0.0
+        n = nuits_swap(t.entry_time, t.exit_time, info["triple_swap_jour"]) if h.swaps else 0
+        if not h.swaps:
+            swap_r, statut = 0.0, "DESACTIVE"
+        elif n == 0:
+            swap_r, statut = 0.0, "AUCUNE_NUIT"
+        elif info["swap_mode"] != MODE_POINTS:
+            swap_r, statut = np.nan, SWAP_UNAVAILABLE  # R_net devient NaN : inconnu, pas zéro
         else:
-            n, swap_r = 0, 0.0
+            swap_r, statut = n * swap_px_par_nuit(info, d) / t.dist, "OK"
         lignes.append({"entree_exec": e_x, "sortie_exec": s_x, "spread_entree_pts": se, "spread_sortie_pts": ss,
                        "plancher_utilise": (pe and d == 1) or (ps and d == -1),
                        "cout_spread_R": cout_spread, "cout_slippage_R": 2 * slip / t.dist,
-                       "R_execution": r_exec, "nuits_swap": n, "swap_R": swap_r, "R_net": r_exec + swap_r})
+                       "R_execution": r_exec, "nuits_swap": n, "swap_R": swap_r, "statut_swap": statut,
+                       "R_net": r_exec + swap_r})
     return pd.concat([out.reset_index(drop=True), pd.DataFrame(lignes)], axis=1)

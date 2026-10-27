@@ -175,9 +175,12 @@ def test_swap_manquant_refuse():
 
 
 @pytest.mark.parametrize("mode", [0, 2, 3, 5, 99])
-def test_unite_de_swap_non_convertible_refusee(mode):
+def test_unite_de_swap_non_convertible_marquee_swap_unavailable(mode):
+    r = cout(e=0, s=2, h=Hypotheses("fixe", 0, 0), info={**INFO, "swap_mode": mode})
+    assert r["statut_swap"] == couts.SWAP_UNAVAILABLE
+    assert math.isnan(r["swap_R"]) and math.isnan(r["R_net"])  # jamais remplacé par 0
     with pytest.raises(CoutInvalide, match="mode"):
-        cout(e=0, s=2, h=Hypotheses("fixe", 0, 0), info={**INFO, "swap_mode": mode})
+        couts.swap_px_par_nuit({**INFO, "swap_mode": mode}, 1)
 
 
 # ---------------- symboles ----------------
@@ -204,8 +207,8 @@ reel = pytest.mark.skipif(not couts.SWAPS_CSV.exists(), reason="swaps.csv v0.2 a
 def test_swaps_reels_v02_forex_ok_indices_refuses():
     eur = couts.info_symbole("EURUSD")
     assert eur["swap_mode"] == 1 and eur["triple_swap_jour"] == "mercredi"
-    with pytest.raises(CoutInvalide, match="mode"):
-        cout(e=0, s=2, h=Hypotheses("fixe", 0, 0), info=couts.info_symbole("US500"))
+    r = cout(e=0, s=2, h=Hypotheses("fixe", 0, 0), info=couts.info_symbole("US500"))
+    assert r["statut_swap"] == couts.SWAP_UNAVAILABLE
 
 
 def test_aucun_trade():

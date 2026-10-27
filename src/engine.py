@@ -29,6 +29,8 @@ import pandas as pd
 
 from src.data import STATUT_GAP
 
+VERSION_MOTEUR = "0.3.0"
+
 
 @dataclass(frozen=True)
 class Params:
@@ -60,7 +62,9 @@ def backtest(df: pd.DataFrame, signal: pd.Series, stop_dist: pd.Series,
     for i in range(1, n):
         if gap[i]:
             evenements.append({"statut": STATUT_GAP, "derniere_bougie_avant": t[i - 1], "reprise": t[i],
-                               "position_ouverte": pos is not None})
+                               "position_ouverte": pos is not None,
+                               # signal d'avant le trou qui aurait donné une entrée : refusé (NON_TRADABLE)
+                               "entree_refusee": pos is None and sig[i - 1] != 0})
             if pos is not None:
                 pos["traverse_gap"] = True
 
@@ -101,7 +105,8 @@ def backtest(df: pd.DataFrame, signal: pd.Series, stop_dist: pd.Series,
     cols = ["direction", "entry_time", "entry", "stop", "target", "dist", "exit_time", "exit", "raison",
             "bougies", "R", "traverse_gap"]
     return (pd.DataFrame(trades, columns=cols),
-            pd.DataFrame(evenements, columns=["statut", "derniere_bougie_avant", "reprise", "position_ouverte"]))
+            pd.DataFrame(evenements, columns=["statut", "derniere_bougie_avant", "reprise", "position_ouverte",
+                                               "entree_refusee"]))
 
 
 def verifier_sans_lookahead(fonction_signal, df: pd.DataFrame, coupures=(0.3, 0.5, 0.8), seed: int = 0) -> None:
