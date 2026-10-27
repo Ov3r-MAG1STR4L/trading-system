@@ -1,0 +1,42 @@
+//@version=6
+// Stratégie d'apprentissage : croisement de moyennes mobiles sur EUR/USD (journal 001 — REJETÉE)
+// Version finale testée : filtre EMA 200 + marge 20 % (levier 1:5).
+strategy("Croisement MM EUR/USD", overlay=true, initial_capital=1000, currency=currency.USD,
+     commission_type=strategy.commission.percent, commission_value=0.002, slippage=2,
+     margin_long=20, margin_short=20)
+
+// ---- Réglages ----
+fastLen  = input.int(20, "MM rapide (bougies)")
+slowLen  = input.int(50, "MM lente (bougies)")
+trendLen = input.int(200, "MM tendance")
+atrLen   = input.int(14, "ATR (volatilité)")
+slMult   = input.float(2.0, "Stop-loss (x ATR)")
+rr       = input.float(2.0, "Ratio gain / risque")
+riskPct  = input.float(1.0, "Risque par trade (% du capital)")
+
+// ---- Calculs ----
+fast  = ta.ema(close, fastLen)
+slow  = ta.ema(close, slowLen)
+trend = ta.ema(close, trendLen)
+atr   = ta.atr(atrLen)
+
+plot(fast, "MM rapide", color.blue)
+plot(slow, "MM lente", color.orange)
+plot(trend, "MM tendance", color.gray)
+
+// ---- Signaux ----
+longSignal  = ta.crossover(fast, slow)  and close > trend
+shortSignal = ta.crossunder(fast, slow) and close < trend
+
+// ---- Gestion du risque (taille convertie dans la devise du symbole) ----
+stopDist = atr * slMult
+qty      = strategy.convert_to_symbol(strategy.equity * riskPct / 100) / stopDist
+
+// ---- Ordres ----
+if longSignal and strategy.position_size == 0
+    strategy.entry("Long", strategy.long, qty = qty)
+    strategy.exit("Sortie Long", "Long", stop = close - stopDist, limit = close + stopDist * rr)
+
+if shortSignal and strategy.position_size == 0
+    strategy.entry("Short", strategy.short, qty = qty)
+    strategy.exit("Sortie Short", "Short", stop = close + stopDist, limit = close - stopDist * rr)

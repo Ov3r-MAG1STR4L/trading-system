@@ -1,0 +1,39 @@
+# ---- Secrets : ne JAMAIS versionner ----
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*secret*
+*credentials*
+*password*
+
+# ---- Données de marché (volumineuses, re-téléchargeables) ----
+data/*
+!data/.gitkeep
+
+# ---- Détail brut des trades (régénérable avec les scripts) ----
+reports/**/trades.csv
+
+# ---- Python ----
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.ipynb_checkpoints/
+.pytest_cache/
+
+# ---- Logs / temporaires ----
+*.log
+*.tmp
+logs/
+
+# ---- Éditeurs / système ----
+.vscode/
+.idea/
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# ---- Obsidian (si le dossier est ouvert comme coffre) ----
+.obsidian/workspace*.json
