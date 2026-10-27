@@ -38,6 +38,8 @@ PARAMS = {
     "z_aberrant": 12,                # rendement à plus de 12 écarts robustes (MAD) = aberrant
     "derniere_bougie_max_jours": 7,  # données périmées au-delà
     "attente_max_s": 60,             # attente max du téléchargement initial MT5
+    "debut_reference": "2012-08-06", # début de la période commune des backtests de portefeuille
+    "plates_max_ref_pct": 0.5,       # % max de bougies plates tolérées sur la période de référence
 }
 
 
@@ -81,6 +83,8 @@ def controler(df: pd.DataFrame, p: dict = PARAMS) -> dict:
     trous = ecarts[ecarts > p["trou_max_jours"]]
     r["trous"] = len(trous)
     r["plus_grand_trou_j"] = int(ecarts.max()) if len(ecarts) > 1 else 0
+    # liste datée de chaque trou : dernière bougie avant -> première bougie après
+    r["trous_liste"] = [(ts[i - 1].date(), ts[i].date(), int(ecarts[i])) for i in trous.index]
     if len(trous):
         pire = trous.idxmax()
         r["avertissements"].append(
@@ -93,6 +97,7 @@ def controler(df: pd.DataFrame, p: dict = PARAMS) -> dict:
         z = (rend - rend.median()).abs() / mad
         aberr = z[z > p["z_aberrant"]]
         r["aberrants"] = len(aberr)
+        r["extremes_liste"] = [(df["time"][i].date(), float(rend[i])) for i in aberr.index]
         if len(aberr):
             exemples = ", ".join(f"{df['time'][i].date()} ({rend[i]:+.1%})" for i in aberr.nlargest(3).index)
             r["avertissements"].append(f"{len(aberr)} rendement(s) aberrant(s), ex. {exemples}")
@@ -103,6 +108,11 @@ def controler(df: pd.DataFrame, p: dict = PARAMS) -> dict:
     r["bougies_plates"] = n_plat
     if n_plat:
         r["avertissements"].append(f"{n_plat} bougie(s) plate(s) (high = low)")
+    ref = t >= pd.Timestamp(p["debut_reference"])
+    r["plates_depuis_ref"] = int(((df["high"] == df["low"]) & ref).sum())
+    r["plates_depuis_ref_pct"] = round(100 * r["plates_depuis_ref"] / max(int(ref.sum()), 1), 3)
+    if r["plates_depuis_ref_pct"] > p["plates_max_ref_pct"]:
+        r["erreurs"].append(f"{r['plates_depuis_ref_pct']} % de bougies plates depuis {p['debut_reference']}")
 
     age = (datetime.now(timezone.utc).date() - r["fin"]).days
     if age > p["derniere_bougie_max_jours"]:
@@ -149,7 +159,7 @@ def main():
     out.mkdir(parents=True, exist_ok=True)
     DATA.mkdir(exist_ok=True)
 
-    lignes = []
+    lignes, trous, extremes = [], [], []
     for _, m in symboles.iterrows():
         sym = m["symbol"]
         print(f"{sym:8} ...", end=" ", flush=True)
@@ -157,18 +167,29 @@ def main():
         r = controler(df)
         if len(df):
             df.to_csv(DATA / f"{sym}_D1.csv", index=False)
+        trous += [{"symbol": sym, "derniere_bougie_avant": a, "premiere_bougie_apres": b, "ecart_jours": n,
+                   "dans_periode_reference": b >= date.fromisoformat(PARAMS["debut_reference"])}
+                  for a, b, n in r.get("trous_liste", [])]
+        extremes += [{"symbol": sym, "date": d, "rendement_log": round(x, 4),
+                      "a_verifier_source_externe": sym == "XAGUSD" and d.year >= 2026}
+                     for d, x in r.get("extremes_liste", [])]
         statut = "ERREUR" if r["erreurs"] else "AVERTISSEMENT" if r["avertissements"] else "OK"
         print(statut)
         lignes.append({"symbol": sym, "groupe": m["groupe"], "statut": statut,
                        **{k: r.get(k) for k in ["bougies", "debut", "fin", "doublons", "manquantes",
                                                 "ohlc_incoherents", "trous", "plus_grand_trou_j",
-                                                "aberrants", "bougies_plates"]},
+                                                "aberrants", "bougies_plates", "plates_depuis_ref",
+                                                "plates_depuis_ref_pct"]},
                        "spread_median_points": float(df["spread"].median()) if len(df) else None,
                        "details": " | ".join(r["erreurs"] + r["avertissements"])})
     mt5.shutdown()
 
     rapport = pd.DataFrame(lignes)
     rapport.to_csv(out / "qualite.csv", index=False, sep=";")
+    # Les trous restent dans les données : ni interpolation ni bougie créée. Le moteur v0.3 les lit ici.
+    pd.DataFrame(trous, columns=["symbol", "derniere_bougie_avant", "premiere_bougie_apres", "ecart_jours",
+                                 "dans_periode_reference"]).to_csv(out / "trous.csv", index=False, sep=";")
+    pd.DataFrame(extremes, columns=["symbol", "date", "rendement_log", "a_verifier_source_externe"])         .to_csv(out / "evenements_extremes.csv", index=False, sep=";")
     git = subprocess.run(["git", "rev-parse", "--short", "HEAD"], cwd=ROOT, capture_output=True, text=True).stdout.strip()
     (out / "params.json").write_text(json.dumps({**PARAMS, "git": git, "serveur": compte.server,
                                                  "symboles": symboles["symbol"].tolist()}, indent=2), encoding="utf-8")
@@ -202,11 +223,14 @@ def selftest():
     d = base.copy(); d.loc[20, "close"] = np.nan
     assert controler(d, p)["manquantes"] == 1
     d = base.drop(index=range(100, 120)).reset_index(drop=True)
-    assert controler(d, p)["trous"] == 1
+    r = controler(d, p)
+    assert r["trous"] == 1 and r["trous_liste"][0][0] == t[99].date() and r["trous_liste"][0][1] == t[120].date()
     d = base.copy(); d.loc[500:, ["open", "high", "low", "close"]] *= 1.5
     assert controler(d, p)["aberrants"] >= 1
     d = base.iloc[-1000:].reset_index(drop=True)
     assert any("insuffisant" in e for e in controler(d, p)["erreurs"])
+    d = base.copy(); d.loc[3000:3100, "high"] = d.loc[3000:3100, "low"]
+    assert any("bougies plates depuis" in e for e in controler(d, p)["erreurs"])
     print("selftest OK")
 
 

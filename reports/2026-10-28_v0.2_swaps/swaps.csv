@@ -1,0 +1,13 @@
+symbol;swap_long;swap_short;swap_mode;unite;triple_swap_jour;point;contrat_taille;devise_profit;valeur_tick_compte;devise_compte;spread_actuel_points;date_recuperation;serveur
+EURUSD;-0.7;-1.0;1;points par lot et par nuit;mercredi;1e-05;100000.0;USD;0.898513;EUR;4;2026-10-27 23:28 UTC;MetaQuotes-Demo
+GBPUSD;-0.2;-2.2;1;points par lot et par nuit;mercredi;1e-05;100000.0;USD;0.898513;EUR;-8;2026-10-27 23:28 UTC;MetaQuotes-Demo
+USDJPY;-0.1;-0.6;1;points par lot et par nuit;mercredi;0.001;100000.0;JPY;0.56876;EUR;3;2026-10-27 23:28 UTC;MetaQuotes-Demo
+USDCHF;0.1;-1.0;1;points par lot et par nuit;mercredi;1e-05;100000.0;CHF;1.084034;EUR;2;2026-10-27 23:28 UTC;MetaQuotes-Demo
+USDCAD;-0.8;-0.4;1;points par lot et par nuit;mercredi;1e-05;100000.0;CAD;0.639558;EUR;1;2026-10-27 23:28 UTC;MetaQuotes-Demo
+AUDUSD;6.3;-14.8;1;points par lot et par nuit;mercredi;1e-05;100000.0;USD;0.898513;EUR;2;2026-10-27 23:28 UTC;MetaQuotes-Demo
+NZDUSD;2.8;-6.7;1;points par lot et par nuit;mercredi;1e-05;100000.0;USD;0.898513;EUR;1;2026-10-27 23:28 UTC;MetaQuotes-Demo
+US500;-0.31;-0.26;2;devise de base du symbole par lot;vendredi;0.01;1.0;USD;0.008985;EUR;50;2026-10-27 23:28 UTC;MetaQuotes-Demo
+US30;-2.21;-1.99;3;devise de marge par lot;vendredi;0.01;1.0;USD;0.008985;EUR;120;2026-10-27 23:28 UTC;MetaQuotes-Demo
+DE40;-0.7;-1.12;3;devise de marge par lot;vendredi;0.01;1.0;EUR;0.01;EUR;1000;2026-10-27 23:28 UTC;MetaQuotes-Demo
+XAUUSD;-12.6;-4.6;1;points par lot et par nuit;mercredi;0.01;100.0;USD;0.1;EUR;36;2026-10-27 23:28 UTC;MetaQuotes-Demo
+XAGUSD;-2.3;0.2;1;points par lot et par nuit;mercredi;0.001;5000.0;USD;0.5;EUR;5;2026-10-27 23:28 UTC;MetaQuotes-Demo

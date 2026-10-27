@@ -4,15 +4,32 @@
 
 ## Étape actuelle
 
-**v0.2 — Données** (v0.1 terminée, tag `v0.1`)
+**v0.2 — DONNÉES : TERMINÉE** (le 2026-10-28) → prochaine étape : v0.3, moteur de backtest (pas encore commencée)
 
 ## Objectif actuel
 
-Obtenir un jeu de données historique D1 fiable et contrôlé pour les 12 marchés retenus.
+Présenter le rapport v0.2, puis démarrer la v0.3 (moteur de backtest fiable). Pas de stratégie avant la v0.4.
 
 ## Prochaine étape
 
-Données D1 téléchargées et contrôlées (rapport `reports/2026-10-28_v0.2_donnees/`). Décider du traitement des anomalies, puis récupérer les swaps. Pas de stratégie avant validation.
+v0.3 : extraire le moteur dans `src/`, avec des tests (pas de look-ahead, calcul du R, stop/objectif, **trous de données**).
+Rapport v0.2 : [`reports/2026-10-28_v0.2_donnees/RAPPORT.md`](reports/2026-10-28_v0.2_donnees/RAPPORT.md).
+
+## Données (v0.2)
+
+- Période de référence des backtests : **2012-08-06 → aujourd'hui**. Les données plus anciennes restent dans `data/`, pour référence uniquement.
+- Re-télécharger : `python scripts/telecharger_donnees.py` (contrôles inclus), puis `python scripts/recuperer_swaps.py`.
+- Principe : **aucune donnée n'est modifiée, interpolée ni supprimée** pour améliorer un backtest.
+
+### Limitations restantes
+1. Trou du broker sur les indices : US500 et US30 du 2025-07-16 au 2025-09-09, DE40 du 2025-07-23 au 2025-09-09. À traiter en v0.3 comme `DATA_GAP / NON_TRADABLE`.
+2. Forex d'avant 2012 reconstruit (bougies plates), donc exclu des backtests de référence.
+3. Swaps : seulement les valeurs actuelles (2026-10-28), sans historique. Leur application au passé est approximative.
+4. Krach XAGUSD de janvier-février 2026 (-31 % puis -22 % en un jour) : à vérifier avec une source indépendante.
+5. Une seule source de données (broker démo MetaQuotes), sans comparaison avec une autre source.
+6. Spread historique : la colonne `spread` des D1 donne la valeur du broker par bougie ; sa fiabilité n'est pas vérifiée.
+7. Pas d'énergie dans l'univers ; US30 et US500 sont très corrélés.
+8. Heure serveur MT5 non convertie (bougies D1 du broker).
 
 ## Univers de marchés (v0.2)
 

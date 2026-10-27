@@ -6,7 +6,9 @@
   "z_aberrant": 12,
   "derniere_bougie_max_jours": 7,
   "attente_max_s": 60,
-  "git": "7961492",
+  "debut_reference": "2012-08-06",
+  "plates_max_ref_pct": 0.5,
+  "git": "65003e4",
   "serveur": "MetaQuotes-Demo",
   "symboles": [
     "EURUSD",
