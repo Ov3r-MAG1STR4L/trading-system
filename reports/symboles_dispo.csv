@@ -1,0 +1,37 @@
+symbol;category;description;D1_bars;first_date;swap_long;swap_short;swap_mode;spread_points
+AUDJPY;Forex\AUDJPY;Australian Dollar vs Yen;8638;1993-05-17;5,6;-12,8;1;5
+AUDUSD;Forex\AUDUSD;Australian Dollar vs US Dollar;8712;1993-04-27;6,3;-14,8;1;2
+CADJPY;Forex\CADJPY;Canadian Dollar vs Yen;5106;2007-02-12;-1,1;-0,9;1;8
+EURCHF;Forex\EURCHF;Euro vs Swiss Franc;8700;1993-04-28;0,1;-1,7;1;6
+EURGBP;Forex\EURGBP;Euro vs Pound Sterling;8705;1993-05-03;-1,2;-0,4;1;2
+EURJPY;Forex\EURJPY;Euro vs Yen;8583;1993-04-27;-0,2;-1,2;1;4
+EURUSD;Forex\EURUSD;Euro vs US Dollar;14394;1971-01-04;-0,7;-1,0;1;2
+GBPJPY;Forex\GBPJPY;Pound Sterling vs Yen;8710;1993-04-19;0,3;-2,2;1;16
+GBPUSD;Forex\GBPUSD;Pound Sterling vs US Dollar;8701;1993-05-12;-0,2;-2,2;1;1
+HKDJPY;Forex\HKDJPY;Hong Kong Dollar vs Japanese Yen;1847;2019-09-29;-0,4232;-0,3818;1;13
+NZDJPY;Forex\NZDJPY;New Zealand Dollar vs Yen;5118;2007-02-12;-2,8;-6,1;1;10
+NZDUSD;Forex\NZDUSD;New Zealand Dollar vs US Dollar;8516;1994-02-01;2,8;-6,7;1;1
+SGDJPY;Forex\SGDJPY;Singapore Dollar vs Yen;4975;2007-08-20;0,1;-0,8;1;0
+USDCAD;Forex\USDCAD;US Dollar vs Canadian Dollar;8712;1993-04-28;-0,8;-0,4;1;2
+USDCHF;Forex\USDCHF;US Dollar vs Swiss Franc;14352;1971-01-04;0,1;-1,0;1;0
+USDJPY;Forex\USDJPY;US Dollar vs Yen;14397;1971-01-04;-0,1;-0,6;1;5
+AUS200;Indexes\AUS200;ASX 200 Index;1937;2019-04-29;-6,83;-0,42;3;0
+DE40;Indexes\DE40;Germany 40 Index;3589;2012-08-06;-0,7;-1,12;3;0
+EUSTX50;Indexes\EUSTX50;Euro Stoxx 50;1933;2019-04-29;-5,0;-5,0;0;0
+FRA40;Indexes\FRA40;CAC 40;1939;2019-04-29;-5,0;-5,0;0;0
+UK100;Indexes\UK100;FTSE 100 Index;616;2020-09-23;-5,1;-2,0;3;0
+US30;Indexes\US30;US Wall Street 30 Index;3642;2012-08-06;-2,21;-1,99;3;0
+US30M;Indexes\US30M;US30m;1264;2021-11-22;-7,0;-4,0;0;0
+US500;Indexes\US500;US SPX 500 Index;3641;2012-08-06;-0,31;-0,26;2;80
+US500M;Indexes\US500M;S&P 500mini;1778;2019-12-17;-2,19;-8,81;0;0
+USTEC;Indexes\USTEC;US Tech 100 Index;1077;2022-07-06;-0,82;-0,75;3;0
+USTECH100M;Indexes\USTECH100M;USTECH100mini;1630;2020-06-01;-4,695;-6,305;0;0
+COPPER;Metals\COPPER;Copper;880;2023-05-09;-9,83;-2,66;5;0
+XAGAUD;Metals\XAGAUD;Silver vs Australian Dollar;1221;2022-01-24;0,0;0,0;0;0
+XAGEUR;Metals\XAGEUR;Silver vs Euro;3639;2012-09-24;-0,14;-0,25;1;0
+XAGUSD;Metals\XAGUSD;Silver vs US Dollar;4631;2008-11-07;-2,3;0,2;1;0
+XAUAUD;Metals\XAUAUD;Gold vs Australian Dollar;1967;2017-04-24;-5,01;0,13;1;0
+XAUCHF;Metals\XAUCHF;Gold vs Swiss Franc;1147;2022-01-24;0,0;0,0;0;0
+XAUEUR;Metals\XAUEUR;Gold vs Euro;3640;2012-09-24;0,62;-3,24;1;0
+XAUGBP;Metals\XAUGBP;Gold vs Great Britain Pound;1191;2022-01-24;0,0;0,0;0;0
+XAUUSD;Metals\XAUUSD;Gold vs US Dollar;5751;2004-06-11;-12,6;-4,6;1;15

@@ -8,3 +8,4 @@ Format : date — décision — raison.
 - **2026-10-27** — Abandon des stratégies « classiques » MA cross et RSI retour à la moyenne sur forex seul. — Facteur de profit ≈ 1 sur 1 614 trades (voir journal 001 à 003).
 - **2026-10-27** — Prochaine piste : suivi de tendance **diversifié** multi-marchés. — Seule famille de stratégies simples avec un historique documenté sur longue période ; l'avantage vient de la diversification, pas du signal.
 - **2026-10-27** — Dépôt GitHub **privé**. — Pourra devenir public plus tard pour du contenu pédagogique.
+- **2026-10-28** — Univers de départ figé à 12 marchés (7 forex, 3 indices, 2 métaux), voir `STATUS.md`. — Historique ≥ 2012 et diversification ; pas d'optimisation de la sélection.

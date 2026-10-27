@@ -8,7 +8,9 @@ Lancement (MT5 ouvert et connecté) :
 Sortie : reports/symboles_dispo.csv
 """
 import re
+import time
 from pathlib import Path
+import sys
 import pandas as pd
 import MetaTrader5 as mt5
 
@@ -28,6 +30,9 @@ FX = ["EURUSD", "GBPUSD", "USDJPY", "AUDUSD", "USDCAD", "USDCHF", "NZDUSD",
       "EURJPY", "GBPJPY", "EURGBP", "AUDJPY", "EURCHF"]
 
 
+sys.stdout.reconfigure(encoding="utf-8")
+
+
 def main():
     if not mt5.initialize():
         print("Connexion MT5 impossible :", mt5.last_error())
@@ -41,11 +46,16 @@ def main():
         if not (is_fx or is_other):
             continue
         # on évite les actions individuelles et les dérivés exotiques
-        if re.search(r"STOCK|SHARE|EQUIT|ETF", path) and not is_fx:
+        if re.search(r"STOCK|SHARE|EQUIT|ETF|NASDAQ", path) and not is_fx:
             continue
 
         mt5.symbol_select(s.name, True)
-        rates = mt5.copy_rates_from_pos(s.name, mt5.TIMEFRAME_D1, 0, 20000)
+        # MT5 télécharge l'historique à la demande : 1re requête souvent vide -> on réessaie
+        for _ in range(10):
+            rates = mt5.copy_rates_from_pos(s.name, mt5.TIMEFRAME_D1, 0, 20000)
+            if rates is not None and len(rates):
+                break
+            time.sleep(1)
         n_bars = 0 if rates is None else len(rates)
         first = pd.to_datetime(rates[0]["time"], unit="s").date() if n_bars else None
 
@@ -55,6 +65,8 @@ def main():
             "description": s.description,
             "D1_bars": n_bars,
             "first_date": first,
+            # 0 bougie = MT5 encore en téléchargement, PAS « pas d'historique » : relancer le script
+            "statut": "ok" if n_bars else "a_reessayer",
             "swap_long": s.swap_long,
             "swap_short": s.swap_short,
             "swap_mode": s.swap_mode,
@@ -65,8 +77,12 @@ def main():
     df = pd.DataFrame(rows).sort_values(["category", "symbol"])
     OUT.parent.mkdir(exist_ok=True)
     df.to_csv(OUT, index=False, sep=";", decimal=",")
-    print(df[["symbol", "category", "D1_bars", "first_date"]].to_string(index=False))
+    print(df[["symbol", "category", "D1_bars", "first_date", "statut"]].to_string(index=False))
     print(f"\n{len(df)} symboles trouvés -> {OUT}")
+    pending = df.loc[df["statut"] == "a_reessayer", "symbol"].tolist()
+    if pending:
+        print(f"⚠ {len(pending)} symbole(s) à 0 bougie (historique en cours de téléchargement) : "
+              f"{', '.join(pending)}\n  -> relance le script dans 1 à 2 minutes.")
 
 
 if __name__ == "__main__":
