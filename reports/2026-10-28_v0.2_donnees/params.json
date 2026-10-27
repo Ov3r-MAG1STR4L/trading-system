@@ -1,0 +1,25 @@
+{
+  "timeframe": "D1",
+  "date_debut_max": "2012-12-31",
+  "bougies_min": 2500,
+  "trou_max_jours": 5,
+  "z_aberrant": 12,
+  "derniere_bougie_max_jours": 7,
+  "attente_max_s": 60,
+  "git": "7961492",
+  "serveur": "MetaQuotes-Demo",
+  "symboles": [
+    "EURUSD",
+    "GBPUSD",
+    "USDJPY",
+    "USDCHF",
+    "USDCAD",
+    "AUDUSD",
+    "NZDUSD",
+    "US500",
+    "US30",
+    "DE40",
+    "XAUUSD",
+    "XAGUSD"
+  ]
+}

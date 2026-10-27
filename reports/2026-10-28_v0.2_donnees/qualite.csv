@@ -1,0 +1,13 @@
+symbol;groupe;statut;bougies;debut;fin;doublons;manquantes;ohlc_incoherents;trous;plus_grand_trou_j;aberrants;bougies_plates;spread_median_points;details
+EURUSD;forex;AVERTISSEMENT;14393;1971-01-04;2026-10-27;0;0;0;1;10;2;1010;50.0;1 trou(s) > 5 j, le plus grand : 10 j avant le 1971-08-23 | 2 rendement(s) aberrant(s), ex. 1973-02-13 (+6.0%), 1978-11-01 (-5.8%) | 1010 bougie(s) plate(s) (high = low)
+GBPUSD;forex;AVERTISSEMENT;8700;1993-05-12;2026-10-27;0;0;0;0;4;1;0;20.0;1 rendement(s) aberrant(s), ex. 2016-06-24 (-8.7%)
+USDJPY;forex;AVERTISSEMENT;14396;1971-01-04;2026-10-27;0;0;0;1;18;3;4019;50.0;1 trou(s) > 5 j, le plus grand : 18 j avant le 1971-08-31 | 3 rendement(s) aberrant(s), ex. 1973-02-13 (-9.5%), 1998-10-07 (-6.6%), 1974-01-07 (+6.3%) | 4019 bougie(s) plate(s) (high = low)
+USDCHF;forex;AVERTISSEMENT;14351;1971-01-04;2026-10-27;0;0;0;1;10;2;4008;50.0;1 trou(s) > 5 j, le plus grand : 10 j avant le 1971-08-23 | 2 rendement(s) aberrant(s), ex. 2015-01-15 (-13.5%), 2011-09-06 (+9.2%) | 4008 bougie(s) plate(s) (high = low)
+USDCAD;forex;AVERTISSEMENT;8712;1993-04-28;2026-10-27;0;0;0;0;4;0;2;22.0;2 bougie(s) plate(s) (high = low)
+AUDUSD;forex;AVERTISSEMENT;8711;1993-04-27;2026-10-27;0;0;0;0;4;4;1;18.0;4 rendement(s) aberrant(s), ex. 2008-10-06 (-8.6%), 2008-10-24 (-8.0%), 2008-10-13 (+8.1%) | 1 bougie(s) plate(s) (high = low)
+NZDUSD;forex;AVERTISSEMENT;8515;1994-02-01;2026-10-27;0;0;0;0;4;0;4;3.0;4 bougie(s) plate(s) (high = low)
+US500;indice;AVERTISSEMENT;3640;2012-08-06;2026-10-27;0;0;0;1;55;6;1;20.0;1 trou(s) > 5 j, le plus grand : 55 j avant le 2025-09-09 | 6 rendement(s) aberrant(s), ex. 2020-03-12 (-11.2%), 2020-03-16 (-10.0%), 2020-03-24 (+9.7%) | 1 bougie(s) plate(s) (high = low)
+US30;indice;AVERTISSEMENT;3641;2012-08-06;2026-10-27;0;0;0;1;55;6;2;70.0;1 trou(s) > 5 j, le plus grand : 55 j avant le 2025-09-09 | 6 rendement(s) aberrant(s), ex. 2020-03-12 (-11.9%), 2020-03-16 (-11.3%), 2020-03-24 (+11.2%) | 2 bougie(s) plate(s) (high = low)
+DE40;indice;AVERTISSEMENT;3588;2012-08-06;2026-10-27;0;0;0;5;48;3;10;50.0;5 trou(s) > 5 j, le plus grand : 48 j avant le 2025-09-09 | 3 rendement(s) aberrant(s), ex. 2020-03-12 (-13.6%), 2020-03-16 (-12.3%), 2020-03-09 (-10.9%) | 10 bougie(s) plate(s) (high = low)
+XAUUSD;metal;AVERTISSEMENT;5750;2004-06-11;2026-10-27;0;0;0;0;5;1;0;5.0;1 rendement(s) aberrant(s), ex. 2008-09-17 (+10.4%)
+XAGUSD;metal;AVERTISSEMENT;4630;2008-11-07;2026-10-27;0;0;0;0;5;2;0;12.0;2 rendement(s) aberrant(s), ex. 2026-01-30 (-31.2%), 2026-02-05 (-21.6%)

@@ -2,19 +2,20 @@
 
 Chaque version correspond à un tag Git (`git tag v0.x`).
 
-## v0.1 — Environnement *(en cours)*
+## v0.1 — Environnement *(terminée)*
 - [x] Audit du PC (Python, Git, MT5, VS Code, TradingView)
 - [x] Structure du dépôt, `.gitignore`, `.env.example`, `requirements.txt`
 - [x] Règles de risque écrites
 - [x] Journal des 3 premières expériences
 - [x] `scripts/check_env.py` passe sans erreur
-- [ ] Premier commit + dépôt GitHub privé
-- [ ] Tag `v0.1`
+- [x] Premier commit + dépôt GitHub privé
+- [x] Tag `v0.1`
 
-## v0.2 — Données
-- [ ] Inventaire des symboles (`lister_symboles.py`) → `config/marches.csv`
-- [ ] Script de téléchargement des données historiques vers `data/` (format Parquet ou CSV)
-- [ ] Contrôles qualité : trous, doublons, bougies aberrantes, historique minimal
+## v0.2 — Données *(en cours)*
+- [x] Inventaire des symboles (`lister_symboles.py`) → `config/marches.csv` (12 marchés)
+- [x] Script de téléchargement des données historiques vers `data/` (CSV) — `telecharger_donnees.py`
+- [x] Contrôles qualité : trous, doublons, bougies aberrantes, historique minimal (rapport 2026-10-28)
+- [ ] Décider du traitement des anomalies (trou indices 2025, forex reconstruit avant 2012)
 - [ ] Récupération des swaps par symbole
 
 ## v0.3 — Moteur de backtest fiable

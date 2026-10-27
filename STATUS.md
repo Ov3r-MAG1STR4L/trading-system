@@ -12,7 +12,7 @@ Obtenir un jeu de données historique D1 fiable et contrôlé pour les 12 march�
 
 ## Prochaine étape
 
-Télécharger les données D1 (`scripts/telecharger_donnees.py`) et analyser le rapport qualité. Pas de stratégie avant validation.
+Données D1 téléchargées et contrôlées (rapport `reports/2026-10-28_v0.2_donnees/`). Décider du traitement des anomalies, puis récupérer les swaps. Pas de stratégie avant validation.
 
 ## Univers de marchés (v0.2)
 
