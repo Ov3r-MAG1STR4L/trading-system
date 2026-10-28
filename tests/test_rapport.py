@@ -218,3 +218,12 @@ def test_avertissement_fin_des_donnees():
     trades, ev = scenario()
     trades.loc[2, "raison"] = "fin_donnees"
     assert any("FIN DES DONNÉES" in x for x in rapport.avertissements(params(), trades, ev, GIT_PROPRE))
+
+
+def test_fichier_non_suivi_ne_rend_pas_dirty(tmp_path):
+    _git(tmp_path, "init", "-q")
+    (tmp_path / "f.txt").write_text("a")
+    _git(tmp_path, "add", ".")
+    _git(tmp_path, "-c", "user.name=t", "-c", "user.email=t@t", "commit", "-qm", "init")
+    (tmp_path / "nouveau_rapport.csv").write_text("x")
+    assert rapport.etat_git(tmp_path)["dirty"] is False

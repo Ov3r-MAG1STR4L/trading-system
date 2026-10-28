@@ -41,7 +41,7 @@ def etat_git(racine: Path = ROOT) -> dict:
         r = subprocess.run(["git", *args], cwd=racine, capture_output=True, text=True)
         return r.stdout.strip() if r.returncode == 0 else None
     commit = git("rev-parse", "HEAD")
-    statut = git("status", "--porcelain")
+    statut = git("status", "--porcelain", "--untracked-files=no")  # dirty = code suivi modifié (pas les rapports créés)
     return {"commit": commit, "tag": git("describe", "--tags", "--always", "--dirty") if commit else None,
             "dirty": None if statut is None else bool(statut)}
 
