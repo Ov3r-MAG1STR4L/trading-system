@@ -50,6 +50,10 @@ Chaque version correspond à un tag Git (`git tag v0.x`).
 - [x] Revue transversale 001-003 (`docs/revue-transversale-001-003.md`)
 - [x] **Décision C : campagne 001-003 terminée.** 18 variantes, 0 candidat OOS, OOS intact, aucune 004.
 - Hypothèse future conservée sans test : continuation à court terme (dérivée de 003).
+- [x] Audit de conception du laboratoire (recommandation B), puis **audit de puissance : décision C**
+  (`docs/audit-puissance-campagne-001-003.md`). Aucune expérience 004.
+- Reprise éventuelle conditionnée à : beaucoup plus de trades indépendants (marchés, historique, fréquence si données
+  fiables), stratégies à dispersion plus faible, correction des tests multiples définie avant la campagne.
 
 ## v0.5 — Validation hors échantillon
 - [ ] Découpage entraînement / validation / test fixé à l'avance

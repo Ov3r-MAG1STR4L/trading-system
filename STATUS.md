@@ -33,6 +33,14 @@ complète conservée, critère P95 inchangé), 285 tests.
   0 candidat OOS, OOS intact ; code, résultats et critères figés ; aucune expérience 004 préparée.
   Synthèse : [`docs/revue-transversale-001-003.md`](docs/revue-transversale-001-003.md).
 - Hypothèse future conservée **sans test** : continuation à court terme, dérivée de 003 (voir la synthèse, section 7).
+- **Audit de puissance terminé : décision méthodologique C**
+  ([`docs/audit-puissance-campagne-001-003.md`](docs/audit-puissance-campagne-001-003.md)). Avec les données, l'univers et
+  le protocole actuels, on ne peut pas établir de manière fiable qu'une petite stratégie (+0,02 à +0,05 R par trade)
+  possède un avantage réel : il faudrait 1 700 à plus de 10 000 trades, contre 38 à 517 par variante en validation.
+  Ce n'est pas une conclusion « aucune stratégie ne fonctionne ».
+- La campagne 001-003 reste définitivement close ; résultats historiques immuables ; OOS 2023-2026 vierge ;
+  **aucune expérience 004 préparée**. Toute reprise exige d'abord une nouvelle base de données et un protocole adapté
+  (dont une correction des tests multiples fixée avant la campagne).
 
 ## Prochaine étape
 
