@@ -21,6 +21,21 @@ INFO = {"symbol": "X", "swap_long": -1.0, "swap_short": -1.0, "swap_mode": 1, "u
         "triple_swap_jour": "mercredi", "point": 0.01}
 
 
+@pytest.fixture(autouse=True)
+def protocole_historique_002(monkeypatch):
+    """002 a été évaluée sous v0.4.1 : ses tests de logique simulent ce protocole. Le protocole réel (v0.4.2) est
+    vérifié séparément par test_protocole_actuel_bloque_aussi_002."""
+    monkeypatch.setattr(rc, "VERSION_PROTOCOLE", "v0.4.1")
+
+
+def test_protocole_actuel_bloque_aussi_002(monkeypatch, dossiers):
+    source = (Path(rc.__file__)).read_text(encoding="utf-8")
+    assert 'VERSION_PROTOCOLE = "v0.4.2"' in source  # protocole réellement actif
+    monkeypatch.setattr(rc, "VERSION_PROTOCOLE", "v0.4.2")
+    with pytest.raises(SystemExit, match="protocole actif v0.4.2, attendu v0.4.1"):
+        x.verifier_preconditions(GIT_PROPRE, *dossiers)  # même avec un dossier vierge, 002 ne peut plus partir
+
+
 @pytest.fixture
 def dossiers(tmp_path):
     """Copie de l'hypothèse 002 et de la décision 001 dans un dossier temporaire."""

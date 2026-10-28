@@ -39,8 +39,9 @@ Chaque version correspond à un tag Git (`git tag v0.x`).
 - [x] Moteur : retournement de position optionnel (activé par la stratégie)
 - [x] Expérience 002 momentum en série temporelle : REJETÉE (6/6), OOS non ouvert
 - [x] Revue de 002 (`docs/revue-experience-002.md`)
-- [ ] Décider du traitement du benchmark aléatoire (distribution conservée, benchmark à sorties indépendantes du signal)
-- [ ] Seulement ensuite : réflexion sur l'expérience 003
+- [x] Protocole v0.4.2 : benchmark d'entrées randomisées à sorties identiques, méthode figée, distribution complète
+  conservée, percentile empirique rapporté (critère P95 inchangé)
+- [ ] Réflexion sur l'expérience 003 (première sous v0.4.2), à valider avant toute préparation
 
 ## v0.5 — Validation hors échantillon
 - [ ] Découpage entraînement / validation / test fixé à l'avance

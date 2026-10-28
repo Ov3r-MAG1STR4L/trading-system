@@ -80,10 +80,31 @@ KEEP signifie seulement « mérite d'autres tests » (walk-forward, autres march
 
 ## 6. Benchmarks
 
-1. **Entrées aléatoires** : mêmes marchés, même nombre de trades par marché, même règle de stop/objectif/sortie,
-   directions et dates tirées au hasard (graines fixes, 200 tirages). La stratégie doit dépasser le **95e centile** de
-   l'espérance après coûts des tirages.
+1. **Benchmark d'entrées randomisées à sorties identiques** (v0.4.2, `src/recherche.py` :
+   `benchmark_entrees_randomisees`).
+   - **Ce qu'il mesure** : l'information apportée par le **timing d'entrée**. Question posée : « avec exactement le même
+     mécanisme de sortie, la règle d'entrée choisit-elle de meilleurs points d'entrée qu'une sélection aléatoire ? »
+   - **Ce qu'il ne mesure pas** : la performance d'une stratégie entièrement aléatoire ou indépendante. Comme les
+     sorties sont celles de la stratégie, il peut hériter d'une partie de son signal (ex. momentum : un long tiré
+     pendant une baisse sort aussitôt). Chaque expérience doit le rappeler.
+   - **Identique à la stratégie** : stop (`stop_dist`), sorties (`sortie`, `sortie_long`, `sortie_short`),
+     retournement, objectif, coûts (spread, slippage, swaps), période (données tronquées à sa fin), contraintes
+     d'exécution du moteur, marchés, nombre de signaux par marché.
+   - **Seuls randomisés** : la date et le sens de chaque entrée, parmi les bougies de la période.
+   - **Méthode figée** : 200 tirages pour toutes les variantes ; graine du tirage k = `[graine, k]` (le tirage k ne
+     dépend pas du nombre total de tirages) ; centiles par la méthode « linear » de numpy ; tirages sans trade exclus
+     des centiles et comptés. **Interdit** : augmenter le nombre de tirages, ou changer de graine, parce qu'une
+     variante est proche du seuil.
+   - **Critère (inchangé)** : l'espérance de la stratégie après coûts doit être **strictement supérieure au P95**.
+   - **Rapporté en plus** : P50, P95 et le **percentile empirique** de la stratégie (% des tirages dont l'espérance est
+     strictement inférieure).
+   - **Conservé** : la distribution complète, un fichier `benchmark/<variante>.json` par variante, avec pour chaque
+     tirage la graine, les signaux demandés, les trades réellement pris, les marchés avec trades, l'espérance en R, le
+     profit factor et le total R après coûts.
 2. **Achat-conservation** à risque égal (référence de « marché haussier »), rapporté pour information.
+
+*Historique : 001 (v0.4) et 002 (v0.4.1) ont utilisé `benchmark_aleatoire`, qui ne conserve que l'espérance par
+tirage. Il est gardé tel quel et ces expériences ne sont pas recalculées.*
 
 ## 7. Traçabilité
 
@@ -112,3 +133,16 @@ Grille fixée à l'avance : N ∈ {20, 55, 100}, stop ∈ {2, 3} × ATR → 6 va
 - L'expérience 001 reste jugée avec les règles v0.4 d'origine. Elle n'est pas recalculée (le script refuse de rejuger une
   expérience qui a déjà une décision), et son OOS reste fermé.
 - Le seuil de 150 trades en entraînement et les périodes sont inchangés.
+
+**v0.4.2 (2026-10-28) — benchmark documenté et distribution complète conservée.**
+- Le benchmark devient explicitement un « benchmark d'entrées randomisées à sorties identiques » : il mesure le timing
+  d'entrée, pas une stratégie indépendante (section 6).
+- Méthode figée avant toute expérience qui l'utilise : 200 tirages, graine par tirage, centile « linear ».
+- Distribution complète conservée et percentile empirique de la stratégie rapporté.
+- Le nouveau benchmark transmet aussi la sortie générique et l'objectif de la stratégie (l'ancien utilisait toujours
+  « sans objectif » et ignorait la sortie générique ; aucune des deux options ne servait dans 001 ni 002).
+- **Critère inchangé : P95.** Seule la transparence et la reproductibilité changent.
+- Pourquoi : la revue de 002 (`docs/revue-experience-002.md`) a montré que la distribution n'était pas conservée et que
+  le sens du benchmark devait être précisé. La modification ne vise pas à rendre 002 acceptable : 001 et 002 restent
+  historiques et ne sont pas recalculées. Le script de 002 refuse d'ailleurs de tourner sous v0.4.2.
+- **003 sera la première expérience évaluée sous v0.4.2.**

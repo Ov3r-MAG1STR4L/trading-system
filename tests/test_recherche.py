@@ -245,3 +245,118 @@ def test_script_001_refuse_de_rejuger(tmp_path, monkeypatch):
     (tmp_path / "decision.json").write_text("{}")
     with pytest.raises(SystemExit, match="déjà jugée"):
         x.main()
+
+
+# ---------------- benchmark v0.4.2 : entrées randomisées à sorties identiques ----------------
+
+def test_benchmark_v042_fige():
+    assert rc.VERSION_PROTOCOLE == "v0.4.2"
+    b = rc.BENCHMARK
+    assert b["tirages"] == 200 and b["methode_centile"] == "linear" and b["centile_seuil"] == 95
+    assert b["nom"] == "entrées randomisées à sorties identiques"
+    assert rc.CRITERES["centile_benchmark"] == 95  # le seuil P95 n'a pas changé
+
+
+def test_benchmark_memes_regles_que_la_strategie(univers, monkeypatch):
+    """Seules la date et le sens d'entrée changent : stop, sorties, retournement, objectif, coûts et période sont
+    exactement ceux de la stratégie."""
+    from src.engine import Params
+    from strategies import momentum
+    marches, infos, hyp = univers
+    f = momentum.variante(momentum.GRILLE[0])
+    params = Params(2.5)
+    vus, couts_vus = [], []
+    vrai_bt, vrai_ap = rc.backtest, rc.couts.appliquer
+
+    def espion_bt(d, signal, stop, p, sortie, sl, ss, retournement):
+        vus.append((d, signal, stop, p, sortie, sl, ss, retournement))
+        return vrai_bt(d, signal, stop, p, sortie, sl, ss, retournement=retournement)
+
+    def espion_ap(t, d, info, h):
+        couts_vus.append((info, h))
+        return vrai_ap(t, d, info, h)
+    monkeypatch.setattr(rc, "backtest", espion_bt)
+    monkeypatch.setattr(rc.couts, "appliquer", espion_ap)
+    rc.benchmark_entrees_randomisees(marches, f, infos, hyp, "validation", {"A": 15, "B": 15}, params,
+                                     n_tirages=2, graine=1)
+    assert len(vus) == 4  # 2 tirages x 2 marchés
+    for d, signal, stop, p, sortie, sl, ss, rt in vus:
+        tronques = rc.tronquer(marches, "2022-12-31")
+        sym = next(s for s, df in tronques.items() if df["close"].iloc[-1] == d["close"].iloc[-1])
+        complet = tronques[sym]
+        s = f(complet)
+        k0 = len(complet) - len(d)
+        assert d["time"].max() <= pd.Timestamp("2022-12-31")                       # période : rien après la fin
+        pd.testing.assert_series_equal(stop, s["stop_dist"].iloc[k0:].reset_index(drop=True))
+        pd.testing.assert_series_equal(sl, s["sortie_long"].iloc[k0:].reset_index(drop=True))
+        pd.testing.assert_series_equal(ss, s["sortie_short"].iloc[k0:].reset_index(drop=True))
+        assert rt is True and p is params and sortie is None                      # retournement et objectif
+        assert (signal != 0).sum() == 15                                           # même nombre de signaux
+    assert all(h is hyp[info["symbol"]] and info is infos[info["symbol"]] for info, h in couts_vus)  # mêmes coûts
+
+
+def test_benchmark_transmet_la_sortie_generique(univers, monkeypatch):
+    marches, infos, hyp = univers
+    vus = []
+    vrai = rc.backtest
+    monkeypatch.setattr(rc, "backtest", lambda *a, **k: vus.append(a[4]) or vrai(*a, **k))
+
+    def strat(df):
+        return {"signal": pd.Series(0.0, index=df.index), "stop_dist": pd.Series(1.0, index=df.index),
+                "sortie": df["close"] > df["close"].shift()}
+    rc.benchmark_entrees_randomisees(marches, strat, infos, hyp, "validation", {"A": 5, "B": 5}, n_tirages=1)
+    assert vus and all(v is not None and v.dtype == bool for v in vus)
+
+
+def test_benchmark_reproductible_et_tirages_independants_du_nombre(univers):
+    marches, infos, hyp = univers
+    f = donchian.variante(donchian.GRILLE[2])
+    n = {"A": 15, "B": 15}
+    t3 = rc.benchmark_entrees_randomisees(marches, f, infos, hyp, "validation", n, n_tirages=3, graine=7)
+    t3_bis = rc.benchmark_entrees_randomisees(marches, f, infos, hyp, "validation", n, n_tirages=3, graine=7)
+    t2 = rc.benchmark_entrees_randomisees(marches, f, infos, hyp, "validation", n, n_tirages=2, graine=7)
+    autre = rc.benchmark_entrees_randomisees(marches, f, infos, hyp, "validation", n, n_tirages=2, graine=8)
+    assert t3 == t3_bis                    # mêmes graines -> mêmes 200 (ici 3) tirages, au bit près
+    assert t3[:2] == t2                    # ajouter des tirages ne change pas les premiers
+    assert [t["esperance_R"] for t in autre] != [t["esperance_R"] for t in t2]
+    for k, t in enumerate(t3):
+        assert t["tirage"] == k + 1 and t["graine"] == [7, k]
+        assert set(t) >= {"trades", "marches_avec_trades", "signaux_demandes", "esperance_R", "profit_factor",
+                          "total_R_execution"}
+        assert t["signaux_demandes"] == 30 and 0 < t["trades"] <= 30
+
+
+def test_resume_benchmark_percentile_et_p95():
+    tirages = [{"esperance_R": v} for v in np.round(np.arange(200) / 1000, 3)] + [{"esperance_R": None}]
+    r = rc.resume_benchmark(tirages, 0.1505)
+    assert r["tirages"] == 201 and r["tirages_sans_trade"] == 1
+    assert r["percentile_strategie"] == pytest.approx(75.5)  # 151 tirages sur 200 strictement inférieurs
+    assert r["p95"] == pytest.approx(np.percentile(np.arange(200) / 1000, 95)) and not r["bat_p95"]
+    assert rc.resume_benchmark(tirages, 0.25)["bat_p95"]
+    assert rc.resume_benchmark(tirages, r["p95"])["bat_p95"] is False  # égalité : pas battu (> strict)
+
+
+def test_resume_benchmark_coherent_avec_le_critere_du_protocole():
+    tirages = [{"esperance_R": float(v)} for v in np.linspace(-0.1, 0.1, 200)]
+    for e in (0.05, 0.09, 0.095):
+        r = rc.resume_benchmark(tirages, e)
+        rejet = rc.criteres(m_ok(esperance_R=e), "validation",
+                            bench=np.array([t["esperance_R"] for t in tirages]))["rejet"]
+        assert r["bat_p95"] == (not any("centile" in x for x in rejet))
+
+
+def test_distribution_complete_ecrite(tmp_path):
+    tirages = [{"tirage": k + 1, "graine": [0, k], "trades": 10, "esperance_R": k / 1000} for k in range(200)]
+    f = rc.ecrire_benchmark(tmp_path, "L60_K3", tirages, rc.resume_benchmark(tirages, 0.1))
+    contenu = json.loads(f.read_text("utf-8"))
+    assert f.name == "L60_K3.json" and f.parent.name == "benchmark"
+    assert contenu["protocole"] == "v0.4.2" and len(contenu["tirages"]) == 200
+    assert contenu["benchmark"]["nom"] == "entrées randomisées à sorties identiques"
+
+
+def test_ancien_benchmark_historique_inchange(univers):
+    """benchmark_aleatoire (001, 002) existe toujours et renvoie toujours un tableau d'espérances."""
+    marches, infos, hyp = univers
+    b = rc.benchmark_aleatoire(marches, donchian.variante(donchian.GRILLE[2]), infos, hyp, "validation",
+                               {"A": 20, "B": 20}, n_tirages=2, seed=1)
+    assert isinstance(b, np.ndarray) and b.shape == (2,)

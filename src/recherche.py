@@ -30,7 +30,14 @@ PERIODES = {"entrainement": ("2012-08-06", "2019-12-31"),
             "oos": ("2023-01-01", "2026-10-27")}
 # Seuils du protocole (section 5). v0.4.1 : éligibilité par marché à 5 trades, 15 = simple information,
 # critère « marchés positifs » = au moins 5 ET plus de la moitié des marchés éligibles (entraînement et validation).
-VERSION_PROTOCOLE = "v0.4.1"
+# v0.4.2 : benchmark d'entrées randomisées à sorties identiques, distribution complète conservée (critère inchangé).
+VERSION_PROTOCOLE = "v0.4.2"
+# Benchmark v0.4.2, figé AVANT toute expérience qui l'utilise : nombre de tirages, graines et méthode de centile.
+BENCHMARK = {"nom": "entrées randomisées à sorties identiques",
+             "mesure": "information apportée par le timing d'entrée (pas une stratégie indépendante)",
+             "tirages": 200, "graine_tirage": "numpy default_rng([graine, k]) pour le tirage k",
+             "methode_centile": "linear", "centile_seuil": 95,
+             "percentile_strategie": "% des tirages (avec trades) dont l'espérance est strictement inférieure"}
 INSUFFICIENT_SAMPLE = "INSUFFICIENT_SAMPLE"
 CRITERES = {"trades_min": {"entrainement": 150, "validation": 60, "oos": 0},
             "trades_min_marche": 5,           # ÉLIGIBILITÉ : en dessous, le marché ne compte ni positif ni négatif
@@ -159,6 +166,73 @@ def benchmark_aleatoire(marches: dict, fonction_signal, infos: dict, hyp: dict, 
         if rs:
             esperances[k] = np.concatenate(rs).mean()
     return esperances
+
+
+# ---------------- benchmark v0.4.2 : entrées randomisées à sorties identiques ----------------
+# benchmark_aleatoire ci-dessus reste le benchmark HISTORIQUE (v0.4, v0.4.1 : expériences 001 et 002).
+
+def benchmark_entrees_randomisees(marches: dict, fonction_signal, infos: dict, hyp: dict, periode: str,
+                                  trades_par_marche: dict, params: Params = Params(None),
+                                  n_tirages: int = BENCHMARK["tirages"], graine: int = 0,
+                                  chauffe: int = 120) -> list[dict]:
+    """Seule la date et le sens d'entrée sont tirés au hasard. Tout le reste est celui de la stratégie : stop
+    (stop_dist), sorties (sortie, sortie_long, sortie_short), retournement, objectif (params), coûts (hyp),
+    période (données tronquées à sa fin), un signal par marché comme la stratégie. Renvoie un dict par tirage."""
+    prep = {}
+    for s, df in tronquer(marches, PERIODES[periode][1]).items():
+        sig = fonction_signal(df)
+        k0 = max(int(np.argmax(dans(df["time"], periode).to_numpy())) - chauffe, 0)
+        d = df.iloc[k0:].reset_index(drop=True)
+        serie = lambda cle: None if sig.get(cle) is None else sig[cle].iloc[k0:].reset_index(drop=True)  # noqa: E731
+        prep[s] = {"d": d, "stop": serie("stop_dist"), "sortie": serie("sortie"), "sl": serie("sortie_long"),
+                   "ss": serie("sortie_short"), "rt": bool(sig.get("retournement", False)),
+                   "dedans": np.flatnonzero(dans(d["time"], periode).to_numpy()[:-1])}  # signal j -> entrée j+1
+    tirages = []
+    for k in range(n_tirages):
+        rng = np.random.default_rng([graine, k])  # le tirage k ne dépend pas du nombre total de tirages
+        rs, marches_touches, demandes = [], 0, 0
+        for s, p in prep.items():
+            n = min(trades_par_marche.get(s, 0), len(p["dedans"]))
+            demandes += n
+            if n == 0:
+                continue
+            signal = pd.Series(0.0, index=p["d"].index)
+            signal.iloc[rng.choice(p["dedans"], n, replace=False)] = rng.choice([-1.0, 1.0], n)
+            t, _ = backtest(p["d"], signal, p["stop"], params, p["sortie"], p["sl"], p["ss"], retournement=p["rt"])
+            t = t[dans(t["entry_time"], periode)]
+            if len(t):
+                rs.append(couts.appliquer(t, p["d"], infos[s], hyp[s])["R_execution"].to_numpy())
+                marches_touches += 1
+        r = np.concatenate(rs) if rs else np.array([])
+        gains, pertes = r[r > 0].sum(), -r[r < 0].sum()
+        tirages.append({"tirage": k + 1, "graine": [graine, k], "signaux_demandes": demandes, "trades": len(r),
+                        "marches_avec_trades": marches_touches,
+                        "esperance_R": float(r.mean()) if len(r) else None,
+                        "profit_factor": float(gains / pertes) if pertes > 0 else None,
+                        "total_R_execution": float(r.sum())})
+    return tirages
+
+
+def resume_benchmark(tirages: list[dict], esperance_strategie: float) -> dict:
+    """P50, P95 (méthode linéaire figée) et percentile empirique de la stratégie parmi les tirages avec trades."""
+    e = np.array([t["esperance_R"] for t in tirages if t["esperance_R"] is not None], dtype=float)
+    if not len(e):
+        return {"tirages": len(tirages), "tirages_sans_trade": len(tirages), "p50": None, "p95": None,
+                "percentile_strategie": None, "bat_p95": False}
+    p95 = float(np.percentile(e, BENCHMARK["centile_seuil"], method=BENCHMARK["methode_centile"]))
+    return {"tirages": len(tirages), "tirages_sans_trade": len(tirages) - len(e),
+            "p50": float(np.percentile(e, 50, method=BENCHMARK["methode_centile"])), "p95": p95,
+            "percentile_strategie": float(100 * (e < esperance_strategie).mean()),
+            "bat_p95": bool(esperance_strategie > p95)}
+
+
+def ecrire_benchmark(dossier: Path, variante: str, tirages: list[dict], resume: dict) -> Path:
+    """Distribution complète conservée : <dossier>/benchmark/<variante>.json."""
+    f = dossier / "benchmark" / f"{variante}.json"
+    f.parent.mkdir(parents=True, exist_ok=True)
+    f.write_text(json.dumps({"protocole": VERSION_PROTOCOLE, "benchmark": BENCHMARK, "variante": variante,
+                             "resume": resume, "tirages": tirages}, indent=2, ensure_ascii=False), encoding="utf-8")
+    return f
 
 
 # ---------------- critères du protocole ----------------

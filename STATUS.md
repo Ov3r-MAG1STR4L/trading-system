@@ -8,7 +8,8 @@
 
 ## Objectif actuel
 
-v0.4 en cours, protocole **v0.4.1**, 276 tests.
+v0.4 en cours, protocole actif **v0.4.2** (benchmark d'entrées randomisées à sorties identiques, distribution
+complète conservée, critère P95 inchangé), 285 tests.
 
 | Expérience | Protocole | Variantes | Décision | OOS |
 |---|---|---|---|---|
@@ -20,7 +21,8 @@ v0.4 en cours, protocole **v0.4.1**, 276 tests.
 - Revue de 002 : [`docs/revue-experience-002.md`](docs/revue-experience-002.md). Aucune des six variantes ne démontre un
   avantage suffisamment robuste selon le protocole v0.4.1 (ce n'est pas une preuve que le momentum ne marche pas).
 - 001 et 002 sont **historiques et immuables** (leurs scripts refusent de les rejouer).
-- **Expérience 003 : aucune préparation ni exécution** avant décision sur les constats de la revue (benchmark).
+- Constats de la revue sur le benchmark traités par le protocole v0.4.2 ; 001 et 002 ne sont pas recalculées.
+- **Expérience 003 : aucune préparation ni exécution pour l'instant.** Elle sera la première évaluée sous v0.4.2.
 
 ## Prochaine étape
 
