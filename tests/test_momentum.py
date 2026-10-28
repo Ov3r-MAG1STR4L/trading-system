@@ -85,8 +85,9 @@ def test_sans_lookahead(p):
 
 def test_cles_attendues_par_le_moteur_et_le_portefeuille():
     s = momentum.signaux(serie_prix([100] * 40), 3, 3.0)
-    assert set(s) == {"signal", "stop_dist", "sortie_long", "sortie_short"}
-    assert all(len(v) == 40 for v in s.values())
+    assert set(s) == {"signal", "stop_dist", "sortie_long", "sortie_short", "retournement"}
+    assert s["retournement"] is True  # activé explicitement par la stratégie (hypothèse 002)
+    assert all(len(v) == 40 for k, v in s.items() if k != "retournement")
     assert s["sortie_long"].dtype == bool and s["sortie_short"].dtype == bool
 
 
@@ -114,17 +115,24 @@ def test_sortie_au_changement_de_signe_a_l_ouverture_suivante():
     assert t["raison"].iloc[0] == "signal" and t["exit_time"].iloc[0] == df["time"][i_sortie + 1]
 
 
-def test_retournement_le_short_du_meme_changement_de_signe_n_est_pas_pris():
-    """PROBLÈME SIGNALÉ (non corrigé) : quand r passe de > 0 à < 0 avec un long ouvert, le moteur sort du long à
-    l'ouverture suivante mais n'entre pas en short sur la même bougie (règle « pas d'entrée sur la bougie d'une
-    sortie »). Le signal n'existant qu'au changement de signe, ce short est perdu."""
+def lancer(df, s, retournement):
+    return backtest(df, s["signal"], s["stop_dist"], Params(None), None, s["sortie_long"], s["sortie_short"],
+                    retournement=retournement)[0]
+
+
+def test_retournement_long_vers_short_avec_la_strategie():
     L = 3
     closes = [100] * 25 + [101, 102, 103, 104, 103, 102, 101, 100, 99, 98, 97]
     df = serie_prix(closes)
     s = momentum.signaux(df, L, 5.0)
-    assert (s["signal"] == -1).sum() == 1  # le short existe bien dans le signal
-    t, _ = backtest(df, s["signal"], s["stop_dist"], Params(None), None, s["sortie_long"], s["sortie_short"])
-    assert t["direction"].tolist() == ["long"]  # mais seul le long est tradé
+    assert (s["signal"] == -1).sum() == 1
+    # sans retournement (comportement par défaut du moteur) : le short du changement de signe est perdu
+    assert lancer(df, s, False)["direction"].tolist() == ["long"]
+    # avec le retournement demandé par la stratégie : long puis short, à la même ouverture
+    t = lancer(df, s, s["retournement"])
+    assert t["direction"].tolist() == ["long", "short"]
+    assert t["exit_time"].iloc[0] == t["entry_time"].iloc[1] and t["exit"].iloc[0] == t["entry"].iloc[1]
+    assert t["retournement"].tolist() == [False, True]
 
 
 def test_portefeuille_execute_la_strategie():

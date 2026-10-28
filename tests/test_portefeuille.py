@@ -294,3 +294,33 @@ def test_ruine_etat_explicite_sans_plantage():
     assert alloc["statut_allocation"].tolist() == ["OK", "RUINE", "CAPITAL_INCONNU"]
     assert alloc["pnl"].iloc[1:].isna().all()
     assert a["resume"]["ruine"]["brut"]
+
+
+def test_retournement_plusieurs_marches_risques_independants():
+    """Deux marchés, retournement sur chacun : chaque position a son propre risque, le retournement est dimensionné
+    sur le capital réalisé AVANT la sortie du même jour (sorties strictement antérieures)."""
+    from strategies import momentum
+    rng = np.random.default_rng(12)
+    marches = {}
+    for sym in "AB":
+        c = 100 * np.exp(np.cumsum(rng.normal(0, 0.012, 600)))
+        o = np.r_[100, c[:-1]]
+        df = bougies(list(zip(o, np.maximum(o, c) * 1.004, np.minimum(o, c) * 0.996, c)))
+        df["spread"] = 10
+        marches[sym] = df
+    infos = {s: {**INFO, "symbol": s} for s in marches}
+    t, _ = pf.executer(marches, momentum.variante(momentum.GRILLE[0]), Params(None), infos, Hypotheses("fixe", 10, 0))
+    assert set(t.loc[t["retournement"], "symbol"]) == {"A", "B"}
+    al = pf.allouer(t, CAP, PCT)
+    for k in t.index[t["retournement"]]:
+        avant = t.index[(t["symbol"] == t.loc[k, "symbol"]) & (t["exit_time"] == t.loc[k, "entry_time"])]
+        assert len(avant) == 1  # la position fermée par ce retournement
+        attendu = CAP + al.loc[(al["exit_time"] < t.loc[k, "entry_time"]), "pnl"].sum()
+        assert al.loc[k, "capital_entree"] == pytest.approx(attendu)
+        assert al.loc[k, "risque_initial"] == pytest.approx(attendu * PCT)
+        # la position fermée garde le risque fixé à SON entrée (capital réalisé avant sa propre entrée)
+        e0 = t.loc[avant[0], "entry_time"]
+        assert al.loc[avant[0], "risque_initial"] == pytest.approx(
+            (CAP + al.loc[al["exit_time"] < e0, "pnl"].sum()) * PCT)
+    for _, g in t.groupby("symbol"):  # jamais deux positions ouvertes en même temps sur un marché
+        assert (g["exit_time"].to_numpy()[:-1] <= g["entry_time"].to_numpy()[1:]).all()

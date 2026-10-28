@@ -14,7 +14,11 @@ Règles d'exécution (CLAUDE.md, règles du projet) :
   - stop et objectif dans la même bougie -> stop ;
   - ouverture au-delà du stop -> sortie au prix d'ouverture (gap défavorable encaissé) ;
   - sortie sur signal -> à l'ouverture suivante ;
-  - une seule position à la fois, pas de nouvelle entrée sur la bougie d'une sortie.
+  - une seule position à la fois, pas de nouvelle entrée sur la bougie d'une sortie ;
+  - EXCEPTION, seulement si retournement=True (activé explicitement par la stratégie) : quand une sortie SUR SIGNAL
+    décidée à la clôture de i-1 coïncide avec un signal de sens OPPOSÉ à la même clôture, la position est fermée à
+    l'ouverture de i et la position inverse est ouverte à cette même ouverture, avec son propre stop
+    (stop_dist[i-1]) et son propre état. Jamais après un stop, un objectif, ni sur une bougie de reprise après un trou.
 
 DATA_GAP / NON_TRADABLE (décision 2026-10-28) :
   - aucune bougie inventée pendant le trou ;
@@ -40,8 +44,8 @@ class Params:
 
 def backtest(df: pd.DataFrame, signal: pd.Series, stop_dist: pd.Series,
              params: Params = Params(), sortie: pd.Series | None = None,
-             sortie_long: pd.Series | None = None, sortie_short: pd.Series | None = None
-             ) -> tuple[pd.DataFrame, pd.DataFrame]:
+             sortie_long: pd.Series | None = None, sortie_short: pd.Series | None = None,
+             retournement: bool = False) -> tuple[pd.DataFrame, pd.DataFrame]:
     """Renvoie (trades, evenements). df doit venir de src.data (colonne gap_avant)."""
     n = len(df)
     for nom, s in (("signal", signal), ("stop_dist", stop_dist)):
@@ -62,7 +66,7 @@ def backtest(df: pd.DataFrame, signal: pd.Series, stop_dist: pd.Series,
 
     def fermer(i, prix, raison):
         trades.append({**{k: pos[k] for k in ("direction", "entry_time", "entry", "stop", "target", "dist",
-                                             "traverse_gap")},
+                                             "traverse_gap", "retournement")},
                        "exit_time": t[i], "exit": prix, "raison": raison, "bougies": i - pos["i"] + 1,
                        "R": (prix - pos["entry"]) * pos["d"] / pos["dist"]})
 
@@ -75,11 +79,12 @@ def backtest(df: pd.DataFrame, signal: pd.Series, stop_dist: pd.Series,
             if pos is not None:
                 pos["traverse_gap"] = True
 
-        sorti = False
+        sorti, inverse = False, False
         if pos is not None:
             d, stop, target = pos["d"], pos["stop"], pos["target"]
             if sort[i - 1] or (sort_l[i - 1] if d == 1 else sort_s[i - 1]):  # décidée à la clôture de i-1
                 fermer(i, o[i], "signal")
+                inverse = retournement and sig[i - 1] == -d  # sortie sur signal + signal opposé : retournement
             elif (d == 1 and l[i] <= stop) or (d == -1 and h[i] >= stop):
                 prix = min(o[i], stop) if d == 1 else max(o[i], stop)
                 fermer(i, prix, "stop_gap" if prix == o[i] and o[i] != stop else "stop")
@@ -91,7 +96,7 @@ def backtest(df: pd.DataFrame, signal: pd.Series, stop_dist: pd.Series,
 
         if gap[i]:  # signal d'avant le trou qui aurait pu donner une entrée : refusé (NON_TRADABLE)
             evenements[-1]["entree_refusee"] = pos is None and sig[i - 1] != 0
-        if sorti or gap[i] or sig[i - 1] == 0:
+        if (sorti and not inverse) or gap[i] or sig[i - 1] == 0:
             continue
         if not (np.isfinite(dist[i - 1]) and dist[i - 1] > 0):
             continue
@@ -99,7 +104,7 @@ def backtest(df: pd.DataFrame, signal: pd.Series, stop_dist: pd.Series,
         pos = {"i": i, "d": d, "direction": "long" if d == 1 else "short", "entry_time": t[i], "entry": e,
                "dist": dd, "stop": e - d * dd,
                "target": None if params.target_r is None else e + d * dd * params.target_r,
-               "traverse_gap": False}
+               "traverse_gap": False, "retournement": inverse}
         # la bougie d'entrée peut déjà toucher le stop ou l'objectif (après l'ouverture)
         if (d == 1 and l[i] <= pos["stop"]) or (d == -1 and h[i] >= pos["stop"]):
             fermer(i, pos["stop"], "stop")
@@ -112,7 +117,7 @@ def backtest(df: pd.DataFrame, signal: pd.Series, stop_dist: pd.Series,
         fermer(n - 1, c[n - 1], "fin_donnees")
 
     cols = ["direction", "entry_time", "entry", "stop", "target", "dist", "exit_time", "exit", "raison",
-            "bougies", "R", "traverse_gap"]
+            "bougies", "R", "traverse_gap", "retournement"]
     return (pd.DataFrame(trades, columns=cols),
             pd.DataFrame(evenements, columns=["statut", "derniere_bougie_avant", "reprise", "position_ouverte",
                                                "entree_refusee"]))

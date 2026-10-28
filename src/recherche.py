@@ -141,17 +141,18 @@ def benchmark_aleatoire(marches: dict, fonction_signal, infos: dict, hyp: dict, 
         dedans = np.flatnonzero(dans(d["time"], periode).to_numpy()[:-1])  # signal en j -> entrée en j+1
         prep[s] = (d, sig["stop_dist"].iloc[k0:].reset_index(drop=True),
                    sig.get("sortie_long", pd.Series(False, index=df.index)).iloc[k0:].reset_index(drop=True),
-                   sig.get("sortie_short", pd.Series(False, index=df.index)).iloc[k0:].reset_index(drop=True), dedans)
+                   sig.get("sortie_short", pd.Series(False, index=df.index)).iloc[k0:].reset_index(drop=True), dedans,
+                   bool(sig.get("retournement", False)))  # mêmes règles d'exécution que la stratégie
     esperances = np.full(n_tirages, np.nan)
     for k in range(n_tirages):
         rs = []
-        for s, (d, stop, sl, ss, dedans) in prep.items():
+        for s, (d, stop, sl, ss, dedans, rt) in prep.items():
             n = min(trades_par_marche.get(s, 0), len(dedans))
             if n == 0:
                 continue
             signal = pd.Series(0.0, index=d.index)
             signal.iloc[rng.choice(dedans, n, replace=False)] = rng.choice([-1.0, 1.0], n)
-            t, _ = backtest(d, signal, stop, Params(None), None, sl, ss)
+            t, _ = backtest(d, signal, stop, Params(None), None, sl, ss, retournement=rt)
             t = t[dans(t["entry_time"], periode)]
             if len(t):
                 rs.append(couts.appliquer(t, d, infos[s], hyp[s])["R_execution"].to_numpy())

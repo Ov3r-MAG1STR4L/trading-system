@@ -282,3 +282,103 @@ def test_sortie_par_sens_n_affecte_que_le_sens_concerne():
     assert t["raison"].iloc[0] == "signal"                                 # short : sortie_short
     with pytest.raises(ValueError):
         backtest(df, serie(6), stop, Params(None), None, serie(5).astype(bool))
+
+
+# ---------------- retournement (reverse), désactivé par défaut ----------------
+
+def run_rt(ohlc, sig, sl=None, ss=None, retournement=True, gaps_avant=(), stop=5.0):
+    df = bougies(ohlc, gaps_avant=gaps_avant)
+    n = len(df)
+    vide = pd.Series(False, index=range(n))
+    return backtest(df, sig, pd.Series(stop, index=range(n)), Params(None), None,
+                    vide if sl is None else sl, vide if ss is None else ss, retournement=retournement)
+
+
+def drapeau(n, *idx):
+    s = pd.Series(False, index=range(n))
+    s[list(idx)] = True
+    return s
+
+
+def test_reverse_long_vers_short():
+    ohlc = [PLAT, PLAT, PLAT, PLAT, (102, 103, 101, 102), PLAT]
+    t, _ = run_rt(ohlc, serie(6, **{"1": 1, "3": -1}), sl=drapeau(6, 3))
+    assert t["direction"].tolist() == ["long", "short"] and t["retournement"].tolist() == [False, True]
+    assert t["raison"].iloc[0] == "signal"
+    # même ouverture (bougie 4, 102) pour la sortie et la nouvelle entrée
+    assert t["exit_time"].iloc[0] == t["entry_time"].iloc[1] and t["exit"].iloc[0] == t["entry"].iloc[1] == 102
+    assert t["stop"].iloc[1] == 107 and t["dist"].iloc[1] == 5  # nouveau stop : 102 + stop_dist[3]
+
+
+def test_reverse_short_vers_long():
+    ohlc = [PLAT, PLAT, PLAT, PLAT, (98, 99, 97, 98), PLAT]
+    t, _ = run_rt(ohlc, serie(6, **{"1": -1, "3": 1}), ss=drapeau(6, 3))
+    assert t["direction"].tolist() == ["short", "long"] and t["retournement"].tolist() == [False, True]
+    assert t["exit"].iloc[0] == t["entry"].iloc[1] == 98 and t["stop"].iloc[1] == 93
+
+
+def test_nouveau_stop_utilise_stop_dist_de_la_bougie_du_signal():
+    df = bougies([PLAT, PLAT, PLAT, PLAT, (102, 103, 101, 102), PLAT])
+    stop = pd.Series([5.0, 5.0, 5.0, 2.5, 9.0, 9.0])  # 2,5 à la clôture du signal de retournement
+    t, _ = backtest(df, serie(6, **{"1": 1, "3": -1}), stop, Params(None), None, drapeau(6, 3), drapeau(6),
+                    retournement=True)
+    assert t["dist"].tolist() == [5.0, 2.5] and t["stop"].iloc[1] == 104.5  # rien de la bougie 4 n'est utilisé
+
+
+def test_sortie_sans_retournement_si_pas_de_signal_oppose():
+    ohlc = [PLAT, PLAT, PLAT, PLAT, (102, 103, 101, 102), PLAT]
+    t, _ = run_rt(ohlc, serie(6, **{"1": 1}), sl=drapeau(6, 3))
+    assert t["direction"].tolist() == ["long"] and t["raison"].iloc[0] == "signal"
+    t, _ = run_rt(ohlc, serie(6, **{"1": 1, "3": 1}), sl=drapeau(6, 3))  # signal du MÊME sens : pas de réentrée
+    assert len(t) == 1
+
+
+def test_entree_normale_inchangee_avec_retournement_actif():
+    ohlc = [PLAT, PLAT, PLAT, (101, 111, 100, 108)]
+    sig = serie(4, **{"1": 1})
+    t_on, _ = run_rt(ohlc, sig, retournement=True)
+    t_off, _ = run_rt(ohlc, sig, retournement=False)
+    pd.testing.assert_frame_equal(t_on, t_off)
+
+
+def test_stop_puis_signal_oppose_aucune_entree_le_meme_jour():
+    """Le retournement n'est PAS une réentrée après stop : stop sur la bougie 4, signal short à la clôture 3."""
+    ohlc = [PLAT, PLAT, PLAT, PLAT, (99, 100, 90, 92), PLAT]
+    t, _ = run_rt(ohlc, serie(6, **{"1": 1, "3": -1}))
+    assert t["raison"].tolist() == ["stop"] and len(t) == 1
+
+
+def test_retournement_refuse_sur_la_bougie_de_reprise_apres_un_trou():
+    ohlc = [PLAT, PLAT, PLAT, PLAT, (102, 103, 101, 102), PLAT]
+    t, ev = run_rt(ohlc, serie(6, **{"1": 1, "3": -1}), sl=drapeau(6, 3), gaps_avant=(4,))
+    assert t["direction"].tolist() == ["long"] and t["exit"].iloc[0] == 102  # sortie au premier prix réel
+    assert ev["entree_refusee"].iloc[0]  # le short est refusé (NON_TRADABLE) et journalisé
+
+
+def test_par_defaut_le_moteur_est_inchange():
+    df = marche_aleatoire(300, seed=9)
+    s = strategie_honnete(df)
+    s["signal"] = s["signal"].diff().fillna(0).clip(-1, 1)
+    sortie = s["signal"] != 0
+    t_def, e_def = backtest(df, s["signal"], s["stop_dist"], Params(2.0), sortie)
+    t_off, e_off = backtest(df, s["signal"], s["stop_dist"], Params(2.0), sortie, retournement=False)
+    pd.testing.assert_frame_equal(t_def, t_off)
+    pd.testing.assert_frame_equal(e_def, e_off)
+    assert not t_def["retournement"].any()
+
+
+def test_retournement_sans_lookahead():
+    from strategies import momentum
+    df = marche_aleatoire(600, seed=11)
+    s = momentum.signaux(df, 60, 3.0)
+    t1, _ = backtest(df, s["signal"], s["stop_dist"], Params(None), None, s["sortie_long"], s["sortie_short"],
+                     retournement=True)
+    futur = df.copy()
+    futur.loc[401:, ["open", "high", "low", "close"]] *= 3
+    s2 = momentum.signaux(futur, 60, 3.0)
+    t2, _ = backtest(futur, s2["signal"], s2["stop_dist"], Params(None), None, s2["sortie_long"], s2["sortie_short"],
+                     retournement=True)
+    coupure = df["time"][400]
+    assert t1["retournement"].any()
+    pd.testing.assert_frame_equal(t1[t1["exit_time"] <= coupure].reset_index(drop=True),
+                                  t2[t2["exit_time"] <= coupure].reset_index(drop=True))

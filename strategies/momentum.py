@@ -27,7 +27,9 @@ def signaux(df: pd.DataFrame, L: int, k: float) -> dict:
     signal = long_.astype(float) - short.astype(float)
     signal.iloc[:L + ATR_N] = 0.0        # chauffe
     return {"signal": signal, "stop_dist": atr(df, ATR_N) * k,
-            "sortie_long": (r <= 0).fillna(False), "sortie_short": (r >= 0).fillna(False)}
+            "sortie_long": (r <= 0).fillna(False), "sortie_short": (r >= 0).fillna(False),
+            # changement de signe avec position ouverte : sortie ET entrée inverse à la même ouverture (hypothèse 002)
+            "retournement": True}
 
 
 def variante(p: dict):
