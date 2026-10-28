@@ -39,7 +39,8 @@ def main():
     trades, ev = portefeuille.executer(marches, exemple.signaux, Params(TARGET_R), infos, hyp)
     debut = min(df["time"].min() for df in marches.values())
     fin = max(df["time"].max() for df in marches.values())
-    a = portefeuille.analyser(trades, ev, symboles, CAPITAL, RISQUE_PCT, debut)
+    dates = sorted(set().union(*(df["time"] for df in marches.values())))  # dates réelles de cotation
+    a = portefeuille.analyser(trades, ev, symboles, CAPITAL, RISQUE_PCT, debut, dates)
 
     params = {"strategie": exemple.NOM, "params_strategie": {**exemple.PARAMS, "target_r": TARGET_R},
               "marches": symboles, "periode": {"debut": debut.date().isoformat(), "fin": fin.date().isoformat()},

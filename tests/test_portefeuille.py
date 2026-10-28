@@ -108,7 +108,7 @@ def test_swap_unavailable_propage_sans_zero():
     assert eq["equity_net_realisee"].iloc[2:].isna().all()               # après : inconnu, pas complété
     assert eq["equity_brut_realisee"].notna().all()                      # le brut reste calculable
     r = a["resume"]
-    assert r["net"]["capital_final"] is None and r["net"]["statut"] == SWAP_UNAVAILABLE
+    assert r["net"]["capital_final"] is None and r["net"]["statut"] == "EQUITY_INCONNUE"
     assert r["marches_swap_unavailable"] == ["IDX"]
     pm = a["tables"]["par_marche.csv"].set_index("symbol")
     assert pm.loc["IDX", "R_net"] == SWAP_UNAVAILABLE and pm.loc["A", "R_net"] == 2
@@ -208,8 +208,89 @@ def test_rapport_portefeuille_complet(tmp_path):
         assert (dos / f).exists(), f
     res = json.loads((dos / "resume.json").read_text("utf-8"))
     assert "drawdown_realise" in res["portefeuille"]["brut"]
-    assert "drawdown_max" not in res["brut"]  # pas d'equity séquentielle trompeuse
+    assert "drawdown_realise" not in res["brut"]  # pas d'equity séquentielle trompeuse
     r = pd.read_csv(dos / "resultats.csv", sep=";")
     assert {"symbol", "risque_initial", "pnl_brut", "pnl_net", "traverse_gap", "statut_swap"} <= set(r.columns)
     av = (dos / "avertissements.txt").read_text("utf-8")
     assert "DRAWDOWN : calculé sur l'equity RÉALISÉE" in av and "RISQUE SIMULTANÉ" in av
+
+
+# ---------------- audit v0.3 ----------------
+
+@pytest.mark.parametrize("modif", ["x10", "inverse", "bruit_fort"])
+def test_lookahead_fort_aucun_signal_entree_sortie_allocation_avant_T_ne_change(modif):
+    """Données de TOUS les marchés modifiées brutalement après T, avec le vrai signal d'exemple."""
+    from strategies.exemple import signaux
+    rng = np.random.default_rng(3)
+    marches = {s: marche(400, k) for k, s in enumerate("ABC")}
+    T = marches["A"]["time"][250]
+    futur = {}
+    for s, df in marches.items():
+        f = df.copy()
+        k = f["time"] > T
+        px = ["open", "high", "low", "close"]
+        if modif == "x10":
+            f.loc[k, px] *= 10
+        elif modif == "inverse":
+            f.loc[k, px] = 300 - f.loc[k, px].to_numpy()
+            f.loc[k, ["high", "low"]] = f.loc[k, ["low", "high"]].to_numpy()
+        else:
+            choc = rng.uniform(0.2, 5, k.sum())
+            f.loc[k, px] = f.loc[k, px].to_numpy() * choc[:, None]
+        futur[s] = f
+    infos = {s: {**INFO, "symbol": s} for s in marches}
+    h = Hypotheses("historique", 10, 2)
+
+    def run(m):
+        t, _ = pf.executer(m, signaux, Params(2.0), infos, h)
+        return t, pf.allouer(t, CAP, PCT)
+
+    t1, a1 = run(marches)
+    t2, a2 = run(futur)
+    for s in marches:  # signaux jusqu'à T identiques
+        s1, s2 = signaux(marches[s]), signaux(futur[s])
+        k = marches[s]["time"] <= T
+        pd.testing.assert_series_equal(s1["signal"][k], s2["signal"][k])
+        pd.testing.assert_series_equal(s1["stop_dist"][k], s2["stop_dist"][k])
+    e1, e2 = t1["entry_time"] <= T, t2["entry_time"] <= T
+    assert e1.sum() > 5
+    cols_entree = ["symbol", "direction", "entry_time", "entry", "stop", "target", "dist"]
+    pd.testing.assert_frame_equal(t1.loc[e1, cols_entree].reset_index(drop=True),
+                                  t2.loc[e2, cols_entree].reset_index(drop=True))
+    pd.testing.assert_frame_equal(a1.loc[e1, ["capital_entree", "risque_initial"]].reset_index(drop=True),
+                                  a2.loc[e2, ["capital_entree", "risque_initial"]].reset_index(drop=True))
+    x1, x2 = t1["exit_time"] <= T, t2["exit_time"] <= T
+    pd.testing.assert_frame_equal(t1[x1].reset_index(drop=True), t2[x2].reset_index(drop=True))
+    pd.testing.assert_frame_equal(a1[x1].reset_index(drop=True), a2[x2].reset_index(drop=True))
+
+
+def test_allocation_independante_de_l_ordre_des_lignes_en_entree():
+    t = table([("A", 0, 7, 1), ("B", 1, 3, -1), ("C", 4, 9, 2), ("D", 5, 6, -1)])
+    melange = t.sample(frac=1, random_state=0)
+    pd.testing.assert_frame_equal(pf.allouer(t, CAP, PCT), pf.allouer(melange, CAP, PCT))
+
+
+def test_exposition_journaliere_sur_dates_reelles():
+    t = table([("A", 0, 3, 1), ("B", 1, 2, -1), ("C", 2, 5, 1)])
+    alloc = pf.allouer(t, CAP, PCT)
+    dates = [d(k) for k in range(7)]
+    ej = pf.exposition_journaliere(alloc, dates, CAP)
+    assert ej["positions"].tolist() == [1, 2, 3, 2, 1, 1, 0]  # sortie le jour même : encore comptée
+    assert ej["risque_ouvert"].iloc[2] == pytest.approx(300)
+    assert ej["capital_realise"].iloc[3] == pytest.approx(9_900)  # B (-1 R) sorti le jour 2
+    s = pf.stats_exposition(ej)
+    assert s["positions_max"] == 3 and s["risque_ouvert_max_pct"] == pytest.approx(0.03)
+    # jours : 1 %, 2 %, 3 %, 2,02 % (300 -> A,C ouverts sur 9 900), 1 %, 1 %, 0 ; seuils STRICTS
+    assert s["jours_au_dessus"]["2%"] == 2 and s["jours_au_dessus"]["3%"] == 0
+    assert s["plus_longue_periode_jours"]["2%"] == 2
+    assert s["marches_jours_au_dessus_2pct"] == {"A": 2, "C": 2, "B": 1}
+
+
+def test_ruine_etat_explicite_sans_plantage():
+    """Une perte > 100 R (saut de prix énorme) ruine le capital : état RUINE, pas de taille inventée."""
+    t = table([("A", 0, 1, -150), ("B", 2, 3, 1), ("C", 4, 5, 1)])
+    a = analyser(t, ("A", "B", "C"))
+    alloc = a["allocations"]["brut"]
+    assert alloc["statut_allocation"].tolist() == ["OK", "RUINE", "CAPITAL_INCONNU"]
+    assert alloc["pnl"].iloc[1:].isna().all()
+    assert a["resume"]["ruine"]["brut"]

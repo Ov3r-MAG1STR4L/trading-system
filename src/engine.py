@@ -63,8 +63,8 @@ def backtest(df: pd.DataFrame, signal: pd.Series, stop_dist: pd.Series,
         if gap[i]:
             evenements.append({"statut": STATUT_GAP, "derniere_bougie_avant": t[i - 1], "reprise": t[i],
                                "position_ouverte": pos is not None,
-                               # signal d'avant le trou qui aurait donné une entrée : refusé (NON_TRADABLE)
-                               "entree_refusee": pos is None and sig[i - 1] != 0})
+                               # complété plus bas, APRÈS la sortie éventuelle à la reprise
+                               "entree_refusee": False})
             if pos is not None:
                 pos["traverse_gap"] = True
 
@@ -82,6 +82,8 @@ def backtest(df: pd.DataFrame, signal: pd.Series, stop_dist: pd.Series,
                 continue                                       # position conservée
             pos, sorti = None, True
 
+        if gap[i]:  # signal d'avant le trou qui aurait pu donner une entrée : refusé (NON_TRADABLE)
+            evenements[-1]["entree_refusee"] = pos is None and sig[i - 1] != 0
         if sorti or gap[i] or sig[i - 1] == 0:
             continue
         if not (np.isfinite(dist[i - 1]) and dist[i - 1] > 0):

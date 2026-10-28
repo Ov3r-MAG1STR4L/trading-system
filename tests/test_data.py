@@ -58,3 +58,11 @@ def test_trou_us500_2025_marque_et_non_rempli():
     assert len(reprise) == 1 and reprise["gap_avant"].iloc[0]
     dedans = df[(df["time"] > "2025-07-16") & (df["time"] < "2025-09-09")]
     assert dedans.empty, "aucune bougie ne doit exister pendant le trou"
+
+
+@reel
+def test_seule_la_bougie_de_reprise_est_marquee():
+    df = data.charger("US500")
+    i = df.index[df["time"] == "2025-09-09"][0]
+    assert not df.loc[i - 1, "gap_avant"] and not df.loc[i + 1, "gap_avant"]
+    assert df.loc[i - 1, "time"] == pd.Timestamp("2025-07-16")

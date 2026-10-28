@@ -68,7 +68,7 @@ def stats_argent(r, capital: float, risque_pct: float, compose: bool) -> dict:
     dd = risque.drawdown_max(eq)
     return {"capital_initial": capital, "capital_final": float(eq.iloc[-1]),
             "resultat_monetaire": float(eq.iloc[-1] - capital),
-            "drawdown_max": dd["dd_max_abs"], "drawdown_max_pct": dd["dd_max_pct"]}
+            "drawdown_realise": dd["dd_max_abs"], "drawdown_realise_pct": dd["dd_max_pct"]}
 
 
 def resume(trades: pd.DataFrame, evenements: pd.DataFrame, params: dict, argent: bool = True) -> dict:

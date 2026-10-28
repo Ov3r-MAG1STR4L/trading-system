@@ -235,3 +235,14 @@ def test_integration_sortie_du_moteur():
     assert len(net) == len(trades) > 10
     assert (net["R_execution"] < net["R"]).all()
     assert net["R_net"].sum() < net["R"].sum()
+
+
+def test_points_convertis_avec_la_taille_du_point_du_marche():
+    """EURUSD-like : 20 points x 0.00001 = 0.0002 de prix ; dist 0.0050 -> 0.04 R. Une erreur d'unité
+    (points pris pour du prix) donnerait 4 000 R."""
+    info = {**INFO, "point": 1e-5}
+    t = trade(entry=1.1000, exit=1.1100)
+    t[["stop", "dist"]] = [1.0950, 0.0050]
+    r = appliquer(t, bougies(spread=20), info, Hypotheses("fixe", 20, 5, swaps=False)).iloc[0]
+    assert r["cout_spread_R"] == pytest.approx(0.04)
+    assert r["cout_slippage_R"] == pytest.approx(2 * 5e-5 / 0.005)

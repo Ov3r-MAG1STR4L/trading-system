@@ -189,3 +189,80 @@ def test_gap_aucune_bougie_creee_ni_sortie_pendant_le_trou():
     trades, _ = backtest(df, serie(4, **{"1": 1}), pd.Series(5.0, index=range(4)), Params(2.0))
     pd.testing.assert_frame_equal(df, avant)  # le moteur ne touche pas aux données
     assert set(trades["exit_time"]) <= set(df["time"])  # toute sortie a lieu sur une bougie réelle
+
+
+# ---------------- audit v0.3 : cas limites ----------------
+
+def test_bug_refus_journalise_si_la_position_sort_a_la_reprise():
+    """Position stoppée sur la bougie de reprise + signal d'avant le trou : le refus doit être compté."""
+    df = bougies([PLAT, PLAT, PLAT, (90, 92, 88, 91), PLAT], gaps_avant=(3,))
+    sig = serie(5, **{"1": 1, "2": 1})  # entrée en 2 ; nouveau signal en 2, juste avant le trou
+    trades, ev = backtest(df, sig, pd.Series(5.0, index=range(5)), Params(2.0))
+    assert trades["raison"].tolist() == ["stop_gap"] and len(trades) == 1
+    assert ev["position_ouverte"].iloc[0] and ev["entree_refusee"].iloc[0]
+
+
+def miroir(df):
+    """Prix p -> 400 - p : un long sur df doit se comporter exactement comme un short sur miroir(df)."""
+    m = df.copy()
+    m["open"], m["close"] = 400 - df["open"], 400 - df["close"]
+    m["high"], m["low"] = 400 - df["low"], 400 - df["high"]
+    return m
+
+
+def test_symetrie_long_short_sur_prix_miroir():
+    df = marche_aleatoire(300, seed=7)
+    df.loc[[50, 120, 200], "gap_avant"] = True
+    s = strategie_honnete(df)
+    s["signal"] = s["signal"].diff().fillna(0).clip(-1, 1)  # croisements : plusieurs trades, long et short
+    sortie = s["signal"] != 0  # sortir à chaque nouveau croisement : beaucoup de trades
+    for target in (None, 2.0):
+        tl, el = backtest(df, s["signal"], s["stop_dist"], Params(target), sortie)
+        ts, es = backtest(miroir(df), -s["signal"], s["stop_dist"], Params(target), sortie)
+        assert len(tl) == len(ts) > 10
+        np.testing.assert_allclose(tl["R"], ts["R"], atol=1e-9)
+        assert tl["raison"].tolist() == ts["raison"].tolist()
+        assert tl["traverse_gap"].tolist() == ts["traverse_gap"].tolist()
+        pd.testing.assert_frame_equal(el, es)
+
+
+def test_ouverture_au_dela_de_l_objectif_sortie_a_l_ouverture():
+    t, _ = run([PLAT, PLAT, PLAT, (112, 113, 111, 112)])
+    assert t["raison"].iloc[0] == "objectif" and t["exit"].iloc[0] == 112 and t["R"].iloc[0] == pytest.approx(2.4)
+    t, _ = run([PLAT, PLAT, PLAT, (88, 89, 87, 88)], direction=-1)
+    assert t["raison"].iloc[0] == "objectif" and t["R"].iloc[0] == pytest.approx(2.4)
+
+
+def test_short_stop_gap_et_fin_de_donnees():
+    t, _ = run([PLAT, PLAT, PLAT, (110, 112, 109, 111)], direction=-1)
+    assert t["raison"].iloc[0] == "stop_gap" and t["exit"].iloc[0] == 110 and t["R"].iloc[0] == pytest.approx(-2)
+    t, _ = run([PLAT, PLAT, PLAT, (100, 103, 97, 98)], direction=-1)
+    assert t["raison"].iloc[0] == "fin_donnees" and t["R"].iloc[0] == pytest.approx(0.4)
+
+
+def test_gap_puis_objectif_a_la_reprise():
+    t, _ = run([PLAT, PLAT, PLAT, (113, 114, 112, 113)], gaps_avant=(3,))
+    assert t["raison"].iloc[0] == "objectif" and t["exit"].iloc[0] == 113 and t["traverse_gap"].iloc[0]
+
+
+def test_gap_reprise_touche_stop_et_objectif_compte_le_stop():
+    t, _ = run([PLAT, PLAT, PLAT, (100, 112, 94, 100)], gaps_avant=(3,))
+    assert t["raison"].iloc[0] == "stop" and t["R"].iloc[0] == pytest.approx(-1) and t["traverse_gap"].iloc[0]
+
+
+def test_gap_sortie_sur_signal_decidee_avant_le_trou_executee_au_premier_prix_reel():
+    t, ev = run([PLAT, PLAT, PLAT, (103, 104, 102, 103), PLAT], sortie_idx=2, gaps_avant=(3,))
+    assert t["raison"].iloc[0] == "signal" and t["exit"].iloc[0] == 103 and t["traverse_gap"].iloc[0]
+    assert ev["position_ouverte"].iloc[0]
+
+
+def test_gap_position_continue_puis_stop_plus_tard():
+    t, _ = run([PLAT, PLAT, PLAT, PLAT, (99, 100, 94, 96)], gaps_avant=(3,))
+    assert t["raison"].iloc[0] == "stop" and t["exit_time"].iloc[0] == bougies([PLAT] * 5)["time"][4]
+    assert t["traverse_gap"].iloc[0]
+
+
+def test_aucune_entree_sur_la_bougie_de_reprise_meme_signal_valide():
+    df = bougies([PLAT] * 6, gaps_avant=(3,))
+    trades, _ = backtest(df, pd.Series(1.0, index=range(6)), pd.Series(5.0, index=range(6)), Params(None))
+    assert df["time"][3] not in set(trades["entry_time"])

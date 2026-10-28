@@ -104,8 +104,8 @@ def test_resume_brut_couts_net(tmp_path):
     assert n["total_R"] < b["total_R"]
     assert n["resultat_monetaire"] < b["resultat_monetaire"]
     # equity composée : 10 000 -> 10 200 -> 10 098 -> 9 997,02 ; plus haut 10 200
-    assert b["drawdown_max"] == pytest.approx(10_200 * (1 - 0.99 ** 2))
-    assert b["drawdown_max_pct"] == pytest.approx(1 - 0.99 ** 2)
+    assert b["drawdown_realise"] == pytest.approx(10_200 * (1 - 0.99 ** 2))
+    assert b["drawdown_realise_pct"] == pytest.approx(1 - 0.99 ** 2)
 
 
 def test_resume_data_gap_traverses_et_refuses(tmp_path):
@@ -227,3 +227,14 @@ def test_fichier_non_suivi_ne_rend_pas_dirty(tmp_path):
     _git(tmp_path, "-c", "user.name=t", "-c", "user.email=t@t", "commit", "-qm", "init")
     (tmp_path / "nouveau_rapport.csv").write_text("x")
     assert rapport.etat_git(tmp_path)["dirty"] is False
+
+
+def test_fichiers_reproductibles_sans_horodatage(tmp_path):
+    t1 = datetime(2026, 1, 1, 9, 0, 0)
+    t2 = datetime(2026, 1, 1, 18, 30, 0)
+    trades, ev = scenario()
+    d1 = rapport.ecrire("x", params(), trades, ev, racine=tmp_path / "a", git=GIT_PROPRE, maintenant=t1)
+    d2 = rapport.ecrire("x", params(), trades, ev, racine=tmp_path / "b", git=GIT_PROPRE, maintenant=t2)
+    for f in ("resultats.csv", "evenements.csv", "resume.json", "avertissements.txt"):
+        assert (d1 / f).read_bytes() == (d2 / f).read_bytes(), f  # l'heure n'y apparaît pas
+    assert (d1 / "params.json").read_bytes() != (d2 / "params.json").read_bytes()  # elle est dans params.json
