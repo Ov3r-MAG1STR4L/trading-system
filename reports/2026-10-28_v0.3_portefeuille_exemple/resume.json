@@ -1,0 +1,153 @@
+{
+  "apres_spread_slippage": {
+    "esperance_R": 0.0561704744971069,
+    "meilleure_serie_gains": 13,
+    "pire_serie_pertes": 15,
+    "profit_factor": 1.08656722112647,
+    "taux_reussite": 0.3548387096774194,
+    "total_R": 36.56697889761659,
+    "trades": 651
+  },
+  "brut": {
+    "esperance_R": 0.061954319416997,
+    "meilleure_serie_gains": 13,
+    "pire_serie_pertes": 15,
+    "profit_factor": 1.0960681265503789,
+    "taux_reussite": 0.3548387096774194,
+    "total_R": 40.332261940465045,
+    "trades": 651
+  },
+  "couts_R": {
+    "slippage": 0.0,
+    "spread": 3.7652830428490107,
+    "swap_connu": -18.891470535737753,
+    "total_connu": 22.656753578586216,
+    "trades_swap_unavailable": 143
+  },
+  "data_gap": {
+    "entrees_refusees": 0,
+    "trades_traversant": 3,
+    "trous": 7
+  },
+  "net": {
+    "raison": "143 trade(s) sans swap calculable : net inconnu, pas mis à zéro",
+    "statut": "SWAP_UNAVAILABLE"
+  },
+  "portefeuille": {
+    "brut": {
+      "capital_final": 13009.32867998779,
+      "date_creux": "2018-04-23T00:00:00",
+      "drawdown_realise": 4603.640963326356,
+      "drawdown_realise_pct": 0.4187342197166465,
+      "resultat_monetaire": 3009.3286799877897
+    },
+    "execution": {
+      "capital_final": 12534.970870567333,
+      "date_creux": "2018-04-23T00:00:00",
+      "drawdown_realise": 4708.140172012267,
+      "drawdown_realise_pct": 0.4289670014638127,
+      "resultat_monetaire": 2534.970870567333
+    },
+    "exposition": {
+      "positions_simultanees_max": 11,
+      "risque_ouvert_max": 1498.6431184838605,
+      "risque_ouvert_max_pct": 0.11000000000000001
+    },
+    "exposition_journaliere": {
+      "date_risque_max": "2026-03-27T00:00:00",
+      "distribution_pct": {
+        "q50": 0.0406165835046262,
+        "q75": 0.06028105971234355,
+        "q90": 0.07937426697993863,
+        "q95": 0.08870093332891511,
+        "q99": 0.1009522815168897
+      },
+      "jours_au_dessus": {
+        "10%": 49,
+        "2%": 3132,
+        "3%": 2666,
+        "5%": 1433,
+        "8%": 346
+      },
+      "jours_total": 3698,
+      "marches_jours_au_dessus_2pct": {
+        "AUDUSD": 1543,
+        "DE40": 1226,
+        "EURUSD": 1360,
+        "GBPUSD": 1330,
+        "NZDUSD": 1599,
+        "US30": 1154,
+        "US500": 1160,
+        "USDCAD": 1402,
+        "USDCHF": 1411,
+        "USDJPY": 1142,
+        "XAGUSD": 1424,
+        "XAUUSD": 1327
+      },
+      "marches_jours_au_dessus_5pct": {
+        "AUDUSD": 908,
+        "DE40": 640,
+        "EURUSD": 866,
+        "GBPUSD": 861,
+        "NZDUSD": 916,
+        "US30": 817,
+        "US500": 727,
+        "USDCAD": 884,
+        "USDCHF": 866,
+        "USDJPY": 679,
+        "XAGUSD": 853,
+        "XAUUSD": 805
+      },
+      "part_jours_au_dessus": {
+        "10%": 0.01325040562466198,
+        "2%": 0.8469442942130881,
+        "3%": 0.7209302325581395,
+        "5%": 0.387506760411033,
+        "8%": 0.09356408869659276
+      },
+      "plus_longue_periode_jours": {
+        "10%": 12,
+        "2%": 259,
+        "3%": 190,
+        "5%": 82,
+        "8%": 31
+      },
+      "positions_max": 11,
+      "risque_ouvert_max": 1498.6431184838602,
+      "risque_ouvert_max_pct": 0.11
+    },
+    "marches_swap_unavailable": [
+      "DE40",
+      "US30",
+      "US500"
+    ],
+    "modele_equity": "réalisée aux dates de sortie ; pertes latentes NON comptées",
+    "net": {
+      "capital_final": null,
+      "drawdown_realise": null,
+      "drawdown_realise_pct": null,
+      "resultat_monetaire": null,
+      "statut": "EQUITY_INCONNUE"
+    },
+    "regle_risque": "1.00% du capital réalisé à l'entrée, risques simultanés additionnés, sans plafond",
+    "ruine": {
+      "brut": false,
+      "execution": false,
+      "net": false
+    },
+    "trades_par_marche": {
+      "AUDUSD": 57,
+      "DE40": 54,
+      "EURUSD": 57,
+      "GBPUSD": 48,
+      "NZDUSD": 62,
+      "US30": 47,
+      "US500": 46,
+      "USDCAD": 72,
+      "USDCHF": 55,
+      "USDJPY": 42,
+      "XAGUSD": 63,
+      "XAUUSD": 48
+    }
+  }
+}

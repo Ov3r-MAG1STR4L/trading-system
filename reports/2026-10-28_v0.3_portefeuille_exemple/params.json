@@ -1,0 +1,65 @@
+{
+  "couts": {
+    "slippage_points": 0.0,
+    "spread_mode": "historique",
+    "spread_points": "par marché : médiane des spreads historiques > 0",
+    "swaps": true
+  },
+  "date_swaps": "2026-10-27 23:28 UTC",
+  "execution": "2026-10-28T01:16:01",
+  "git": {
+    "commit": "24043d7b2b39898386d65b3c33612d8252fd2ca9",
+    "dirty": false,
+    "tag": "v0.2-8-g24043d7"
+  },
+  "marches": [
+    "EURUSD",
+    "GBPUSD",
+    "USDJPY",
+    "USDCHF",
+    "USDCAD",
+    "AUDUSD",
+    "NZDUSD",
+    "US500",
+    "US30",
+    "DE40",
+    "XAUUSD",
+    "XAGUSD"
+  ],
+  "nom": "portefeuille_exemple",
+  "params_strategie": {
+    "atr": 14,
+    "chauffe": 60,
+    "ema_lente": 50,
+    "ema_rapide": 20,
+    "stop_atr": 2.0,
+    "target_r": 2.0
+  },
+  "periode": {
+    "debut": "2012-08-06",
+    "fin": "2026-10-27"
+  },
+  "risque": {
+    "capital": 10000,
+    "compose": true,
+    "regle": "1 % du capital réalisé à l'entrée, risques simultanés additionnés, sans plafond",
+    "risque_pct": 0.01
+  },
+  "source_donnees": "MT5 MetaQuotes-Demo, D1, data/*_D1.csv (v0.2)",
+  "spread_plancher_points_par_marche": {
+    "AUDUSD": 4.0,
+    "DE40": 50.0,
+    "EURUSD": 2.0,
+    "GBPUSD": 2.0,
+    "NZDUSD": 6.0,
+    "US30": 100.0,
+    "US500": 30.0,
+    "USDCAD": 3.0,
+    "USDCHF": 3.0,
+    "USDJPY": 3.0,
+    "XAGUSD": 16.0,
+    "XAUUSD": 14.0
+  },
+  "strategie": "exemple_mecanique_ema20_50",
+  "version_moteur": "0.3.0"
+}

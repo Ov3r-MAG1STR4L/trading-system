@@ -1,0 +1,13 @@
+- SOURCE : une seule source de données (MT5 MetaQuotes-Demo, D1, data/*_D1.csv (v0.2)), sans recoupement.
+- SPREAD : historique MT5 avec plancher de par marché : médiane des spreads historiques > 0 points (plancher utilisé sur 411 trade(s) ; le spread D1 de MT5 contient de nombreuses valeurs à 0).
+- SLIPPAGE : 0 (aucun slippage simulé).
+- SWAPS : valeurs actuelles du broker (2026-10-27 23:28 UTC) appliquées à tout l'historique : approximation, pas les swaps observés à l'époque.
+- SWAP_UNAVAILABLE : swap non convertible pour DE40, US30, US500 ; résultat net inconnu pour ces trades.
+- DATA_GAP : 7 trou(s) de données ; 3 trade(s) les traversent ; 0 entrée(s) refusée(s).
+- BOUGIES PLATES : AUDUSD en a 1 sur la période de référence.
+- BOUGIES PLATES : US500 en a 1 sur la période de référence.
+- BOUGIES PLATES : US30 en a 2 sur la période de référence.
+- BOUGIES PLATES : DE40 en a 10 sur la période de référence.
+- FIN DES DONNÉES : position(s) clôturée(s) à la dernière clôture disponible.
+- DRAWDOWN : calculé sur l'equity RÉALISÉE (trades clôturés) ; pertes latentes non comptées, le vrai drawdown peut être plus grand.
+- RISQUE SIMULTANÉ : sans plafond en v0.3 ; maximum observé 11.00% du capital, 11 position(s) ouvertes.

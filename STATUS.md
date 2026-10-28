@@ -4,15 +4,15 @@
 
 ## Étape actuelle
 
-**v0.2 — DONNÉES : TERMINÉE** (le 2026-10-28) → prochaine étape : v0.3, moteur de backtest (pas encore commencée)
+**v0.3 — MOTEUR DE BACKTEST : audité le 2026-10-28** (tag `v0.3` pas encore créé) → prochaine étape : décisions avant v0.4
 
 ## Objectif actuel
 
-Présenter le rapport v0.2, puis démarrer la v0.3 (moteur de backtest fiable). Pas de stratégie avant la v0.4.
+Moteur v0.3 fiable et testé (174 tests). Avant la v0.4 : décider du plafond d'exposition et du traitement des swaps d'indices. Pas de stratégie avant validation.
 
 ## Prochaine étape
 
-v0.3 : extraire le moteur dans `src/`, avec des tests (pas de look-ahead, calcul du R, stop/objectif, **trous de données**).
+Audit v0.3 : [`docs/audit-v0.3.md`](docs/audit-v0.3.md). Lancer : `python -m pytest` puis `python scripts/backtest.py` (hors ligne, sans MT5).
 Rapport v0.2 : [`reports/2026-10-28_v0.2_donnees/RAPPORT.md`](reports/2026-10-28_v0.2_donnees/RAPPORT.md).
 
 ## Données (v0.2)
