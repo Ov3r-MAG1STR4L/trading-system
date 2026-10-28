@@ -2,6 +2,7 @@
 
 **Date :** 2026-10-28. Lecture seule des résultats commités ; aucun résultat, paramètre ni critère modifié.
 001, 002 et 003 sont **figées**. **OOS 2023-2026 : vierge.** Aucune expérience 004 n'est préparée.
+**Décision (section 7) : option C, la campagne 001-003 est terminée.**
 
 ## 1. Bilan
 | | 001 Donchian | 002 Momentum en série temporelle | 003 Retour à la moyenne après séance extrême |
@@ -86,3 +87,33 @@ sera pas utilisé pour « voir ce qui marche » sur 2023-2026.
   comme hypothèse dérivée déclarée, avec une grille petite et fixée, en acceptant qu'un éventuel succès ne vaudrait
   qu'après un OOS unique. Pour préserver au maximum la valeur de l'OOS, **C** est le choix le plus prudent.
 - Dans les deux cas : pas d'OOS pour 001-003, et pas de boucle « hypothèse → résultat → inverse ».
+
+## 7. Décision : option C, campagne 001-003 terminée (2026-10-28)
+**Conclusion de la campagne : sur cet univers de données, ces trois familles d'entrées ne fournissent pas une stratégie
+suffisamment robuste pour justifier une validation hors échantillon.** Cela ne signifie pas que le forex est efficient ni
+qu'aucune stratégie ne peut fonctionner : seulement que ce laboratoire n'a pas trouvé de candidat assez convaincant.
+
+| Élément | État final |
+|---|---|
+| 001 Donchian | 6/6 REJECT |
+| 002 Momentum en série temporelle | 6/6 REJECT |
+| 003 Retour à la moyenne après séance extrême | 6/6 REJECT |
+| Variantes testées (registre) | 18 |
+| Candidats à l'OOS | 0 |
+| OOS 2023-01-01 → 2026-10-27 | **intact**, jamais utilisé pour sélectionner une variante |
+| Code, résultats, critères | figés |
+| Expérience 004 | non préparée |
+
+**Pourquoi s'arrêter plutôt que « trouver quelque chose »** : lancer une 004 parce que les trois premières familles ont
+échoué reviendrait à choisir une idée suggérée par les résultats précédents, sur les mêmes données. Le laboratoire avait
+le droit de conclure qu'il ne trouvait rien ; c'est ce résultat qui est retenu.
+
+**Hypothèse future conservée, non testée** — *continuation à court terme* : « une séance exceptionnellement forte
+annonce-t-elle une poursuite du mouvement sur quelques séances ? ». Elle est **dérivée de 003** (suggérée par son
+résultat) et ne sera pas testée dans cette campagne. Si une campagne future la reprend, elle devra : être déclarée comme
+dérivée de 003 ; avoir une hypothèse et une grille fixées avant tout code ; considérer que la validation 2020-2022 a déjà
+informé l'idée ; et, de préférence, s'appuyer sur des données nouvelles ou indépendantes.
+
+**Pour une campagne future indépendante** : l'OOS 2023-2026 est disponible, puisqu'il n'a servi à sélectionner aucune
+variante de 001-003 (rappel : la famille « retour à la moyenne » avait été regardée informellement sur cette période
+avant le laboratoire, journal 002 TradingView).

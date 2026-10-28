@@ -31,7 +31,7 @@ Chaque version correspond à un tag Git (`git tag v0.x`).
 - [x] Audit technique ([`docs/audit-v0.3.md`](audit-v0.3.md)) : 174 tests
 - [x] Décisions : 0,25 % par trade sans plafond en recherche ; swaps des indices convertis (vérifiés MT5)
 
-## v0.4 — Recherche de stratégies *(en cours)*
+## v0.4 — Recherche de stratégies *(campagne 001-003 terminée le 2026-10-28)*
 - [x] Protocole anti-surapprentissage (`docs/protocole-recherche-v0.4.md`)
 - [x] Laboratoire : périodes, OOS verrouillé, registre, benchmark aléatoire (`src/recherche.py`)
 - [x] Expérience 001 Donchian baseline : REJETÉE
@@ -43,12 +43,13 @@ Chaque version correspond à un tag Git (`git tag v0.x`).
   conservée, percentile empirique rapporté (critère P95 inchangé)
 - [x] Proposition 003 validée (`docs/proposition-experience-003.md`)
 - [x] Moteur : durée maximale de détention optionnelle + tests + non-régression 001/002
-- [ ] `strategies/reversion.py` (6 variantes fixées) + tests, sans lancement
-- [ ] `scripts/experience_003.py` avec les garde-fous de 002, sans lancement
+- [x] `strategies/reversion.py` (6 variantes fixées) + tests
+- [x] `scripts/experience_003.py` avec les garde-fous de 002 (tests simulés)
 - [x] Expérience 003 retournement après séance extrême : REJETÉE (6/6), OOS non ouvert
 - [x] Revue de 003 (`docs/revue-experience-003.md`)
-- [ ] Décider de la suite : hypothèse indépendante, piste « continuation » issue de 003 (déclarée comme telle),
-  ou arrêt des expériences
+- [x] Revue transversale 001-003 (`docs/revue-transversale-001-003.md`)
+- [x] **Décision C : campagne 001-003 terminée.** 18 variantes, 0 candidat OOS, OOS intact, aucune 004.
+- Hypothèse future conservée sans test : continuation à court terme (dérivée de 003).
 
 ## v0.5 — Validation hors échantillon
 - [ ] Découpage entraînement / validation / test fixé à l'avance

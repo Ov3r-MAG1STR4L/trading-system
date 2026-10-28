@@ -4,7 +4,7 @@
 
 ## Étape actuelle
 
-**v0.4 — RECHERCHE** (tag `v0.3` créé et poussé)
+**v0.4 — RECHERCHE : campagne 001-003 TERMINÉE** (décision C, 2026-10-28). Aucune expérience en cours ni préparée.
 
 ## Objectif actuel
 
@@ -28,8 +28,11 @@ complète conservée, critère P95 inchangé), 285 tests.
   même aller dans la mauvaise direction (0e-5e percentile du benchmark v0.4.2). Pas de bug : 943 trades contrôlés, et un
   calcul sans le moteur donne le même signe.
 - 001, 002 et 003 sont historiques et immuables.
-- **Prochaine étape : décision.** Aucune expérience 004 préparée. Une piste « suivre la séance extrême » serait une
-  hypothèse inspirée par 003 : elle devrait être écrite et justifiée comme telle avant tout test.
+- **CAMPAGNE 001-003 TERMINÉE (décision C, 2026-10-28)** : sur cet univers de données, ces trois familles d'entrées ne
+  fournissent pas une stratégie suffisamment robuste pour justifier une validation hors échantillon. 18 variantes,
+  0 candidat OOS, OOS intact ; code, résultats et critères figés ; aucune expérience 004 préparée.
+  Synthèse : [`docs/revue-transversale-001-003.md`](docs/revue-transversale-001-003.md).
+- Hypothèse future conservée **sans test** : continuation à court terme, dérivée de 003 (voir la synthèse, section 7).
 
 ## Prochaine étape
 
