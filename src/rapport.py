@@ -71,11 +71,13 @@ def stats_argent(r, capital: float, risque_pct: float, compose: bool) -> dict:
             "drawdown_max": dd["dd_max_abs"], "drawdown_max_pct": dd["dd_max_pct"]}
 
 
-def resume(trades: pd.DataFrame, evenements: pd.DataFrame, params: dict) -> dict:
-    """Brut -> coûts -> net. Le net n'est calculé que si aucun swap n'est SWAP_UNAVAILABLE."""
+def resume(trades: pd.DataFrame, evenements: pd.DataFrame, params: dict, argent: bool = True) -> dict:
+    """Brut -> coûts -> net. Le net n'est calculé que si aucun swap n'est SWAP_UNAVAILABLE.
+    argent=False : pas d'equity séquentielle trade après trade (le portefeuille fournit la sienne)."""
+    arg = stats_argent if argent else (lambda *a: {})
     t = trades.sort_values(["exit_time", "entry_time"], kind="stable").reset_index(drop=True)
     rq = params["risque"]
-    out = {"brut": {**stats_r(t["R"]), **stats_argent(t["R"], rq["capital"], rq["risque_pct"], rq["compose"])}}
+    out = {"brut": {**stats_r(t["R"]), **arg(t["R"], rq["capital"], rq["risque_pct"], rq["compose"])}}
     if "R_execution" in t:
         indispo = t["statut_swap"] == SWAP_UNAVAILABLE
         out["couts_R"] = {"spread": float(t["cout_spread_R"].sum()), "slippage": float(t["cout_slippage_R"].sum()),
@@ -88,7 +90,7 @@ def resume(trades: pd.DataFrame, evenements: pd.DataFrame, params: dict) -> dict
                           "raison": f"{int(indispo.sum())} trade(s) sans swap calculable : net inconnu, pas mis à zéro"}
         else:
             out["net"] = {**stats_r(t["R_net"]),
-                          **stats_argent(t["R_net"], rq["capital"], rq["risque_pct"], rq["compose"])}
+                          **arg(t["R_net"], rq["capital"], rq["risque_pct"], rq["compose"])}
     out["data_gap"] = {"trous": len(evenements),
                        "trades_traversant": int(t["traverse_gap"].sum()) if len(t) else 0,
                        "entrees_refusees": int(evenements["entree_refusee"].sum()) if len(evenements) else 0}
@@ -154,7 +156,10 @@ def _json(x):
 
 def ecrire(nom: str, params: dict, trades: pd.DataFrame, evenements: pd.DataFrame,
            qualite: pd.DataFrame | None = None, racine: Path = REPORTS, git: dict | None = None,
-           maintenant: datetime | None = None) -> Path:
+           maintenant: datetime | None = None, tables: dict | None = None,
+           portefeuille: dict | None = None) -> Path:
+    """tables : {"nom.csv": DataFrame} écrits tels quels ; portefeuille : résumé de src.portefeuille
+    (remplace l'equity séquentielle, inadaptée à des positions simultanées)."""
     manquantes = [k for k in CLES_OBLIGATOIRES if k not in params]
     if manquantes:
         raise RapportInvalide(f"paramètres obligatoires manquants : {manquantes}")
@@ -171,12 +176,22 @@ def ecrire(nom: str, params: dict, trades: pd.DataFrame, evenements: pd.DataFram
         k += 1
     dossier.mkdir(parents=True)
 
-    res = resume(trades, evenements, params)
+    res = resume(trades, evenements, params, argent=portefeuille is None)
+    if portefeuille is not None:
+        res["portefeuille"] = portefeuille
     avert = avertissements(params, trades, evenements, git, qualite)
+    if portefeuille is not None:
+        x = portefeuille.get("exposition", {})
+        avert.append("DRAWDOWN : calculé sur l'equity RÉALISÉE (trades clôturés) ; pertes latentes non comptées, "
+                     "le vrai drawdown peut être plus grand.")
+        avert.append(f"RISQUE SIMULTANÉ : sans plafond en v0.3 ; maximum observé {x.get('risque_ouvert_max_pct', 0):.2%} "
+                     f"du capital, {x.get('positions_simultanees_max', 0)} position(s) ouvertes.")
     (dossier / "params.json").write_text(_json({**params, "git": git, "execution": maintenant.isoformat(timespec="seconds"),
                                                 "nom": nom}), encoding="utf-8")
     trades.to_csv(dossier / "resultats.csv", index=False, sep=";", na_rep="NaN")
     evenements.to_csv(dossier / "evenements.csv", index=False, sep=";")
+    for nom_f, table in (tables or {}).items():
+        table.to_csv(dossier / nom_f, index=False, sep=";", na_rep="NaN")
     (dossier / "resume.json").write_text(_json(res), encoding="utf-8")
     (dossier / "avertissements.txt").write_text("\n".join(f"- {x}" for x in avert) + "\n", encoding="utf-8")
     return dossier
