@@ -51,13 +51,21 @@ Question à laquelle chaque expérience répond :
 
 ## 5. Critères
 
-**Nombre minimal de trades** : ≥ 150 sur le portefeuille en entraînement, ≥ 60 en validation ; un marché avec < 15 trades
-n'entre pas dans les statistiques de stabilité par marché.
+**Nombre minimal de trades** : ≥ 150 sur le portefeuille en entraînement, ≥ 60 en validation (inchangé).
+
+**Échantillon par marché (v0.4.1, mêmes règles en entraînement et en validation)** :
+
+| Trades du marché sur la période | Statut | Compte dans « marchés positifs » ? |
+|---|---|---|
+| < 5 | `INSUFFICIENT_SAMPLE` | non : ni positif, ni négatif, exclu du dénominateur |
+| 5 à 14 | `ELIGIBLE` | oui |
+| ≥ 15 | `BIEN_ECHANTILLONNE` | oui (information seulement, jamais un critère de rejet) |
 
 **REJECT** (un seul suffit, sur validation après coûts) :
 - espérance ≤ 0 R, ou profit factor < 1,10 ;
 - négative dans le scénario de stress (slippage) ;
-- positive sur moins de 7 marchés sur 12 ;
+- moins de 5 marchés positifs, OU pas plus de la moitié des marchés éligibles positifs
+  (ex. 7/12 passe, 6/12 et 5/12 échouent, 5/8 passe, 5/10 échoue) ;
 - un seul marché fait plus de 40 % du gain total ;
 - moins de 60 % des années civiles positives (entraînement + validation) ;
 - ne bat pas le benchmark (section 6) ;
@@ -91,3 +99,16 @@ Les expériences rejetées restent dans le dépôt.
 Breakout de Donchian : entrée si clôture > plus haut des N jours (short si < plus bas), stop 2 × ATR(20),
 sortie sur clôture inverse au plus bas/haut des N/2 jours, pas d'objectif.
 Grille fixée à l'avance : N ∈ {20, 55, 100}, stop ∈ {2, 3} × ATR → 6 variantes. Mêmes 12 marchés, même protocole.
+
+## 9. Historique des modifications du protocole
+
+**v0.4.1 (2026-10-28) — éligibilité des marchés.** Avant : un marché ne comptait qu'avec ≥ 15 trades, et il fallait
+≥ 7 marchés positifs.
+- Pourquoi : 15 trades par marché en 3 ans de validation est trop exigeant pour les stratégies lentes. L'expérience 001
+  l'a révélé (N100 : 5 à 14 trades par marché en validation, donc 0 marché éligible et un rejet automatique).
+- La règle n'a pas été choisie pour favoriser une variante : elle s'applique identiquement aux deux périodes et à toute
+  stratégie future. La condition « majorité des éligibles » a été ajoutée pour ne pas affaiblir le critère quand tous les
+  marchés sont éligibles (7/12 reste nécessaire avec 12 éligibles).
+- L'expérience 001 reste jugée avec les règles v0.4 d'origine. Elle n'est pas recalculée (le script refuse de rejuger une
+  expérience qui a déjà une décision), et son OOS reste fermé.
+- Le seuil de 150 trades en entraînement et les périodes sont inchangés.

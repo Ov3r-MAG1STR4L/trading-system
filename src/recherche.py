@@ -28,9 +28,15 @@ RISQUE_RECHERCHE = 0.0025
 PERIODES = {"entrainement": ("2012-08-06", "2019-12-31"),
             "validation": ("2020-01-01", "2022-12-31"),
             "oos": ("2023-01-01", "2026-10-27")}
-# Seuils du protocole v0.4 (section 5)
-CRITERES = {"trades_min": {"entrainement": 150, "validation": 60, "oos": 0}, "trades_min_marche": 15,
-            "pf_min": 1.10, "marches_positifs_min": 7, "contribution_max": 0.40, "annees_positives_min": 0.60,
+# Seuils du protocole (section 5). v0.4.1 : éligibilité par marché à 5 trades, 15 = simple information,
+# critère « marchés positifs » = au moins 5 ET plus de la moitié des marchés éligibles (entraînement et validation).
+VERSION_PROTOCOLE = "v0.4.1"
+INSUFFICIENT_SAMPLE = "INSUFFICIENT_SAMPLE"
+CRITERES = {"trades_min": {"entrainement": 150, "validation": 60, "oos": 0},
+            "trades_min_marche": 5,           # ÉLIGIBILITÉ : en dessous, le marché ne compte ni positif ni négatif
+            "trades_bien_echantillonne": 15,  # INFORMATION seulement, jamais un critère de rejet
+            "pf_min": 1.10, "marches_positifs_min": 5, "part_marches_positifs_min": 0.5,  # > 50 % des éligibles
+            "contribution_max": 0.40, "annees_positives_min": 0.60,
             "dd_max": 0.25, "serie_pertes_max": 20, "centile_benchmark": 95, "marge_revue": 0.10,
             "pf_min_oos": 1.05}
 
@@ -76,6 +82,9 @@ def metriques(ev: dict, marches: list) -> dict:
     gains, pertes = r[r > 0].sum(), -r[r < 0].sum()
     par_m = t.groupby("symbol")["R_execution"].agg(["sum", "count"]).reindex(marches)
     eligibles = par_m[par_m["count"] >= CRITERES["trades_min_marche"]]
+    statut_m = {s: (INSUFFICIENT_SAMPLE if (pd.isna(c) or c < CRITERES["trades_min_marche"])
+                    else "BIEN_ECHANTILLONNE" if c >= CRITERES["trades_bien_echantillonne"] else "ELIGIBLE")
+                for s, c in par_m["count"].items()}
     total = r.sum()
     annees = t.groupby(t["entry_time"].dt.year)["R_execution"].sum()
     net = t["R_net"]
@@ -91,6 +100,9 @@ def metriques(ev: dict, marches: list) -> dict:
         "pire_serie_pertes": _serie_max(r < 0), "meilleure_serie_gains": _serie_max(r > 0),
         "marches_eligibles": int(len(eligibles)), "marches_positifs": int((eligibles["sum"] > 0).sum()),
         "marches_negatifs": int((eligibles["sum"] <= 0).sum()),
+        "marches_insufficient_sample": sum(v == INSUFFICIENT_SAMPLE for v in statut_m.values()),
+        "marches_bien_echantillonnes": sum(v == "BIEN_ECHANTILLONNE" for v in statut_m.values()),
+        "statut_echantillon_par_marche": statut_m,
         "trades_par_marche": {s: int(c) if pd.notna(c) else 0 for s, c in par_m["count"].items()},
         "R_par_marche": {s: float(v) if pd.notna(v) else 0.0 for s, v in par_m["sum"].items()},
         "contribution_max": float(par_m["sum"].max() / total) if total > 0 else None,
@@ -163,10 +175,13 @@ def criteres(m: dict, periode: str, stress: dict | None = None, bench: np.ndarra
         rejet.append(f"profit factor {pf:.2f} < {c['pf_min']}")
     elif pf < c["pf_min"] * (1 + c["marge_revue"]):
         revue.append(f"profit factor {pf:.2f} proche du seuil")
-    if m["marches_positifs"] < c["marches_positifs_min"]:
-        rejet.append(f"{m['marches_positifs']} marchés positifs < {c['marches_positifs_min']}")
-    elif m["marches_positifs"] == c["marches_positifs_min"]:
-        revue.append("nombre de marchés positifs au seuil")
+    pos, elig = m["marches_positifs"], m["marches_eligibles"]  # éligibles seulement (INSUFFICIENT_SAMPLE exclus)
+    if pos < c["marches_positifs_min"]:
+        rejet.append(f"{pos} marchés positifs < {c['marches_positifs_min']} (sur {elig} éligibles)")
+    elif pos <= c["part_marches_positifs_min"] * elig:
+        rejet.append(f"{pos} marchés positifs sur {elig} éligibles : pas une majorité")
+    elif pos == c["marches_positifs_min"] or pos - 1 <= c["part_marches_positifs_min"] * elig:
+        revue.append(f"marchés positifs au seuil ({pos} sur {elig} éligibles)")
     cm = m["contribution_max"]
     if cm is not None and cm > c["contribution_max"]:
         rejet.append(f"{m['marche_contribution_max']} fait {cm:.0%} du gain (> {c['contribution_max']:.0%})")

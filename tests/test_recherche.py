@@ -106,7 +106,8 @@ def test_registre_compte_sans_doublon(tmp_path):
 # ---------------- métriques, critères, plateau, benchmark ----------------
 
 def m_ok(**k):
-    base = {"trades": 200, "esperance_R": 0.2, "profit_factor": 1.5, "marches_positifs": 9, "contribution_max": 0.2,
+    base = {"trades": 200, "esperance_R": 0.2, "profit_factor": 1.5, "marches_positifs": 9, "marches_eligibles": 12,
+            "contribution_max": 0.2,
             "marche_contribution_max": "A", "drawdown_realise_pct": 0.1, "pire_serie_pertes": 8,
             "part_max_une_annee": 0.2}
     return {**base, **k}
@@ -164,3 +165,81 @@ def test_benchmark_reproductible_et_meme_nombre_de_signaux(univers):
     b2 = rc.benchmark_aleatoire(marches, f, infos, hyp, "validation", {"A": 20, "B": 20}, n_tirages=3, seed=1)
     np.testing.assert_array_equal(b1, b2)
     assert np.isfinite(b1).all()
+
+
+# ---------------- protocole v0.4.1 : éligibilité des marchés ----------------
+
+def ev_synthetique(trades_par_marche: dict, r_par_marche: dict):
+    """Évaluation minimale : n trades par marché, tous au même R."""
+    lignes = [{"symbol": s, "entry_time": pd.Timestamp("2020-01-06") + pd.Timedelta(days=k), "R": r_par_marche[s],
+               "R_execution": r_par_marche[s], "R_net": r_par_marche[s], "statut_swap": "OK", "cout_spread_R": 0.0,
+               "cout_slippage_R": 0.0, "traverse_gap": False}
+              for s, n in trades_par_marche.items() for k in range(n)]
+    res = {"execution": {"resultat_monetaire": 0.0, "drawdown_realise_pct": 0.0},
+           "exposition_journaliere": {"risque_ouvert_max_pct": 0.0, "positions_max": 0}}
+    return {"trades": pd.DataFrame(lignes), "evenements": pd.DataFrame(), "analyse": {"resume": res}}
+
+
+@pytest.mark.parametrize("n,statut", [(4, rc.INSUFFICIENT_SAMPLE), (5, "ELIGIBLE"), (14, "ELIGIBLE"),
+                                      (15, "BIEN_ECHANTILLONNE")])
+def test_seuils_d_echantillon_par_marche(n, statut):
+    m = rc.metriques(ev_synthetique({"A": n}, {"A": 1.0}), ["A"])
+    assert m["statut_echantillon_par_marche"]["A"] == statut
+    assert m["marches_eligibles"] == (0 if n < 5 else 1)
+    assert m["marches_bien_echantillonnes"] == (1 if n >= 15 else 0)
+
+
+def test_marche_insuffisant_ni_positif_ni_negatif_et_hors_denominateur():
+    m = rc.metriques(ev_synthetique({"A": 4, "B": 4, "C": 6, "D": 6}, {"A": 2.0, "B": -2.0, "C": 1.0, "D": -1.0}),
+                     ["A", "B", "C", "D", "E"])
+    assert m["marches_eligibles"] == 2 and m["marches_positifs"] == 1 and m["marches_negatifs"] == 1
+    assert m["marches_insufficient_sample"] == 3  # A, B (4 trades) et E (aucun trade)
+    assert m["statut_echantillon_par_marche"]["E"] == rc.INSUFFICIENT_SAMPLE
+
+
+@pytest.mark.parametrize("pos,elig,rejete", [
+    (4, 4, True),    # moins de 5 positifs, même à 100 %
+    (5, 12, True),   # 5 positifs mais minorité (5/12)
+    (6, 12, True),   # exactement la moitié : pas une majorité
+    (7, 12, False),  # 7/12 : comme l'ancienne règle
+    (5, 8, False),   # 5/8 : majorité parmi les éligibles
+    (5, 9, False),
+    (5, 10, True),   # 5/10 = moitié
+])
+def test_critere_marches_positifs_sur_eligibles_seulement(pos, elig, rejete):
+    r = rc.criteres(m_ok(marches_positifs=pos, marches_eligibles=elig), "validation")
+    assert any("marchés positifs" in x for x in r["rejet"]) == rejete
+
+
+def test_meme_regle_en_entrainement_et_validation():
+    for p in ("entrainement", "validation"):
+        assert any("pas une majorité" in x for x in rc.criteres(m_ok(marches_positifs=5, marches_eligibles=12), p)["rejet"])
+
+
+def test_quinze_trades_n_est_jamais_un_critere_de_rejet():
+    m = rc.metriques(ev_synthetique({s: 6 for s in "ABCDEFGH"}, {s: 1.0 for s in "ABCDEFGH"}), list("ABCDEFGH"))
+    assert m["marches_bien_echantillonnes"] == 0
+    r = rc.criteres({**m, "trades": 200, "drawdown_realise_pct": 0.0, "part_max_une_annee": 0.1}, "validation")
+    assert not any("marchés positifs" in x for x in r["rejet"])
+
+
+EXP001 = rc.EXPERIMENTS / "001-donchian-baseline"
+
+
+@pytest.mark.skipif(not (EXP001 / "decision.json").exists(), reason="expérience 001 absente")
+def test_experience_001_reste_historique():
+    d = json.loads((EXP001 / "decision.json").read_text("utf-8"))
+    assert [v["statut"] for v in d["variantes"].values()] == ["REJECT"] * 6 and d["oos_ouvert_pour"] is None
+    e = json.loads((EXP001 / "experience.json").read_text("utf-8"))
+    assert e["criteres"]["trades_min_marche"] == 15 and e["criteres"]["marches_positifs_min"] == 7  # règles d'origine
+    assert not (EXP001 / "oos_ouvert.json").exists()  # OOS toujours verrouillé et jamais lu
+    reg = pd.read_csv(rc.REGISTRE, sep=";", dtype=str)
+    assert len(reg) == 6 and set(reg["experience"]) == {"001"}  # registre inchangé
+
+
+def test_script_001_refuse_de_rejuger(tmp_path, monkeypatch):
+    import scripts.experience_001 as x
+    monkeypatch.setattr(x, "DOSSIER", tmp_path)
+    (tmp_path / "decision.json").write_text("{}")
+    with pytest.raises(SystemExit, match="déjà jugée"):
+        x.main()

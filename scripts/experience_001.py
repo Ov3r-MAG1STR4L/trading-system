@@ -41,6 +41,8 @@ def params_rapport(p, periode, symboles, planchers, slippage):
 
 
 def main():
+    if (DOSSIER / "decision.json").exists():
+        sys.exit("STOP : l'expérience 001 est déjà jugée ; ses résultats sont historiques et ne sont pas recalculés.")
     git = rapport.etat_git()
     if not git["commit"] or git["dirty"]:
         sys.exit("STOP : dépôt non propre ou sans commit. Commite avant de lancer une expérience.")
