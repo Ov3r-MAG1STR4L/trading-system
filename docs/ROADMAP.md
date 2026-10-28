@@ -45,7 +45,10 @@ Chaque version correspond à un tag Git (`git tag v0.x`).
 - [x] Moteur : durée maximale de détention optionnelle + tests + non-régression 001/002
 - [ ] `strategies/reversion.py` (6 variantes fixées) + tests, sans lancement
 - [ ] `scripts/experience_003.py` avec les garde-fous de 002, sans lancement
-- [ ] Lancement de 003 (sur autorisation)
+- [x] Expérience 003 retournement après séance extrême : REJETÉE (6/6), OOS non ouvert
+- [x] Revue de 003 (`docs/revue-experience-003.md`)
+- [ ] Décider de la suite : hypothèse indépendante, piste « continuation » issue de 003 (déclarée comme telle),
+  ou arrêt des expériences
 
 ## v0.5 — Validation hors échantillon
 - [ ] Découpage entraînement / validation / test fixé à l'avance

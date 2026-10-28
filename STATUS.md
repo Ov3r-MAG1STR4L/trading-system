@@ -14,15 +14,22 @@ complète conservée, critère P95 inchangé), 285 tests.
 | Expérience | Protocole | Variantes | Décision | OOS |
 |---|---|---|---|---|
 | 001 Donchian baseline | v0.4 (historique) | 6 | 6/6 REJECT | non ouvert |
-| **002 momentum série temporelle** (dernière terminée) | v0.4.1 | 6 | 6/6 REJECT, `VALIDATION_COMPLETE — OOS_LOCKED` | non ouvert |
+| 002 momentum série temporelle | v0.4.1 | 6 | 6/6 REJECT, `VALIDATION_COMPLETE — OOS_LOCKED` | non ouvert |
+| **003 retournement après séance extrême** (dernière terminée) | v0.4.2 | 6 | 6/6 REJECT, `VALIDATION_COMPLETE — OOS_LOCKED` | non ouvert |
 
-- Variantes testées au total : **12** (`experiments/registre_variantes.csv`). Aucune stratégie retenue.
+- Variantes testées au total : **18** (`experiments/registre_variantes.csv`). Aucune stratégie retenue.
 - **OOS 2023-01-01 → 2026-10-27 : vierge.**
 - Revue de 002 : [`docs/revue-experience-002.md`](docs/revue-experience-002.md). Aucune des six variantes ne démontre un
   avantage suffisamment robuste selon le protocole v0.4.1 (ce n'est pas une preuve que le momentum ne marche pas).
 - 001 et 002 sont **historiques et immuables** (leurs scripts refusent de les rejouer).
 - Constats de la revue sur le benchmark traités par le protocole v0.4.2 ; 001 et 002 ne sont pas recalculées.
-- **Expérience 003 : aucune préparation ni exécution pour l'instant.** Elle sera la première évaluée sous v0.4.2.
+- Revue de 003 : [`docs/revue-experience-003.md`](docs/revue-experience-003.md). Le retour à la moyenne après une séance
+  extrême n'apporte aucune valeur prédictive dans l'univers et sur la période testés ; pour plusieurs seuils, il semble
+  même aller dans la mauvaise direction (0e-5e percentile du benchmark v0.4.2). Pas de bug : 943 trades contrôlés, et un
+  calcul sans le moteur donne le même signe.
+- 001, 002 et 003 sont historiques et immuables.
+- **Prochaine étape : décision.** Aucune expérience 004 préparée. Une piste « suivre la séance extrême » serait une
+  hypothèse inspirée par 003 : elle devrait être écrite et justifiée comme telle avant tout test.
 
 ## Prochaine étape
 
