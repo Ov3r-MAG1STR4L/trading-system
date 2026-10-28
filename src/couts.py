@@ -25,9 +25,11 @@ import numpy as np
 import pandas as pd
 
 ROOT = Path(__file__).resolve().parent.parent
-SWAPS_CSV = ROOT / "reports" / "2026-10-28_v0.2_swaps" / "swaps.csv"
+SWAPS_CSV = ROOT / "reports" / "2026-10-28_v0.4_swaps" / "swaps.csv"  # v0.4 : avec devises et mode de calcul
 JOURS = {"lundi": 0, "mardi": 1, "mercredi": 2, "jeudi": 3, "vendredi": 4, "samedi": 5, "dimanche": 6}
-MODE_POINTS = 1  # SYMBOL_SWAP_MODE_POINTS : seul mode convertible sans hypothèse de change
+MODE_POINTS = 1  # SYMBOL_SWAP_MODE_POINTS : converti en prix par x point
+MODES_DEVISE = (2, 3)  # SYMBOL_SWAP_MODE_CURRENCY_SYMBOL / _MARGIN : montant par lot dans devise_swap
+CALCUL_CFD = 2  # SYMBOL_CALC_MODE_CFD : P&L d'1 lot = variation de prix x contrat, en devise_profit
 SWAP_UNAVAILABLE = "SWAP_UNAVAILABLE"  # swap non convertible : état explicite, jamais remplacé par 0
 AVERTISSEMENT_SWAPS = ("Swaps : valeurs ACTUELLES du broker (récupérées le {date}) appliquées à tout l'historique. "
                        "Approximation : ce ne sont PAS les swaps observés à l'époque.")
@@ -87,16 +89,38 @@ def nuits_swap(entree: pd.Timestamp, sortie: pd.Timestamp, jour_triple: str) -> 
     return int(sum(3 if j.weekday() == JOURS[jour_triple] else (1 if j.weekday() < 5 else 0) for j in jours))
 
 
+def raison_swap_non_convertible(info: dict) -> str | None:
+    """None si le swap peut être exprimé en unités de PRIX sans aucun taux de change, sinon la raison.
+    - mode points : swap x point ;
+    - modes devise (2, 3) : seulement si devise du swap = devise du profit ET calcul CFD ET contrat > 0 :
+      1 lot qui bouge de 1,0 rapporte « contrat » unités de devise_profit, donc swap_prix = swap / contrat."""
+    mode = info.get("swap_mode")
+    if mode == MODE_POINTS:
+        return None
+    if mode not in MODES_DEVISE:
+        return f"mode de swap {mode} non pris en charge"
+    ds, dp = info.get("devise_swap"), info.get("devise_profit")
+    if not isinstance(ds, str) or not isinstance(dp, str):
+        return "devise du swap ou du profit non relevée"
+    if ds != dp:
+        return f"devise du swap {ds} différente de la devise du profit {dp} (taux de change nécessaire)"
+    if info.get("mode_calcul") != CALCUL_CFD:
+        return f"mode de calcul {info.get('mode_calcul')} : relation prix/montant non vérifiée"
+    c = info.get("contrat_taille")
+    if c is None or not np.isfinite(c) or c <= 0:
+        return "taille de contrat invalide"
+    return None
+
+
 def swap_px_par_nuit(info: dict, d: int) -> float:
-    """Swap d'une nuit en unités de PRIX (positif = gain). Seul le mode « points » est convertible
-    sans taux de change ; les autres modes sont refusés."""
-    if info["swap_mode"] != MODE_POINTS:
-        raise CoutInvalide(f"{info['symbol']} : swap en mode {info['swap_mode']} ({info.get('unite')}), "
-                           "conversion impossible sans devise ni taux de change -> refusé")
+    """Swap d'une nuit en unités de PRIX (positif = gain). Refuse (CoutInvalide) toute conversion non vérifiée."""
+    raison = raison_swap_non_convertible(info)
+    if raison:
+        raise CoutInvalide(f"{info['symbol']} : swap en mode {info['swap_mode']} non convertible ({raison})")
     valeur = info["swap_long"] if d == 1 else info["swap_short"]
     if valeur is None or not np.isfinite(valeur):
         raise CoutInvalide(f"{info['symbol']} : swap {'long' if d == 1 else 'short'} manquant")
-    return valeur * info["point"]
+    return valeur * info["point"] if info["swap_mode"] == MODE_POINTS else valeur / info["contrat_taille"]
 
 
 def appliquer(trades: pd.DataFrame, bougies: pd.DataFrame, info: dict, h: Hypotheses) -> pd.DataFrame:
@@ -134,7 +158,7 @@ def appliquer(trades: pd.DataFrame, bougies: pd.DataFrame, info: dict, h: Hypoth
             swap_r, statut = 0.0, "DESACTIVE"
         elif n == 0:
             swap_r, statut = 0.0, "AUCUNE_NUIT"
-        elif info["swap_mode"] != MODE_POINTS:
+        elif raison_swap_non_convertible(info):
             swap_r, statut = np.nan, SWAP_UNAVAILABLE  # R_net devient NaN : inconnu, pas zéro
         else:
             swap_r, statut = n * swap_px_par_nuit(info, d) / t.dist, "OK"

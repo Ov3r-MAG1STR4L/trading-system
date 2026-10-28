@@ -204,11 +204,47 @@ reel = pytest.mark.skipif(not couts.SWAPS_CSV.exists(), reason="swaps.csv v0.2 a
 
 
 @reel
-def test_swaps_reels_v02_forex_ok_indices_refuses():
+def test_swaps_reels_v04_indices_convertis_par_verification_mt5():
     eur = couts.info_symbole("EURUSD")
     assert eur["swap_mode"] == 1 and eur["triple_swap_jour"] == "mercredi"
+    for sym in ("US500", "US30", "DE40"):
+        info = couts.info_symbole(sym)
+        assert couts.raison_swap_non_convertible(info) is None, sym
+        assert info["devise_swap"] == info["devise_profit"] and info["mode_calcul"] == 2
     r = cout(e=0, s=2, h=Hypotheses("fixe", 0, 0), info=couts.info_symbole("US500"))
+    assert r["statut_swap"] == "OK" and r["swap_R"] == pytest.approx(2 * -0.31 / 5)  # -0,31 USD/lot, contrat 1
+
+
+V02 = couts.ROOT / "reports" / "2026-10-28_v0.2_swaps" / "swaps.csv"
+
+
+@pytest.mark.skipif(not V02.exists(), reason="relevé v0.2 absent")
+def test_ancien_releve_sans_devises_reste_swap_unavailable():
+    r = cout(e=0, s=2, h=Hypotheses("fixe", 0, 0), info=couts.info_symbole("US500", V02))
     assert r["statut_swap"] == couts.SWAP_UNAVAILABLE
+
+
+INDICE = {**INFO, "swap_mode": 3, "swap_long": -2.0, "devise_swap": "USD", "devise_profit": "USD",
+          "mode_calcul": 2, "contrat_taille": 1.0}
+
+
+def test_swap_indice_converti_par_contrat():
+    r = cout(e=0, s=3, h=Hypotheses("fixe", 0, 0), info={**INDICE, "contrat_taille": 10.0})
+    assert r["statut_swap"] == "OK" and r["swap_R"] == pytest.approx(5 * -2.0 / 10 / 5)  # 5 nuits
+
+
+@pytest.mark.parametrize("modif,raison", [
+    ({"devise_swap": "EUR"}, "différente"),             # devise différente : il faudrait un taux de change
+    ({"mode_calcul": 1}, "mode de calcul"),             # futures : relation prix/montant non vérifiée
+    ({"contrat_taille": 0.0}, "contrat"),
+    ({"devise_swap": float("nan")}, "non relevée"),     # champ absent (ancien relevé)
+    ({"swap_mode": 4}, "non pris en charge"),           # devise du compte : non géré
+])
+def test_swap_indice_non_convertible_reste_unavailable(modif, raison):
+    info = {**INDICE, **modif}
+    assert raison in couts.raison_swap_non_convertible(info)
+    r = cout(e=0, s=3, h=Hypotheses("fixe", 0, 0), info=info)
+    assert r["statut_swap"] == couts.SWAP_UNAVAILABLE and math.isnan(r["R_net"])
 
 
 def test_aucun_trade():
