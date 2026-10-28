@@ -3,6 +3,8 @@
 **Date :** 2026-10-28 (écrit AVANT tout code de stratégie et toute exécution)
 **Protocole :** v0.4.1 (`docs/protocole-recherche-v0.4.md`)
 **Statut :** Proposition — en attente de validation. Aucune variante exécutée, OOS fermé.
+**Statut après exécution (2026-10-28) :** Rejetée — 6/6 REJECT, état `VALIDATION_COMPLETE — OOS_LOCKED`, OOS vierge.
+Conclusion en section 11 ; le texte ci-dessous est celui d'AVANT l'exécution, non modifié.
 
 ## 1. Problème
 L'expérience 001 a montré que le breakout de Donchian n'apportait pas d'avantage robuste : gain concentré sur USDJPY,
@@ -96,3 +98,38 @@ sur plusieurs marchés ?**
   c'est un rejet possible par manque d'échantillon, déclaré avant le test.
 - L'ouverture de l'OOS, si une variante était KEEP, est faite automatiquement par le script de 001. Pour 002, je propose
   qu'elle ne soit **pas automatique** : le script s'arrêterait après la validation, et l'OOS ne s'ouvrirait qu'après ton accord.
+
+## 11. Conclusion (ajoutée le 2026-10-28 après exécution, commit de lancement `172705d`)
+
+Détail : `resultats.csv`, `decision.json`, `rapports/`. E = espérance après spread/slippage (R).
+
+| Variante | E entr. | E valid. | Stress valid. | Net entr. (R) | Benchmark valid. 95e | Principal motif de rejet |
+|---|---|---|---|---|---|---|
+| L60_K3 | +0,079 | +0,035 | +0,029 | +47,6 | +0,039 | USDJPY 67 % du gain en validation ; benchmark non battu |
+| L60_K5 | +0,048 | +0,019 | +0,015 | +28,4 | +0,019 | USDJPY 70 % ; benchmark non battu (égalité) |
+| L125_K3 | +0,038 | +0,066 | +0,060 | -8,9 | +0,140 | EURUSD 48 % (entr.), 22 pertes d'affilée, USDJPY 54 % (valid.) |
+| L125_K5 | +0,024 | +0,062 | +0,059 | -6,6 | +0,097 | EURUSD 47 % (entr.), 22 pertes d'affilée ; benchmark |
+| L250_K3 | +0,033 | +0,073 | +0,067 | -10,7 | +0,166 | AUDUSD 48 % (entr.), 5/11 marchés positifs, USDJPY 62 % |
+| L250_K5 | +0,024 | +0,042 | +0,039 | -6,0 | +0,107 | AUDUSD 43 %, 50 % d'années positives, USDJPY 64 % |
+
+Ce que les chiffres disent :
+- Les 6 variantes sont rejetées par le protocole v0.4.1 ; aucun candidat à l'OOS.
+- Contrairement à 001, la médiane des entrées aléatoires est négative pour L60 (-0,02 R) alors que la stratégie est
+  positive : le signal porte peut-être un peu d'information, mais sans dépasser le 95e centile exigé.
+- La validation 2020-2022 reste dominée par USDJPY (54 à 70 % du gain), comme en 001.
+- Avec les swaps (valeurs actuelles appliquées au passé, approximation), L125 et L250 deviennent négatifs en
+  entraînement.
+
+Ce qu'ils ne disent pas : que le momentum « ne marche pas » en général, ni qu'une variante proche serait rentable.
+
+**Exposition maximale mesurée : 4,4 %** (12 × 0,25 % = 3 % au maximum théorique). Ce chiffre est conservé tel quel,
+mais c'est une **mesure prudente liée au retournement** : le jour d'un retournement, la position fermée à l'ouverture et
+la nouvelle position sont toutes deux comptées comme ouvertes. Il **ne montre pas** qu'un risque économique de plus de
+3 % a réellement été pris : à un instant donné, il n'y a jamais plus d'une position par marché.
+
+État du projet après 002 :
+- 001 : historique, critères v0.4, REJECT (6/6) ;
+- 002 : protocole v0.4.1, 6 variantes, toutes REJECT ;
+- OOS 2023-2026 : toujours vierge, jamais ouvert ;
+- variantes testées au total : 12 ;
+- expérience 003 : aucune préparation ni exécution tant que les résultats de 002 n'ont pas été revus.

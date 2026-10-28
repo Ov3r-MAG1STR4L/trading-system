@@ -71,8 +71,10 @@ def test_periodes_evaluees_entrainement_et_validation_seulement():
     assert rc.PERIODES["validation"] == ("2020-01-01", "2022-12-31")
 
 
-def test_preconditions_reelles_satisfaites_sans_rien_executer():
-    x.verifier_preconditions(GIT_PROPRE)  # dépôt réel : hypothèse présente, aucun résultat, 001 historique
+def test_002_executee_ne_peut_plus_etre_relancee():
+    """État post-exécution (2026-10-28) : le dépôt réel contient les résultats de 002, le lancement est refusé."""
+    with pytest.raises(SystemExit, match="ne se rejoue pas"):
+        x.verifier_preconditions(GIT_PROPRE)
 
 
 @pytest.mark.parametrize("git,motif", [({"commit": None, "dirty": None}, "dépôt"),
@@ -152,9 +154,16 @@ def test_six_variantes_inscrites_au_registre(tmp_path):
     assert rc.enregistrer_variantes(x.EXP, prep["variantes"], "abc", reg) == 12  # pas de doublon
 
 
-def test_registre_reel_non_modifie():
+def test_registre_reel_apres_002():
+    """12 variantes : les 6 de 001 (commit de lancement 94be67c) puis les 6 de 002 (commit 172705d), sans doublon."""
     r = pd.read_csv(rc.REGISTRE, sep=";", dtype=str)
-    assert len(r) == 6 and set(r["experience"]) == {"001"}
+    assert len(r) == 12 and not r.duplicated(["experience", "variante"]).any()
+    assert r.loc[r["experience"] == "001", "variante"].tolist() == ["N20_S2", "N20_S3", "N55_S2", "N55_S3",
+                                                                    "N100_S2", "N100_S3"]
+    assert r.loc[r["experience"] == "002", "variante"].tolist() == [momentum.nom_variante(p)
+                                                                    for p in x.VARIANTES_ATTENDUES]
+    assert set(r.loc[r["experience"] == "001", "commit"].str[:7]) == {"94be67c"}
+    assert set(r.loc[r["experience"] == "002", "commit"].str[:7]) == {"172705d"}
 
 
 # ---------------- retournement ----------------
@@ -198,12 +207,18 @@ def test_plateau_avec_les_parametres_de_momentum():
 
 # ---------------- 001 et sécurité ----------------
 
-def test_experience_001_inchangee_et_002_sans_resultat():
+def test_experience_001_inchangee_et_002_jugee_oos_ferme():
+    import json
     racine = Path(x.__file__).resolve().parent.parent
     r = subprocess.run(["git", "diff", "--quiet", "HEAD", "--", "experiments/001-donchian-baseline"], cwd=racine)
     assert r.returncode == 0  # aucun fichier de 001 modifié par rapport au dernier commit
-    assert sorted(p.name for p in x.DOSSIER.iterdir()) == ["hypothese.md"]
-    assert not list(rc.EXPERIMENTS.rglob("oos_ouvert.json"))
+    d = json.loads((x.DOSSIER / "decision.json").read_text("utf-8"))
+    assert d["etat"] == x.ETAT_FINAL and d["protocole"] == "v0.4.1"
+    assert d["oos_ouvert_pour"] is None and d["candidats_oos"] == []
+    assert [v["statut"] for v in d["variantes"].values()] == ["REJECT"] * 6
+    assert len(list((x.DOSSIER / "rapports").iterdir())) == 12  # 6 variantes x (entraînement, validation)
+    assert not any("oos" in p.name for p in (x.DOSSIER / "rapports").iterdir())
+    assert not list(rc.EXPERIMENTS.rglob("oos_ouvert.json"))  # OOS toujours vierge
 
 
 def test_aucune_fonction_d_ordre_ni_mt5():

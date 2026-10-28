@@ -1,0 +1,8 @@
+- SOURCE : une seule source de données (MT5 MetaQuotes-Demo, D1, data/*_D1.csv (v0.2)), sans recoupement.
+- SPREAD : historique MT5 avec plancher de par marché : médiane des spreads > 0, 2012-2022 points (plancher utilisé sur 653 trade(s) ; le spread D1 de MT5 contient de nombreuses valeurs à 0).
+- SLIPPAGE : 0 (aucun slippage simulé).
+- SWAPS : valeurs actuelles du broker (2026-10-28 (relevé v0.4)) appliquées à tout l'historique : approximation, pas les swaps observés à l'époque.
+- DATA_GAP : 3 trou(s) de données ; 2 trade(s) les traversent ; 0 entrée(s) refusée(s).
+- FIN DES DONNÉES : position(s) clôturée(s) à la dernière clôture disponible.
+- DRAWDOWN : calculé sur l'equity RÉALISÉE (trades clôturés) ; pertes latentes non comptées, le vrai drawdown peut être plus grand.
+- RISQUE SIMULTANÉ : sans plafond en v0.3 ; maximum observé 4.42% du capital, 18 position(s) ouvertes.

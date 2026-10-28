@@ -234,7 +234,9 @@ def test_experience_001_reste_historique():
     assert e["criteres"]["trades_min_marche"] == 15 and e["criteres"]["marches_positifs_min"] == 7  # règles d'origine
     assert not (EXP001 / "oos_ouvert.json").exists()  # OOS toujours verrouillé et jamais lu
     reg = pd.read_csv(rc.REGISTRE, sep=";", dtype=str)
-    assert len(reg) == 6 and set(reg["experience"]) == {"001"}  # registre inchangé
+    reg001 = reg[reg["experience"] == "001"]  # les expériences suivantes s'ajoutent, 001 ne change pas
+    assert reg001["variante"].tolist() == ["N20_S2", "N20_S3", "N55_S2", "N55_S3", "N100_S2", "N100_S3"]
+    assert set(reg001["commit"].str[:7]) == {"94be67c"}
 
 
 def test_script_001_refuse_de_rejuger(tmp_path, monkeypatch):
