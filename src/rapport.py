@@ -157,7 +157,7 @@ def _json(x):
 def ecrire(nom: str, params: dict, trades: pd.DataFrame, evenements: pd.DataFrame,
            qualite: pd.DataFrame | None = None, racine: Path = REPORTS, git: dict | None = None,
            maintenant: datetime | None = None, tables: dict | None = None,
-           portefeuille: dict | None = None) -> Path:
+           portefeuille: dict | None = None, version: str = "v0.3") -> Path:
     """tables : {"nom.csv": DataFrame} écrits tels quels ; portefeuille : résumé de src.portefeuille
     (remplace l'equity séquentielle, inadaptée à des positions simultanées)."""
     manquantes = [k for k in CLES_OBLIGATOIRES if k not in params]
@@ -169,10 +169,10 @@ def ecrire(nom: str, params: dict, trades: pd.DataFrame, evenements: pd.DataFram
     git = etat_git() if git is None else git
     maintenant = maintenant or datetime.now()
 
-    dossier = racine / f"{maintenant:%Y-%m-%d}_v0.3_{nom}"
+    dossier = racine / f"{maintenant:%Y-%m-%d}_{version}_{nom}"
     k = 2
     while dossier.exists():  # jamais d'écrasement d'un rapport existant
-        dossier = racine / f"{maintenant:%Y-%m-%d}_v0.3_{nom}_{k}"
+        dossier = racine / f"{maintenant:%Y-%m-%d}_{version}_{nom}_{k}"
         k += 1
     dossier.mkdir(parents=True)
 

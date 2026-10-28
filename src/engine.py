@@ -6,6 +6,7 @@ Contrat avec la stratégie : pour chaque bougie i, calculée avec les bougies <=
   signal[i]      : +1 long, -1 short, 0 rien
   stop_dist[i]   : distance du stop en prix (> 0)
   sortie[i]      : True = sortir de la position en cours (optionnel)
+  sortie_long[i] / sortie_short[i] : True = sortir seulement d'un long / d'un short (optionnel)
 C'est le MOTEUR qui décale : une info de la clôture de i n'agit qu'à l'ouverture de i+1.
 
 Règles d'exécution (CLAUDE.md, règles du projet) :
@@ -38,7 +39,9 @@ class Params:
 
 
 def backtest(df: pd.DataFrame, signal: pd.Series, stop_dist: pd.Series,
-             params: Params = Params(), sortie: pd.Series | None = None) -> tuple[pd.DataFrame, pd.DataFrame]:
+             params: Params = Params(), sortie: pd.Series | None = None,
+             sortie_long: pd.Series | None = None, sortie_short: pd.Series | None = None
+             ) -> tuple[pd.DataFrame, pd.DataFrame]:
     """Renvoie (trades, evenements). df doit venir de src.data (colonne gap_avant)."""
     n = len(df)
     for nom, s in (("signal", signal), ("stop_dist", stop_dist)):
@@ -49,7 +52,11 @@ def backtest(df: pd.DataFrame, signal: pd.Series, stop_dist: pd.Series,
     gap = df["gap_avant"].to_numpy(bool) if "gap_avant" in df else np.zeros(n, bool)
     sig = np.nan_to_num(np.asarray(signal, float))
     dist = np.asarray(stop_dist, float)
-    sort = np.zeros(n, bool) if sortie is None else np.asarray(sortie, bool)
+    sort, sort_l, sort_s = (np.zeros(n, bool) if x is None else np.asarray(x, bool)
+                            for x in (sortie, sortie_long, sortie_short))
+    for nom, x in (("sortie", sort), ("sortie_long", sort_l), ("sortie_short", sort_s)):
+        if len(x) != n:
+            raise ValueError(f"{nom} : {len(x)} valeurs pour {n} bougies")
 
     trades, evenements, pos = [], [], None
 
@@ -71,7 +78,7 @@ def backtest(df: pd.DataFrame, signal: pd.Series, stop_dist: pd.Series,
         sorti = False
         if pos is not None:
             d, stop, target = pos["d"], pos["stop"], pos["target"]
-            if sort[i - 1]:                                    # sortie décidée à la clôture de i-1
+            if sort[i - 1] or (sort_l[i - 1] if d == 1 else sort_s[i - 1]):  # décidée à la clôture de i-1
                 fermer(i, o[i], "signal")
             elif (d == 1 and l[i] <= stop) or (d == -1 and h[i] >= stop):
                 prix = min(o[i], stop) if d == 1 else max(o[i], stop)

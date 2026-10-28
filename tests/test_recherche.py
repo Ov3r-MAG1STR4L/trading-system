@@ -1,0 +1,166 @@
+import json
+
+import numpy as np
+import pandas as pd
+import pytest
+
+from src import recherche as rc
+from src.couts import Hypotheses
+from src.engine import verifier_sans_lookahead
+from strategies import donchian
+from tests.outils import bougies
+
+INFO = {"symbol": "X", "swap_long": -1.0, "swap_short": -1.0, "swap_mode": 1, "unite": "points",
+        "triple_swap_jour": "mercredi", "point": 0.01}
+
+
+def marche(seed, n=3700):
+    """Marché synthétique couvrant 2012-08-06 -> ~2026 (jours ouvrés)."""
+    rng = np.random.default_rng(seed)
+    c = 100 * np.exp(np.cumsum(rng.normal(0.0002, 0.01, n)))
+    o = np.r_[100, c[:-1]]
+    df = bougies(list(zip(o, np.maximum(o, c) * 1.004, np.minimum(o, c) * 0.996, c)), debut="2012-08-06")
+    df["spread"] = 10
+    return df
+
+
+@pytest.fixture(scope="module")
+def univers():
+    marches = {s: marche(k) for k, s in enumerate("AB")}
+    infos = {s: {**INFO, "symbol": s} for s in marches}
+    hyp = {s: Hypotheses("historique", 10, 0) for s in marches}
+    return marches, infos, hyp
+
+
+# ---------------- Donchian ----------------
+
+def test_grille_exactement_6_variantes_et_hors_grille_refusee():
+    assert len(donchian.GRILLE) == 6
+    assert {donchian.nom_variante(p) for p in donchian.GRILLE} == {"N20_S2", "N20_S3", "N55_S2", "N55_S3",
+                                                                    "N100_S2", "N100_S3"}
+    with pytest.raises(ValueError, match="hors grille"):
+        donchian.variante({"n": 30, "stop_atr": 2.0})
+
+
+@pytest.mark.parametrize("p", donchian.GRILLE)
+def test_donchian_sans_lookahead(p):
+    verifier_sans_lookahead(donchian.variante(p), marche(1, 400))
+
+
+def test_donchian_breakout_sur_cas_ecrit_a_la_main():
+    plat = [(100, 101, 99, 100)] * 25
+    df = bougies(plat + [(100, 103, 100, 102.5)] + plat[:5] + [(100, 100, 96, 97)])
+    s = donchian.signaux(df, 20, 2.0)
+    assert s["signal"][25] == 1 and (s["signal"][:25] == 0).all()   # clôture 102,5 > plus haut 101 des 20 précédentes
+    assert s["sortie_long"][31] and not s["sortie_short"][31]       # clôture 97 < plus bas 99 des 10 précédentes
+    assert s["signal"][31] == -1                                    # et casse le plus bas des 20 : short
+
+
+# ---------------- périodes et isolement de l'OOS ----------------
+
+def test_periodes_contigues_et_figees():
+    p = rc.PERIODES
+    assert p["entrainement"] == ("2012-08-06", "2019-12-31")
+    assert p["validation"] == ("2020-01-01", "2022-12-31") and p["oos"] == ("2023-01-01", "2026-10-27")
+
+
+def test_tronquer_ne_laisse_aucune_bougie_apres_la_fin(univers):
+    t = rc.tronquer(univers[0], "2019-12-31")
+    assert all(df["time"].max() <= pd.Timestamp("2019-12-31") for df in t.values())
+
+
+def test_entrainement_independant_des_donnees_posterieures(univers):
+    marches, infos, hyp = univers
+    f = donchian.variante(donchian.GRILLE[0])
+    r1 = rc.evaluer(marches, f, infos, hyp, "entrainement")
+    modif = {s: df.copy() for s, df in marches.items()}
+    for df in modif.values():
+        k = df["time"] > "2019-12-31"
+        df.loc[k, ["open", "high", "low", "close"]] *= 10
+    r2 = rc.evaluer(modif, f, infos, hyp, "entrainement")
+    pd.testing.assert_frame_equal(r1["trades"], r2["trades"])
+    assert (r1["trades"]["entry_time"] <= "2019-12-31").all() and (r1["trades"]["exit_time"] <= "2019-12-31").all()
+
+
+def test_oos_interdit_sans_ouverture_explicite(univers):
+    marches, infos, hyp = univers
+    with pytest.raises(rc.OosDejaOuvert):
+        rc.evaluer(marches, donchian.variante(donchian.GRILLE[0]), infos, hyp, "oos")
+
+
+def test_ouverture_oos_unique(tmp_path):
+    rc.ouvrir_oos(tmp_path, "N20_S2", "abc")
+    assert json.loads((tmp_path / "oos_ouvert.json").read_text("utf-8"))["variante"] == "N20_S2"
+    with pytest.raises(rc.OosDejaOuvert):
+        rc.ouvrir_oos(tmp_path, "N55_S2", "abc")
+
+
+def test_registre_compte_sans_doublon(tmp_path):
+    reg = tmp_path / "registre.csv"
+    v = [(donchian.nom_variante(p), p) for p in donchian.GRILLE]
+    assert rc.enregistrer_variantes("001", v, "abc", reg) == 6
+    assert rc.enregistrer_variantes("001", v, "abc", reg) == 6   # relancer n'ajoute pas de variante
+    assert rc.enregistrer_variantes("002", v[:2], "abc", reg) == 8
+
+
+# ---------------- métriques, critères, plateau, benchmark ----------------
+
+def m_ok(**k):
+    base = {"trades": 200, "esperance_R": 0.2, "profit_factor": 1.5, "marches_positifs": 9, "contribution_max": 0.2,
+            "marche_contribution_max": "A", "drawdown_realise_pct": 0.1, "pire_serie_pertes": 8,
+            "part_max_une_annee": 0.2}
+    return {**base, **k}
+
+
+def test_criteres_ok_aucun_rejet():
+    assert rc.criteres(m_ok(), "entrainement") == {"rejet": [], "revue": []}
+
+
+@pytest.mark.parametrize("modif,mot", [
+    ({"trades": 100}, "trades"), ({"esperance_R": -0.01}, "espérance"), ({"profit_factor": 1.05}, "profit factor"),
+    ({"marches_positifs": 6}, "marchés positifs"), ({"contribution_max": 0.45}, "du gain"),
+    ({"drawdown_realise_pct": 0.3}, "drawdown"), ({"pire_serie_pertes": 25}, "série"),
+    ({"part_annees_positives_tv": 0.5}, "années positives"),
+])
+def test_chaque_critere_de_rejet(modif, mot):
+    assert any(mot in x for x in rc.criteres(m_ok(**modif), "entrainement")["rejet"])
+
+
+def test_stress_et_benchmark_peuvent_rejeter():
+    r = rc.criteres(m_ok(), "validation", stress={"trades": 100, "esperance_R": -0.01})
+    assert any("stress" in x for x in r["rejet"])
+    r = rc.criteres(m_ok(esperance_R=0.05), "validation", bench=np.linspace(0, 0.1, 200))
+    assert any("centile" in x for x in r["rejet"])
+
+
+def test_marge_de_revue():
+    r = rc.criteres(m_ok(profit_factor=1.15, marches_positifs=7, part_max_une_annee=0.6), "validation")
+    assert r["rejet"] == [] and len(r["revue"]) == 3
+
+
+def test_plateau():
+    nom = donchian.nom_variante
+    esp = {nom(p): 0.1 for p in donchian.GRILLE}
+    esp["N55_S3"] = -0.1
+    pl = rc.plateau(esp, donchian.GRILLE, nom)
+    assert not pl["N55_S2"] and not pl["N20_S3"] and not pl["N100_S3"]  # voisins de N55_S3
+    assert pl["N20_S2"] and pl["N100_S2"]
+
+
+def test_metriques_sur_une_periode(univers):
+    marches, infos, hyp = univers
+    ev = rc.evaluer(marches, donchian.variante(donchian.GRILLE[0]), infos, hyp, "validation")
+    m = rc.metriques(ev, list(marches))
+    assert m["trades"] == len(ev["trades"]) > 0
+    assert set(m["annees"]) <= {2020, 2021, 2022}
+    assert sum(m["trades_par_marche"].values()) == m["trades"]
+    assert m["total_R_execution"] < m["total_R_brut"]
+
+
+def test_benchmark_reproductible_et_meme_nombre_de_signaux(univers):
+    marches, infos, hyp = univers
+    f = donchian.variante(donchian.GRILLE[2])
+    b1 = rc.benchmark_aleatoire(marches, f, infos, hyp, "validation", {"A": 20, "B": 20}, n_tirages=3, seed=1)
+    b2 = rc.benchmark_aleatoire(marches, f, infos, hyp, "validation", {"A": 20, "B": 20}, n_tirages=3, seed=1)
+    np.testing.assert_array_equal(b1, b2)
+    assert np.isfinite(b1).all()

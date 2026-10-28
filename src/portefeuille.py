@@ -39,7 +39,8 @@ def executer(marches: dict, strategie, params: Params, infos: dict, h: Hypothese
     tous, evs = [], []
     for sym, df in marches.items():
         s = strategie(df)
-        trades, ev = backtest(df, s["signal"], s["stop_dist"], params, s.get("sortie"))
+        trades, ev = backtest(df, s["signal"], s["stop_dist"], params, s.get("sortie"),
+                              s.get("sortie_long"), s.get("sortie_short"))
         trades = appliquer(trades, df, infos[sym], h[sym] if isinstance(h, dict) else h)
         trades.insert(0, "symbol", sym)
         ev.insert(0, "symbol", sym)

@@ -266,3 +266,19 @@ def test_aucune_entree_sur_la_bougie_de_reprise_meme_signal_valide():
     df = bougies([PLAT] * 6, gaps_avant=(3,))
     trades, _ = backtest(df, pd.Series(1.0, index=range(6)), pd.Series(5.0, index=range(6)), Params(None))
     assert df["time"][3] not in set(trades["entry_time"])
+
+
+def test_sortie_par_sens_n_affecte_que_le_sens_concerne():
+    ohlc = [PLAT, PLAT, PLAT, (100, 102, 99, 101), (103, 104, 102, 103), PLAT]
+    df = bougies(ohlc)
+    sl = serie(6, **{"3": 1}).astype(bool)
+    vide = serie(6).astype(bool)
+    stop = pd.Series(5.0, index=range(6))
+    t, _ = backtest(df, serie(6, **{"1": 1}), stop, Params(None), None, sl, vide)
+    assert t["raison"].iloc[0] == "signal" and t["exit"].iloc[0] == 103   # long : sortie_long à l'ouverture suivante
+    t, _ = backtest(df, serie(6, **{"1": -1}), stop, Params(None), None, sl, vide)
+    assert t["raison"].iloc[0] == "fin_donnees"                            # short : sortie_long ignorée
+    t, _ = backtest(df, serie(6, **{"1": -1}), stop, Params(None), None, vide, sl)
+    assert t["raison"].iloc[0] == "signal"                                 # short : sortie_short
+    with pytest.raises(ValueError):
+        backtest(df, serie(6), stop, Params(None), None, serie(5).astype(bool))
