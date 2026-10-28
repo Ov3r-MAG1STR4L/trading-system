@@ -18,7 +18,7 @@ Chaque version correspond à un tag Git (`git tag v0.x`).
 - [x] Traitement des anomalies décidé : période de référence 2012-08-06, trous conservés, extrêmes conservés
 - [x] Récupération des swaps par symbole (`recuperer_swaps.py`, valeurs actuelles seulement)
 
-## v0.3 — Moteur de backtest fiable *(terminée, auditée le 2026-10-28, tag à créer)*
+## v0.3 — Moteur de backtest fiable *(terminée, tag v0.3)*
 - [x] Premier backtest multi-paires (version script unique)
 - [x] Extraire indicateurs et moteur dans `src/`
 - [x] Tests automatiques : pas de look-ahead, calcul du R, gestion stop/objectif
@@ -29,11 +29,13 @@ Chaque version correspond à un tag Git (`git tag v0.x`).
 
 - [x] Portefeuille 12 marchés : allocation, exposition, equity réalisée (`src/portefeuille.py`)
 - [x] Audit technique ([`docs/audit-v0.3.md`](audit-v0.3.md)) : 174 tests
-- [ ] Décider : plafond d'exposition (risque ouvert max 11 % observé), swaps des indices (`SWAP_UNAVAILABLE`)
+- [x] Décisions : 0,25 % par trade sans plafond en recherche ; swaps des indices convertis (vérifiés MT5)
 
-## v0.4 — Stratégie de suivi de tendance diversifiée
-- [ ] Hypothèse écrite avant le test
-- [ ] Portefeuille multi-marchés (forex, indices, matières premières)
+## v0.4 — Recherche de stratégies *(en cours)*
+- [x] Protocole anti-surapprentissage (`docs/protocole-recherche-v0.4.md`)
+- [x] Laboratoire : périodes, OOS verrouillé, registre, benchmark aléatoire (`src/recherche.py`)
+- [x] Expérience 001 Donchian baseline : REJETÉE
+- [ ] Revoir le seuil « 15 trades par marché » en validation avant l'expérience 002
 
 ## v0.5 — Validation hors échantillon
 - [ ] Découpage entraînement / validation / test fixé à l'avance

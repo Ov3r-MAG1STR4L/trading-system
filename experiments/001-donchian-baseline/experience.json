@@ -1,0 +1,112 @@
+{
+  "experience": "001",
+  "strategie": "donchian_breakout",
+  "grille": [
+    {
+      "n": 20,
+      "stop_atr": 2.0
+    },
+    {
+      "n": 20,
+      "stop_atr": 3.0
+    },
+    {
+      "n": 55,
+      "stop_atr": 2.0
+    },
+    {
+      "n": 55,
+      "stop_atr": 3.0
+    },
+    {
+      "n": 100,
+      "stop_atr": 2.0
+    },
+    {
+      "n": 100,
+      "stop_atr": 3.0
+    }
+  ],
+  "periodes": {
+    "entrainement": [
+      "2012-08-06",
+      "2019-12-31"
+    ],
+    "validation": [
+      "2020-01-01",
+      "2022-12-31"
+    ],
+    "oos": [
+      "2023-01-01",
+      "2026-10-27"
+    ]
+  },
+  "criteres": {
+    "trades_min": {
+      "entrainement": 150,
+      "validation": 60,
+      "oos": 0
+    },
+    "trades_min_marche": 15,
+    "pf_min": 1.1,
+    "marches_positifs_min": 7,
+    "contribution_max": 0.4,
+    "annees_positives_min": 0.6,
+    "dd_max": 0.25,
+    "serie_pertes_max": 20,
+    "centile_benchmark": 95,
+    "marge_revue": 0.1,
+    "pf_min_oos": 1.05
+  },
+  "risque_par_trade": 0.0025,
+  "capital": 10000,
+  "spread_plancher_points": {
+    "EURUSD": 2.0,
+    "GBPUSD": 5.0,
+    "USDJPY": 3.0,
+    "USDCHF": 3.0,
+    "USDCAD": 3.0,
+    "AUDUSD": 3.0,
+    "NZDUSD": 7.0,
+    "US500": 40.0,
+    "US30": 200.0,
+    "DE40": 100.0,
+    "XAUUSD": 18.0,
+    "XAGUSD": 26.0
+  },
+  "slippage_stress_points": {
+    "EURUSD": 2.0,
+    "GBPUSD": 5.0,
+    "USDJPY": 3.0,
+    "USDCHF": 3.0,
+    "USDCAD": 3.0,
+    "AUDUSD": 3.0,
+    "NZDUSD": 7.0,
+    "US500": 40.0,
+    "US30": 200.0,
+    "DE40": 100.0,
+    "XAUUSD": 18.0,
+    "XAGUSD": 26.0
+  },
+  "benchmark": {
+    "tirages": 200,
+    "graine": 1,
+    "periode": "validation"
+  },
+  "commit": "94be67c2c57890afdda9b419b8f7d004ed5012b5",
+  "variantes_registre_total": 6,
+  "marches": [
+    "EURUSD",
+    "GBPUSD",
+    "USDJPY",
+    "USDCHF",
+    "USDCAD",
+    "AUDUSD",
+    "NZDUSD",
+    "US500",
+    "US30",
+    "DE40",
+    "XAUUSD",
+    "XAGUSD"
+  ]
+}

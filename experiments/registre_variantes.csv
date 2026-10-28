@@ -1,0 +1,7 @@
+experience;variante;params;date;commit
+001;N20_S2;"{""n"": 20, ""stop_atr"": 2.0}";2026-10-28;94be67c2c57890afdda9b419b8f7d004ed5012b5
+001;N20_S3;"{""n"": 20, ""stop_atr"": 3.0}";2026-10-28;94be67c2c57890afdda9b419b8f7d004ed5012b5
+001;N55_S2;"{""n"": 55, ""stop_atr"": 2.0}";2026-10-28;94be67c2c57890afdda9b419b8f7d004ed5012b5
+001;N55_S3;"{""n"": 55, ""stop_atr"": 3.0}";2026-10-28;94be67c2c57890afdda9b419b8f7d004ed5012b5
+001;N100_S2;"{""n"": 100, ""stop_atr"": 2.0}";2026-10-28;94be67c2c57890afdda9b419b8f7d004ed5012b5
+001;N100_S3;"{""n"": 100, ""stop_atr"": 3.0}";2026-10-28;94be67c2c57890afdda9b419b8f7d004ed5012b5

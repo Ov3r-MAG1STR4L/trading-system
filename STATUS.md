@@ -4,11 +4,11 @@
 
 ## Étape actuelle
 
-**v0.3 — MOTEUR DE BACKTEST : audité le 2026-10-28** (tag `v0.3` pas encore créé) → prochaine étape : décisions avant v0.4
+**v0.4 — RECHERCHE** (tag `v0.3` créé et poussé)
 
 ## Objectif actuel
 
-Moteur v0.3 fiable et testé (174 tests). Avant la v0.4 : décider du plafond d'exposition et du traitement des swaps d'indices. Pas de stratégie avant validation.
+v0.4 en cours : laboratoire de recherche prêt (210 tests). Expérience 001 (Donchian baseline) **rejetée** — voir `experiments/001-donchian-baseline/`. Variantes testées au total : 6. Aucune stratégie retenue.
 
 ## Prochaine étape
 

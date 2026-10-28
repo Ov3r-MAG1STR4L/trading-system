@@ -1,0 +1,141 @@
+{
+  "apres_spread_slippage": {
+    "esperance_R": 0.0037859599055548804,
+    "meilleure_serie_gains": 4,
+    "pire_serie_pertes": 26,
+    "profit_factor": 1.005371395926216,
+    "taux_reussite": 0.22714681440443213,
+    "total_R": 1.3667315259053119,
+    "trades": 361
+  },
+  "brut": {
+    "esperance_R": 0.012078247160418252,
+    "meilleure_serie_gains": 4,
+    "pire_serie_pertes": 26,
+    "profit_factor": 1.0172923147191137,
+    "taux_reussite": 0.2299168975069252,
+    "total_R": 4.360247224910989,
+    "trades": 361
+  },
+  "couts_R": {
+    "slippage": 0.0,
+    "spread": 2.993515699005548,
+    "swap_connu": -46.892882814044775,
+    "total_connu": 49.886398513050445,
+    "trades_swap_unavailable": 0
+  },
+  "data_gap": {
+    "entrees_refusees": 0,
+    "trades_traversant": 2,
+    "trous": 3
+  },
+  "net": {
+    "esperance_R": -0.12611122240481848,
+    "meilleure_serie_gains": 4,
+    "pire_serie_pertes": 26,
+    "profit_factor": 0.8348181576324502,
+    "taux_reussite": 0.2077562326869806,
+    "total_R": -45.526151288139474,
+    "trades": 361
+  },
+  "portefeuille": {
+    "brut": {
+      "capital_final": 9989.212061551225,
+      "date_creux": "2019-08-30T00:00:00",
+      "drawdown_realise": 1562.3844294632709,
+      "drawdown_realise_pct": 0.14020811045238138,
+      "resultat_monetaire": -10.787938448775094
+    },
+    "execution": {
+      "capital_final": 9917.339282710149,
+      "date_creux": "2019-08-30T00:00:00",
+      "drawdown_realise": 1602.3814493089667,
+      "drawdown_realise_pct": 0.1441196314733601,
+      "resultat_monetaire": -82.66071728985116
+    },
+    "exposition": {
+      "positions_simultanees_max": 12,
+      "risque_ouvert_max": 318.00257871797686,
+      "risque_ouvert_max_pct": 0.030397133800818422
+    },
+    "exposition_journaliere": {
+      "date_risque_max": "2014-11-27T00:00:00",
+      "distribution_pct": {
+        "q50": 0.017520141626868074,
+        "q75": 0.020212104922698603,
+        "q90": 0.02509017623970724,
+        "q95": 0.02538193488367704,
+        "q99": 0.03009017623970724
+      },
+      "jours_au_dessus": {
+        "10%": 0,
+        "2%": 657,
+        "3%": 40,
+        "5%": 0,
+        "8%": 0
+      },
+      "jours_total": 1923,
+      "marches_jours_au_dessus_2pct": {
+        "AUDUSD": 565,
+        "DE40": 483,
+        "EURUSD": 499,
+        "GBPUSD": 504,
+        "NZDUSD": 455,
+        "US30": 545,
+        "US500": 577,
+        "USDCAD": 474,
+        "USDCHF": 472,
+        "USDJPY": 478,
+        "XAGUSD": 482,
+        "XAUUSD": 525
+      },
+      "marches_jours_au_dessus_5pct": {},
+      "part_jours_au_dessus": {
+        "10%": 0.0,
+        "2%": 0.3416536661466459,
+        "3%": 0.02080083203328133,
+        "5%": 0.0,
+        "8%": 0.0
+      },
+      "plus_longue_periode_jours": {
+        "10%": 0,
+        "2%": 72,
+        "3%": 19,
+        "5%": 0,
+        "8%": 0
+      },
+      "positions_max": 12,
+      "risque_ouvert_max": 318.00257871797686,
+      "risque_ouvert_max_pct": 0.030397133800818422
+    },
+    "marches_swap_unavailable": [],
+    "modele_equity": "réalisée aux dates de sortie ; pertes latentes NON comptées",
+    "net": {
+      "capital_final": 8857.241511776947,
+      "date_creux": "2019-08-30T00:00:00",
+      "drawdown_realise": 2090.498179763228,
+      "drawdown_realise_pct": 0.1961494273729512,
+      "resultat_monetaire": -1142.758488223053
+    },
+    "regle_risque": "0.25% du capital réalisé à l'entrée, risques simultanés additionnés, sans plafond",
+    "ruine": {
+      "brut": false,
+      "execution": false,
+      "net": false
+    },
+    "trades_par_marche": {
+      "AUDUSD": 31,
+      "DE40": 29,
+      "EURUSD": 28,
+      "GBPUSD": 33,
+      "NZDUSD": 26,
+      "US30": 34,
+      "US500": 30,
+      "USDCAD": 38,
+      "USDCHF": 32,
+      "USDJPY": 22,
+      "XAGUSD": 31,
+      "XAUUSD": 27
+    }
+  }
+}

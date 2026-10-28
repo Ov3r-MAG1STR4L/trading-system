@@ -1,0 +1,144 @@
+{
+  "experience": "001",
+  "commit": "94be67c2c57890afdda9b419b8f7d004ed5012b5",
+  "oos_ouvert_pour": null,
+  "variantes": {
+    "N20_S2": {
+      "statut": "REJECT",
+      "rejet": [
+        "entraînement : espérance -0.048 R <= 0",
+        "entraînement : profit factor 0.91 < 1.1",
+        "entraînement : 5 marchés positifs < 7",
+        "entraînement : série de 21 pertes > 20",
+        "entraînement : 45% d'années positives < 60%",
+        "entraînement : stress slippage : espérance -0.061 R <= 0",
+        "validation : espérance -0.005 R <= 0",
+        "validation : profit factor 0.99 < 1.1",
+        "validation : 6 marchés positifs < 7",
+        "validation : série de 21 pertes > 20",
+        "validation : 45% d'années positives < 60%",
+        "validation : stress slippage : espérance -0.012 R <= 0",
+        "validation : ne bat pas le 95e centile aléatoire (-0.005 <= 0.105 R)",
+        "entraînement : pas de plateau (une variante voisine a une espérance <= 0)"
+      ],
+      "revue": [],
+      "plateau": false,
+      "part_annees_positives_tv": 0.45454545454545453,
+      "benchmark_95e": 0.1046642831567602,
+      "benchmark_mediane": -0.018842645818054924
+    },
+    "N20_S3": {
+      "statut": "REJECT",
+      "rejet": [
+        "entraînement : espérance -0.046 R <= 0",
+        "entraînement : profit factor 0.88 < 1.1",
+        "entraînement : 4 marchés positifs < 7",
+        "entraînement : 45% d'années positives < 60%",
+        "entraînement : stress slippage : espérance -0.055 R <= 0",
+        "validation : espérance -0.011 R <= 0",
+        "validation : profit factor 0.97 < 1.1",
+        "validation : 4 marchés positifs < 7",
+        "validation : série de 21 pertes > 20",
+        "validation : 45% d'années positives < 60%",
+        "validation : stress slippage : espérance -0.016 R <= 0",
+        "validation : ne bat pas le 95e centile aléatoire (-0.011 <= 0.101 R)",
+        "entraînement : pas de plateau (une variante voisine a une espérance <= 0)"
+      ],
+      "revue": [],
+      "plateau": false,
+      "part_annees_positives_tv": 0.45454545454545453,
+      "benchmark_95e": 0.10099312881014338,
+      "benchmark_mediane": -0.005948560952256297
+    },
+    "N55_S2": {
+      "statut": "REJECT",
+      "rejet": [
+        "entraînement : profit factor 1.01 < 1.1",
+        "entraînement : 6 marchés positifs < 7",
+        "entraînement : USDJPY fait 2543% du gain (> 40%)",
+        "entraînement : 36% d'années positives < 60%",
+        "entraînement : stress slippage : espérance -0.009 R <= 0",
+        "validation : 0 marchés positifs < 7",
+        "validation : USDJPY fait 76% du gain (> 40%)",
+        "validation : 36% d'années positives < 60%",
+        "validation : ne bat pas le 95e centile aléatoire (0.137 <= 0.469 R)",
+        "entraînement : pas de plateau (une variante voisine a une espérance <= 0)"
+      ],
+      "revue": [
+        "une année fait 3587% du gain",
+        "une année fait 144% du gain"
+      ],
+      "plateau": false,
+      "part_annees_positives_tv": 0.36363636363636365,
+      "benchmark_95e": 0.4687036627909617,
+      "benchmark_mediane": 0.1263754198248953
+    },
+    "N55_S3": {
+      "statut": "REJECT",
+      "rejet": [
+        "entraînement : espérance -0.017 R <= 0",
+        "entraînement : profit factor 0.97 < 1.1",
+        "entraînement : 5 marchés positifs < 7",
+        "entraînement : 36% d'années positives < 60%",
+        "entraînement : stress slippage : espérance -0.025 R <= 0",
+        "validation : 0 marchés positifs < 7",
+        "validation : USDJPY fait 62% du gain (> 40%)",
+        "validation : 36% d'années positives < 60%",
+        "validation : ne bat pas le 95e centile aléatoire (0.171 <= 0.311 R)",
+        "entraînement : pas de plateau (une variante voisine a une espérance <= 0)"
+      ],
+      "revue": [
+        "une année fait 132% du gain"
+      ],
+      "plateau": false,
+      "part_annees_positives_tv": 0.36363636363636365,
+      "benchmark_95e": 0.31100155770858995,
+      "benchmark_mediane": 0.09265402648037138
+    },
+    "N100_S2": {
+      "statut": "REJECT",
+      "rejet": [
+        "entraînement : 6 marchés positifs < 7",
+        "entraînement : USDJPY fait 65% du gain (> 40%)",
+        "entraînement : série de 24 pertes > 20",
+        "entraînement : 45% d'années positives < 60%",
+        "validation : 0 marchés positifs < 7",
+        "validation : USDJPY fait 211% du gain (> 40%)",
+        "validation : 45% d'années positives < 60%",
+        "validation : ne bat pas le 95e centile aléatoire (0.111 <= 0.853 R)"
+      ],
+      "revue": [
+        "une année fait 101% du gain",
+        "profit factor 1.15 proche du seuil",
+        "une année fait 188% du gain"
+      ],
+      "plateau": true,
+      "part_annees_positives_tv": 0.45454545454545453,
+      "benchmark_95e": 0.8530221034882243,
+      "benchmark_mediane": 0.24431268186934738
+    },
+    "N100_S3": {
+      "statut": "REJECT",
+      "rejet": [
+        "entraînement : 4 marchés positifs < 7",
+        "entraînement : USDJPY fait 100% du gain (> 40%)",
+        "entraînement : 55% d'années positives < 60%",
+        "validation : 0 marchés positifs < 7",
+        "validation : USDJPY fait 117% du gain (> 40%)",
+        "validation : 55% d'années positives < 60%",
+        "validation : ne bat pas le 95e centile aléatoire (0.147 <= 0.684 R)",
+        "entraînement : pas de plateau (une variante voisine a une espérance <= 0)"
+      ],
+      "revue": [
+        "profit factor 1.13 proche du seuil",
+        "une année fait 169% du gain",
+        "une année fait 94% du gain"
+      ],
+      "plateau": false,
+      "part_annees_positives_tv": 0.5454545454545454,
+      "benchmark_95e": 0.6836420361858123,
+      "benchmark_mediane": 0.24184878639707405
+    }
+  },
+  "variantes_registre_total": 6
+}

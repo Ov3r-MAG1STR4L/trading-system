@@ -1,0 +1,65 @@
+{
+  "couts": {
+    "slippage_points": 0.0,
+    "spread_mode": "historique",
+    "spread_points": "par marché : médiane des spreads > 0, 2012-2022",
+    "swaps": true
+  },
+  "date_swaps": "2026-10-28 (relevé v0.4)",
+  "execution": "2026-10-28T01:34:41",
+  "experience": "001",
+  "git": {
+    "commit": "94be67c2c57890afdda9b419b8f7d004ed5012b5",
+    "dirty": false,
+    "tag": "v0.3-2-g94be67c"
+  },
+  "marches": [
+    "EURUSD",
+    "GBPUSD",
+    "USDJPY",
+    "USDCHF",
+    "USDCAD",
+    "AUDUSD",
+    "NZDUSD",
+    "US500",
+    "US30",
+    "DE40",
+    "XAUUSD",
+    "XAGUSD"
+  ],
+  "nom": "N100_S3_validation",
+  "params_strategie": {
+    "atr": 20,
+    "n": 100,
+    "sortie": "canal N/2",
+    "stop_atr": 3.0
+  },
+  "periode": {
+    "debut": "2020-01-01",
+    "fin": "2022-12-31",
+    "nom": "validation"
+  },
+  "risque": {
+    "capital": 10000,
+    "compose": true,
+    "regle": "0,25 % du capital réalisé à l'entrée, sans plafond",
+    "risque_pct": 0.0025
+  },
+  "source_donnees": "MT5 MetaQuotes-Demo, D1, data/*_D1.csv (v0.2)",
+  "spread_plancher_points_par_marche": {
+    "AUDUSD": 3.0,
+    "DE40": 100.0,
+    "EURUSD": 2.0,
+    "GBPUSD": 5.0,
+    "NZDUSD": 7.0,
+    "US30": 200.0,
+    "US500": 40.0,
+    "USDCAD": 3.0,
+    "USDCHF": 3.0,
+    "USDJPY": 3.0,
+    "XAGUSD": 26.0,
+    "XAUUSD": 18.0
+  },
+  "strategie": "donchian_breakout",
+  "version_moteur": "0.3.0"
+}
