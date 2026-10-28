@@ -1,0 +1,85 @@
+{
+  "apres_spread_slippage": {
+    "esperance_R": 0.0561704744971069,
+    "meilleure_serie_gains": 13,
+    "pire_serie_pertes": 15,
+    "profit_factor": 1.08656722112647,
+    "taux_reussite": 0.3548387096774194,
+    "total_R": 36.56697889761659,
+    "trades": 651
+  },
+  "brut": {
+    "esperance_R": 0.061954319416997,
+    "meilleure_serie_gains": 13,
+    "pire_serie_pertes": 15,
+    "profit_factor": 1.0960681265503789,
+    "taux_reussite": 0.3548387096774194,
+    "total_R": 40.332261940465045,
+    "trades": 651
+  },
+  "couts_R": {
+    "slippage": 0.0,
+    "spread": 3.7652830428490107,
+    "swap_connu": -18.891470535737753,
+    "total_connu": 22.656753578586216,
+    "trades_swap_unavailable": 143
+  },
+  "data_gap": {
+    "entrees_refusees": 0,
+    "trades_traversant": 3,
+    "trous": 7
+  },
+  "net": {
+    "raison": "143 trade(s) sans swap calculable : net inconnu, pas mis à zéro",
+    "statut": "SWAP_UNAVAILABLE"
+  },
+  "portefeuille": {
+    "brut": {
+      "capital_final": 13009.32867998779,
+      "date_creux": "2018-04-23T00:00:00",
+      "drawdown_realise": 4603.640963326356,
+      "drawdown_realise_pct": 0.4187342197166465,
+      "resultat_monetaire": 3009.3286799877897
+    },
+    "execution": {
+      "capital_final": 12534.970870567333,
+      "date_creux": "2018-04-23T00:00:00",
+      "drawdown_realise": 4708.140172012267,
+      "drawdown_realise_pct": 0.4289670014638127,
+      "resultat_monetaire": 2534.970870567333
+    },
+    "exposition": {
+      "positions_simultanees_max": 11,
+      "risque_ouvert_max": 1498.6431184838605,
+      "risque_ouvert_max_pct": 0.11000000000000001
+    },
+    "marches_swap_unavailable": [
+      "DE40",
+      "US30",
+      "US500"
+    ],
+    "modele_equity": "réalisée aux dates de sortie ; pertes latentes NON comptées",
+    "net": {
+      "capital_final": null,
+      "drawdown_realise": null,
+      "drawdown_realise_pct": null,
+      "resultat_monetaire": null,
+      "statut": "SWAP_UNAVAILABLE"
+    },
+    "regle_risque": "1.00% du capital réalisé à l'entrée, risques simultanés additionnés, sans plafond",
+    "trades_par_marche": {
+      "AUDUSD": 57,
+      "DE40": 54,
+      "EURUSD": 57,
+      "GBPUSD": 48,
+      "NZDUSD": 62,
+      "US30": 47,
+      "US500": 46,
+      "USDCAD": 72,
+      "USDCHF": 55,
+      "USDJPY": 42,
+      "XAGUSD": 63,
+      "XAUUSD": 48
+    }
+  }
+}
