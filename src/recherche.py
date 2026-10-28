@@ -207,14 +207,15 @@ def criteres(m: dict, periode: str, stress: dict | None = None, bench: np.ndarra
     return {"rejet": rejet, "revue": revue}
 
 
-def plateau(esperances_train: dict, grille: list, nom) -> dict:
-    """Voisins dans la grille (même N et autre stop ; N adjacent et même stop) : tous positifs sur l'entraînement ?"""
-    ns = sorted({p["n"] for p in grille})
+def plateau(esperances_train: dict, grille: list, nom, cle_longueur: str = "n", cle_stop: str = "stop_atr") -> dict:
+    """Voisins dans la grille (même longueur et autre stop ; longueur adjacente et même stop) : tous positifs sur
+    l'entraînement ? Les noms de paramètres valent ceux de Donchian par défaut (expérience 001 inchangée)."""
+    ns = sorted({p[cle_longueur] for p in grille})
     out = {}
     for p in grille:
-        i = ns.index(p["n"])
-        voisins = [q for q in grille if (q["n"] == p["n"] and q != p)
-                   or (q["stop_atr"] == p["stop_atr"] and abs(ns.index(q["n"]) - i) == 1)]
+        i = ns.index(p[cle_longueur])
+        voisins = [q for q in grille if (q[cle_longueur] == p[cle_longueur] and q != p)
+                   or (q[cle_stop] == p[cle_stop] and abs(ns.index(q[cle_longueur]) - i) == 1)]
         out[nom(p)] = all(esperances_train[nom(q)] > 0 for q in voisins)
     return out
 
