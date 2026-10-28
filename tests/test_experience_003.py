@@ -34,7 +34,8 @@ def env(tmp_path, monkeypatch):
         shutil.copy(d / "decision.json", exp / d.name / "decision.json")
         hist[nom] = exp / d.name
     reg = exp / "registre_variantes.csv"
-    shutil.copy(VRAI_REGISTRE, reg)
+    r0 = pd.read_csv(VRAI_REGISTRE, sep=";", dtype=str)
+    r0[r0["experience"].isin(["001", "002"])].to_csv(reg, sep=";", index=False)  # état du registre AVANT 003
     prop = tmp_path / "proposition.md"
     shutil.copy(x.PROPOSITION, prop)
     monkeypatch.setattr(x, "DOSSIER", exp / "003-reversion-seance-extreme")
@@ -222,11 +223,26 @@ def test_001_002_modifiees_bloquent(env):
         x.verifier_preconditions(GIT_PROPRE)
 
 
-def test_001_002_et_registre_reels_intacts():
+def test_etat_reel_apres_003():
+    """État post-exécution (2026-10-28, lancement 72eb025) : 001/002 intactes, 003 jugée et verrouillée."""
     racine = Path(x.__file__).resolve().parent.parent
-    r = subprocess.run(["git", "diff", "--quiet", "HEAD", "--", "experiments"], cwd=racine)
+    r = subprocess.run(["git", "diff", "--quiet", "HEAD", "--", "experiments/001-donchian-baseline",
+                        "experiments/002-momentum-serie-temporelle"], cwd=racine)
     assert r.returncode == 0
-    assert not (rc.EXPERIMENTS / "003-reversion-seance-extreme").exists()  # 003 jamais exécutée
+    d = json.loads((x.DOSSIER / "decision.json").read_text("utf-8"))
+    assert d["etat"] == x.ETAT_FINAL and d["protocole"] == "v0.4.2" and d["commit"][:7] == "72eb025"
+    assert d["oos_ouvert_pour"] is None and d["candidats_oos"] == []
+    assert [v["statut"] for v in d["variantes"].values()] == ["REJECT"] * 6
+    assert len(list((x.DOSSIER / "benchmark").glob("*.json"))) == 6
+    assert not list(rc.EXPERIMENTS.rglob("oos_ouvert.json"))
+    reg = pd.read_csv(VRAI_REGISTRE, sep=";", dtype=str)
+    assert len(reg) == 18 and reg["experience"].tolist() == ["001"] * 6 + ["002"] * 6 + ["003"] * 6
+    assert set(reg.loc[reg["experience"] == "003", "commit"].str[:7]) == {"72eb025"}
+
+
+def test_003_executee_ne_peut_plus_etre_relancee():
+    with pytest.raises(SystemExit):
+        x.verifier_preconditions(GIT_PROPRE)  # état réel : résultats présents et registre à 18
 
 
 def test_aucune_fonction_d_ordre_ni_mt5():

@@ -1,0 +1,128 @@
+{
+  "apres_spread_slippage": {
+    "esperance_R": -0.2509460323657693,
+    "meilleure_serie_gains": 4,
+    "pire_serie_pertes": 7,
+    "profit_factor": 0.4260676274500004,
+    "taux_reussite": 0.38461538461538464,
+    "total_R": -9.786895262265002,
+    "trades": 39
+  },
+  "brut": {
+    "esperance_R": -0.2450051976992303,
+    "meilleure_serie_gains": 4,
+    "pire_serie_pertes": 7,
+    "profit_factor": 0.435228551717281,
+    "taux_reussite": 0.38461538461538464,
+    "total_R": -9.555202710269981,
+    "trades": 39
+  },
+  "couts_R": {
+    "slippage": 0.0,
+    "spread": 0.2316925519950269,
+    "swap_connu": -0.15514374300049813,
+    "total_connu": 0.3868362949955205,
+    "trades_swap_unavailable": 0
+  },
+  "data_gap": {
+    "entrees_refusees": 0,
+    "trades_traversant": 0,
+    "trous": 0
+  },
+  "net": {
+    "esperance_R": -0.2549240770580897,
+    "meilleure_serie_gains": 4,
+    "pire_serie_pertes": 7,
+    "profit_factor": 0.4189741132216315,
+    "taux_reussite": 0.38461538461538464,
+    "total_R": -9.9420390052655,
+    "trades": 39
+  },
+  "portefeuille": {
+    "brut": {
+      "capital_final": 9762.832779010592,
+      "date_creux": "2022-11-16T00:00:00",
+      "drawdown_realise": 255.31189532837743,
+      "drawdown_realise_pct": 0.025500986505162866,
+      "resultat_monetaire": -237.16722098940772
+    },
+    "execution": {
+      "capital_final": 9757.176313496413,
+      "date_creux": "2022-11-16T00:00:00",
+      "drawdown_realise": 259.39428318360115,
+      "drawdown_realise_pct": 0.025912763396027202,
+      "resultat_monetaire": -242.82368650358694
+    },
+    "exposition": {
+      "positions_simultanees_max": 5,
+      "risque_ouvert_max": 125.14804832976151,
+      "risque_ouvert_max_pct": 0.012500000000000002
+    },
+    "exposition_journaliere": {
+      "date_risque_max": "2020-03-10T00:00:00",
+      "distribution_pct": {
+        "q50": 0.0,
+        "q75": 0.0,
+        "q90": 0.0,
+        "q95": 0.0025,
+        "q99": 0.01
+      },
+      "jours_au_dessus": {
+        "10%": 0,
+        "2%": 0,
+        "3%": 0,
+        "5%": 0,
+        "8%": 0
+      },
+      "jours_total": 780,
+      "marches_jours_au_dessus_2pct": {},
+      "marches_jours_au_dessus_5pct": {},
+      "part_jours_au_dessus": {
+        "10%": 0.0,
+        "2%": 0.0,
+        "3%": 0.0,
+        "5%": 0.0,
+        "8%": 0.0
+      },
+      "plus_longue_periode_jours": {
+        "10%": 0,
+        "2%": 0,
+        "3%": 0,
+        "5%": 0,
+        "8%": 0
+      },
+      "positions_max": 5,
+      "risque_ouvert_max": 125.14804832976151,
+      "risque_ouvert_max_pct": 0.012500000000000002
+    },
+    "marches_swap_unavailable": [],
+    "modele_equity": "réalisée aux dates de sortie ; pertes latentes NON comptées",
+    "net": {
+      "capital_final": 9753.396974670932,
+      "date_creux": "2022-11-16T00:00:00",
+      "drawdown_realise": 261.7153231295342,
+      "drawdown_realise_pct": 0.026148424419775197,
+      "resultat_monetaire": -246.60302532906826
+    },
+    "regle_risque": "0.25% du capital réalisé à l'entrée, risques simultanés additionnés, sans plafond",
+    "ruine": {
+      "brut": false,
+      "execution": false,
+      "net": false
+    },
+    "trades_par_marche": {
+      "AUDUSD": 0,
+      "DE40": 4,
+      "EURUSD": 0,
+      "GBPUSD": 2,
+      "NZDUSD": 0,
+      "US30": 7,
+      "US500": 6,
+      "USDCAD": 2,
+      "USDCHF": 1,
+      "USDJPY": 7,
+      "XAGUSD": 7,
+      "XAUUSD": 3
+    }
+  }
+}

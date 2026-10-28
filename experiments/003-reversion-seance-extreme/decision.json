@@ -1,0 +1,163 @@
+{
+  "experience": "003",
+  "commit": "72eb025f132ee8608e52504cef92451195ac1740",
+  "protocole": "v0.4.2",
+  "etat": "VALIDATION_COMPLETE — OOS_LOCKED",
+  "oos_ouvert_pour": null,
+  "candidats_oos": [],
+  "note": "KEEP = candidat à l'OOS, pas une preuve de rentabilité ; OOS à ouvrir seulement sur décision manuelle. Benchmark : entrées randomisées à sorties identiques (mesure le timing d'entrée).",
+  "variantes": {
+    "Z1p5_H3": {
+      "statut": "REJECT",
+      "rejet": [
+        "entraînement : espérance -0.061 R <= 0",
+        "entraînement : profit factor 0.79 < 1.1",
+        "entraînement : 2 marchés positifs < 5 (sur 12 éligibles)",
+        "entraînement : 27% d'années positives < 60%",
+        "entraînement : stress slippage : espérance -0.075 R <= 0",
+        "validation : espérance -0.011 R <= 0",
+        "validation : profit factor 0.96 < 1.1",
+        "validation : 4 marchés positifs < 5 (sur 12 éligibles)",
+        "validation : série de 21 pertes > 20",
+        "validation : 27% d'années positives < 60%",
+        "validation : stress slippage : espérance -0.020 R <= 0",
+        "validation : ne bat pas le 95e centile aléatoire (-0.011 <= 0.058 R)",
+        "entraînement : pas de plateau (une variante voisine a une espérance <= 0)"
+      ],
+      "revue": [],
+      "plateau": false,
+      "part_annees_positives_tv": 0.2727272727272727,
+      "benchmark": {
+        "tirages": 200,
+        "tirages_sans_trade": 0,
+        "p50": 0.0061694182986532925,
+        "p95": 0.05801907665437315,
+        "percentile_strategie": 34.5,
+        "bat_p95": false
+      }
+    },
+    "Z1p5_H5": {
+      "statut": "REJECT",
+      "rejet": [
+        "entraînement : espérance -0.088 R <= 0",
+        "entraînement : profit factor 0.75 < 1.1",
+        "entraînement : 3 marchés positifs < 5 (sur 12 éligibles)",
+        "entraînement : 18% d'années positives < 60%",
+        "entraînement : stress slippage : espérance -0.102 R <= 0",
+        "validation : espérance -0.101 R <= 0",
+        "validation : profit factor 0.76 < 1.1",
+        "validation : 4 marchés positifs < 5 (sur 12 éligibles)",
+        "validation : 18% d'années positives < 60%",
+        "validation : stress slippage : espérance -0.110 R <= 0",
+        "validation : ne bat pas le 95e centile aléatoire (-0.101 <= 0.060 R)",
+        "entraînement : pas de plateau (une variante voisine a une espérance <= 0)"
+      ],
+      "revue": [],
+      "plateau": false,
+      "part_annees_positives_tv": 0.18181818181818182,
+      "benchmark": {
+        "tirages": 200,
+        "tirages_sans_trade": 0,
+        "p50": 0.001114713061666601,
+        "p95": 0.060395931976829825,
+        "percentile_strategie": 2.5,
+        "bat_p95": false
+      }
+    },
+    "Z2_H3": {
+      "statut": "REJECT",
+      "rejet": [
+        "entraînement : espérance -0.034 R <= 0",
+        "entraînement : profit factor 0.88 < 1.1",
+        "entraînement : 5 marchés positifs sur 12 éligibles : pas une majorité",
+        "entraînement : 27% d'années positives < 60%",
+        "entraînement : stress slippage : espérance -0.049 R <= 0",
+        "validation : espérance -0.105 R <= 0",
+        "validation : profit factor 0.74 < 1.1",
+        "validation : 3 marchés positifs < 5 (sur 9 éligibles)",
+        "validation : 27% d'années positives < 60%",
+        "validation : stress slippage : espérance -0.115 R <= 0",
+        "validation : ne bat pas le 95e centile aléatoire (-0.105 <= 0.101 R)",
+        "entraînement : pas de plateau (une variante voisine a une espérance <= 0)"
+      ],
+      "revue": [],
+      "plateau": false,
+      "part_annees_positives_tv": 0.2727272727272727,
+      "benchmark": {
+        "tirages": 200,
+        "tirages_sans_trade": 0,
+        "p50": -0.0062478782468843135,
+        "p95": 0.10082006288911101,
+        "percentile_strategie": 5.0,
+        "bat_p95": false
+      }
+    },
+    "Z2_H5": {
+      "statut": "REJECT",
+      "rejet": [
+        "entraînement : espérance -0.082 R <= 0",
+        "entraînement : profit factor 0.76 < 1.1",
+        "entraînement : 3 marchés positifs < 5 (sur 12 éligibles)",
+        "entraînement : 27% d'années positives < 60%",
+        "entraînement : stress slippage : espérance -0.098 R <= 0",
+        "validation : espérance -0.158 R <= 0",
+        "validation : profit factor 0.67 < 1.1",
+        "validation : 3 marchés positifs < 5 (sur 9 éligibles)",
+        "validation : 27% d'années positives < 60%",
+        "validation : stress slippage : espérance -0.169 R <= 0",
+        "validation : ne bat pas le 95e centile aléatoire (-0.158 <= 0.134 R)",
+        "entraînement : pas de plateau (une variante voisine a une espérance <= 0)"
+      ],
+      "revue": [],
+      "plateau": false,
+      "part_annees_positives_tv": 0.2727272727272727,
+      "benchmark": {
+        "tirages": 200,
+        "tirages_sans_trade": 0,
+        "p50": 0.001707322556267476,
+        "p95": 0.13436589571379295,
+        "percentile_strategie": 2.5,
+        "bat_p95": false
+      }
+    },
+    "Z2p5_H3": {
+      "statut": "REJECT",
+      "rejet": [
+        "entraînement : trades 76 < 150",
+        "validation : trades 39 < 60",
+        "entraînement : pas de plateau (une variante voisine a une espérance <= 0)"
+      ],
+      "revue": [],
+      "plateau": false,
+      "part_annees_positives_tv": 0.36363636363636365,
+      "benchmark": {
+        "tirages": 200,
+        "tirages_sans_trade": 0,
+        "p50": 0.009109706401926322,
+        "p95": 0.18163126618205092,
+        "percentile_strategie": 0.0,
+        "bat_p95": false
+      }
+    },
+    "Z2p5_H5": {
+      "statut": "REJECT",
+      "rejet": [
+        "entraînement : trades 75 < 150",
+        "validation : trades 38 < 60",
+        "entraînement : pas de plateau (une variante voisine a une espérance <= 0)"
+      ],
+      "revue": [],
+      "plateau": false,
+      "part_annees_positives_tv": 0.45454545454545453,
+      "benchmark": {
+        "tirages": 200,
+        "tirages_sans_trade": 0,
+        "p50": -0.011472238342487891,
+        "p95": 0.19899744174091608,
+        "percentile_strategie": 29.5,
+        "bat_p95": false
+      }
+    }
+  },
+  "variantes_registre_total": 18
+}

@@ -160,7 +160,8 @@ def test_le_registre_utilise_par_le_script_est_redirigeable():
 
 def test_six_variantes_inscrites_au_registre(tmp_path):
     reg = tmp_path / "registre.csv"
-    shutil.copy(rc.REGISTRE, reg)
+    r0 = pd.read_csv(rc.REGISTRE, sep=";", dtype=str)
+    r0[r0["experience"] == "001"].to_csv(reg, sep=";", index=False)  # état du registre AVANT 002
     prep = x.preparer({"A": marche(1, 300)}, {"A": INFO})
     assert rc.enregistrer_variantes(x.EXP, prep["variantes"], "abc", reg) == 12
     r = pd.read_csv(reg, sep=";", dtype=str)
@@ -170,9 +171,11 @@ def test_six_variantes_inscrites_au_registre(tmp_path):
 
 
 def test_registre_reel_apres_002():
-    """12 variantes : les 6 de 001 (commit de lancement 94be67c) puis les 6 de 002 (commit 172705d), sans doublon."""
+    """Les 6 de 001 (commit 94be67c) puis les 6 de 002 (commit 172705d), sans doublon ; les expériences suivantes
+    s'ajoutent sans modifier ces lignes."""
     r = pd.read_csv(rc.REGISTRE, sep=";", dtype=str)
-    assert len(r) == 12 and not r.duplicated(["experience", "variante"]).any()
+    assert not r.duplicated(["experience", "variante"]).any()
+    assert r["experience"].tolist()[:12] == ["001"] * 6 + ["002"] * 6
     assert r.loc[r["experience"] == "001", "variante"].tolist() == ["N20_S2", "N20_S3", "N55_S2", "N55_S3",
                                                                     "N100_S2", "N100_S3"]
     assert r.loc[r["experience"] == "002", "variante"].tolist() == [momentum.nom_variante(p)

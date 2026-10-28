@@ -1,0 +1,2623 @@
+{
+  "protocole": "v0.4.2",
+  "benchmark": {
+    "nom": "entrées randomisées à sorties identiques",
+    "mesure": "information apportée par le timing d'entrée (pas une stratégie indépendante)",
+    "tirages": 200,
+    "graine_tirage": "numpy default_rng([graine, k]) pour le tirage k",
+    "methode_centile": "linear",
+    "centile_seuil": 95,
+    "percentile_strategie": "% des tirages (avec trades) dont l'espérance est strictement inférieure"
+  },
+  "variante": "Z2_H5",
+  "resume": {
+    "tirages": 200,
+    "tirages_sans_trade": 0,
+    "p50": 0.001707322556267476,
+    "p95": 0.13436589571379295,
+    "percentile_strategie": 2.5,
+    "bat_p95": false
+  },
+  "tirages": [
+    {
+      "tirage": 1,
+      "graine": [
+        3,
+        0
+      ],
+      "signaux_demandes": 95,
+      "trades": 92,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.12242811194833189,
+      "profit_factor": 0.6083833834274143,
+      "total_R_execution": -11.263386299246534
+    },
+    {
+      "tirage": 2,
+      "graine": [
+        3,
+        1
+      ],
+      "signaux_demandes": 95,
+      "trades": 88,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.001850666294600746,
+      "profit_factor": 0.9935425846892676,
+      "total_R_execution": -0.16285863392486566
+    },
+    {
+      "tirage": 3,
+      "graine": [
+        3,
+        2
+      ],
+      "signaux_demandes": 95,
+      "trades": 90,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.053359083689557975,
+      "profit_factor": 1.1844970104503985,
+      "total_R_execution": 4.802317532060218
+    },
+    {
+      "tirage": 4,
+      "graine": [
+        3,
+        3
+      ],
+      "signaux_demandes": 95,
+      "trades": 92,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.060330192189812955,
+      "profit_factor": 1.2371050308707388,
+      "total_R_execution": 5.550377681462792
+    },
+    {
+      "tirage": 5,
+      "graine": [
+        3,
+        4
+      ],
+      "signaux_demandes": 95,
+      "trades": 93,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.09350278118725457,
+      "profit_factor": 0.722774017634899,
+      "total_R_execution": -8.695758650414675
+    },
+    {
+      "tirage": 6,
+      "graine": [
+        3,
+        5
+      ],
+      "signaux_demandes": 95,
+      "trades": 93,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.09185147635436525,
+      "profit_factor": 1.3047855535998913,
+      "total_R_execution": 8.542187300955968
+    },
+    {
+      "tirage": 7,
+      "graine": [
+        3,
+        6
+      ],
+      "signaux_demandes": 95,
+      "trades": 92,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.04519683366159093,
+      "profit_factor": 1.1510724436899482,
+      "total_R_execution": 4.158108696866365
+    },
+    {
+      "tirage": 8,
+      "graine": [
+        3,
+        7
+      ],
+      "signaux_demandes": 95,
+      "trades": 90,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.08427739412570139,
+      "profit_factor": 1.2855462205373733,
+      "total_R_execution": 7.584965471313125
+    },
+    {
+      "tirage": 9,
+      "graine": [
+        3,
+        8
+      ],
+      "signaux_demandes": 95,
+      "trades": 94,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.005112009521878413,
+      "profit_factor": 0.9843703560530173,
+      "total_R_execution": -0.4805288950565708
+    },
+    {
+      "tirage": 10,
+      "graine": [
+        3,
+        9
+      ],
+      "signaux_demandes": 95,
+      "trades": 91,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.04936415038076133,
+      "profit_factor": 0.8236686192076469,
+      "total_R_execution": -4.492137684649281
+    },
+    {
+      "tirage": 11,
+      "graine": [
+        3,
+        10
+      ],
+      "signaux_demandes": 95,
+      "trades": 92,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.1319432442330897,
+      "profit_factor": 1.5149701314909632,
+      "total_R_execution": 12.138778469444253
+    },
+    {
+      "tirage": 12,
+      "graine": [
+        3,
+        11
+      ],
+      "signaux_demandes": 95,
+      "trades": 92,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.10210142058826355,
+      "profit_factor": 0.7128862752778088,
+      "total_R_execution": -9.393330694120246
+    },
+    {
+      "tirage": 13,
+      "graine": [
+        3,
+        12
+      ],
+      "signaux_demandes": 95,
+      "trades": 89,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.14522507800851917,
+      "profit_factor": 1.6672788147011797,
+      "total_R_execution": 12.925031942758205
+    },
+    {
+      "tirage": 14,
+      "graine": [
+        3,
+        13
+      ],
+      "signaux_demandes": 95,
+      "trades": 92,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.0052980589554107805,
+      "profit_factor": 1.0177710576325272,
+      "total_R_execution": 0.4874214238977918
+    },
+    {
+      "tirage": 15,
+      "graine": [
+        3,
+        14
+      ],
+      "signaux_demandes": 95,
+      "trades": 93,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.008109250630762803,
+      "profit_factor": 1.0300769069101865,
+      "total_R_execution": 0.7541603086609407
+    },
+    {
+      "tirage": 16,
+      "graine": [
+        3,
+        15
+      ],
+      "signaux_demandes": 95,
+      "trades": 89,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.0020019114492171282,
+      "profit_factor": 0.992772306149133,
+      "total_R_execution": -0.17817011898032442
+    },
+    {
+      "tirage": 17,
+      "graine": [
+        3,
+        16
+      ],
+      "signaux_demandes": 95,
+      "trades": 90,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.18392000164329458,
+      "profit_factor": 2.2092074423176213,
+      "total_R_execution": 16.552800147896512
+    },
+    {
+      "tirage": 18,
+      "graine": [
+        3,
+        17
+      ],
+      "signaux_demandes": 95,
+      "trades": 91,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.031990967281088134,
+      "profit_factor": 1.124145607447335,
+      "total_R_execution": 2.91117802257902
+    },
+    {
+      "tirage": 19,
+      "graine": [
+        3,
+        18
+      ],
+      "signaux_demandes": 95,
+      "trades": 89,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.06210093784732791,
+      "profit_factor": 1.225069850067903,
+      "total_R_execution": 5.526983468412184
+    },
+    {
+      "tirage": 20,
+      "graine": [
+        3,
+        19
+      ],
+      "signaux_demandes": 95,
+      "trades": 90,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.06531621517022487,
+      "profit_factor": 0.802904513979227,
+      "total_R_execution": -5.878459365320238
+    },
+    {
+      "tirage": 21,
+      "graine": [
+        3,
+        20
+      ],
+      "signaux_demandes": 95,
+      "trades": 89,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.07887736515512563,
+      "profit_factor": 0.7375896661965152,
+      "total_R_execution": -7.020085498806181
+    },
+    {
+      "tirage": 22,
+      "graine": [
+        3,
+        21
+      ],
+      "signaux_demandes": 95,
+      "trades": 91,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.25063700077347945,
+      "profit_factor": 2.2946833484185336,
+      "total_R_execution": 22.807967070386628
+    },
+    {
+      "tirage": 23,
+      "graine": [
+        3,
+        22
+      ],
+      "signaux_demandes": 95,
+      "trades": 91,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.12619095584873732,
+      "profit_factor": 1.538083024406645,
+      "total_R_execution": 11.483376982235097
+    },
+    {
+      "tirage": 24,
+      "graine": [
+        3,
+        23
+      ],
+      "signaux_demandes": 95,
+      "trades": 92,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.0049155811212827,
+      "profit_factor": 0.9833043418899564,
+      "total_R_execution": -0.4522334631580084
+    },
+    {
+      "tirage": 25,
+      "graine": [
+        3,
+        24
+      ],
+      "signaux_demandes": 95,
+      "trades": 91,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.010726183617651408,
+      "profit_factor": 0.962180906191789,
+      "total_R_execution": -0.976082709206278
+    },
+    {
+      "tirage": 26,
+      "graine": [
+        3,
+        25
+      ],
+      "signaux_demandes": 95,
+      "trades": 89,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.012284262563159284,
+      "profit_factor": 1.043085193763091,
+      "total_R_execution": 1.0932993681211762
+    },
+    {
+      "tirage": 27,
+      "graine": [
+        3,
+        26
+      ],
+      "signaux_demandes": 95,
+      "trades": 92,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.1965933377360369,
+      "profit_factor": 0.4747811235044144,
+      "total_R_execution": -18.086587071715396
+    },
+    {
+      "tirage": 28,
+      "graine": [
+        3,
+        27
+      ],
+      "signaux_demandes": 95,
+      "trades": 93,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.012240521377918237,
+      "profit_factor": 0.9571292194369503,
+      "total_R_execution": -1.138368488146396
+    },
+    {
+      "tirage": 29,
+      "graine": [
+        3,
+        28
+      ],
+      "signaux_demandes": 95,
+      "trades": 92,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.12495278590763795,
+      "profit_factor": 1.4757821133755997,
+      "total_R_execution": 11.495656303502692
+    },
+    {
+      "tirage": 30,
+      "graine": [
+        3,
+        29
+      ],
+      "signaux_demandes": 95,
+      "trades": 89,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.03151091872295385,
+      "profit_factor": 0.8819493857482092,
+      "total_R_execution": -2.8044717663428926
+    },
+    {
+      "tirage": 31,
+      "graine": [
+        3,
+        30
+      ],
+      "signaux_demandes": 95,
+      "trades": 93,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.06209028887526052,
+      "profit_factor": 1.2658033298593252,
+      "total_R_execution": 5.774396865399228
+    },
+    {
+      "tirage": 32,
+      "graine": [
+        3,
+        31
+      ],
+      "signaux_demandes": 95,
+      "trades": 89,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.05866842535329837,
+      "profit_factor": 1.2463933721502978,
+      "total_R_execution": 5.221489856443555
+    },
+    {
+      "tirage": 33,
+      "graine": [
+        3,
+        32
+      ],
+      "signaux_demandes": 95,
+      "trades": 86,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.042396492352292287,
+      "profit_factor": 0.8670440522167823,
+      "total_R_execution": -3.6460983422971367
+    },
+    {
+      "tirage": 34,
+      "graine": [
+        3,
+        33
+      ],
+      "signaux_demandes": 95,
+      "trades": 90,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.201754069086593,
+      "profit_factor": 0.4682703896772422,
+      "total_R_execution": -18.15786621779337
+    },
+    {
+      "tirage": 35,
+      "graine": [
+        3,
+        34
+      ],
+      "signaux_demandes": 95,
+      "trades": 93,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.04211303478004224,
+      "profit_factor": 0.8483476678044873,
+      "total_R_execution": -3.9165122345439283
+    },
+    {
+      "tirage": 36,
+      "graine": [
+        3,
+        35
+      ],
+      "signaux_demandes": 95,
+      "trades": 90,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.18468737762369106,
+      "profit_factor": 0.4601965767364256,
+      "total_R_execution": -16.621863986132194
+    },
+    {
+      "tirage": 37,
+      "graine": [
+        3,
+        36
+      ],
+      "signaux_demandes": 95,
+      "trades": 89,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.0926198207657133,
+      "profit_factor": 1.3615953392332725,
+      "total_R_execution": 8.243164048148484
+    },
+    {
+      "tirage": 38,
+      "graine": [
+        3,
+        37
+      ],
+      "signaux_demandes": 95,
+      "trades": 87,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.039561585477506524,
+      "profit_factor": 1.1447184592084687,
+      "total_R_execution": 3.4418579365430673
+    },
+    {
+      "tirage": 39,
+      "graine": [
+        3,
+        38
+      ],
+      "signaux_demandes": 95,
+      "trades": 92,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.06876262400557348,
+      "profit_factor": 0.7959067931238586,
+      "total_R_execution": -6.32616140851276
+    },
+    {
+      "tirage": 40,
+      "graine": [
+        3,
+        39
+      ],
+      "signaux_demandes": 95,
+      "trades": 89,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.05995056532032746,
+      "profit_factor": 1.2595365846683164,
+      "total_R_execution": 5.335600313509144
+    },
+    {
+      "tirage": 41,
+      "graine": [
+        3,
+        40
+      ],
+      "signaux_demandes": 95,
+      "trades": 90,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.011758191395649924,
+      "profit_factor": 1.0442701357511177,
+      "total_R_execution": 1.058237225608493
+    },
+    {
+      "tirage": 42,
+      "graine": [
+        3,
+        41
+      ],
+      "signaux_demandes": 95,
+      "trades": 90,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.04490866336428378,
+      "profit_factor": 0.8482020924957587,
+      "total_R_execution": -4.04177970278554
+    },
+    {
+      "tirage": 43,
+      "graine": [
+        3,
+        42
+      ],
+      "signaux_demandes": 95,
+      "trades": 90,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.061904924085717655,
+      "profit_factor": 1.225272577893063,
+      "total_R_execution": 5.571443167714589
+    },
+    {
+      "tirage": 44,
+      "graine": [
+        3,
+        43
+      ],
+      "signaux_demandes": 95,
+      "trades": 93,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.0852445862240868,
+      "profit_factor": 0.721063666820722,
+      "total_R_execution": -7.927746518840072
+    },
+    {
+      "tirage": 45,
+      "graine": [
+        3,
+        44
+      ],
+      "signaux_demandes": 95,
+      "trades": 91,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.11492314942648453,
+      "profit_factor": 1.4959918203738078,
+      "total_R_execution": 10.458006597810092
+    },
+    {
+      "tirage": 46,
+      "graine": [
+        3,
+        45
+      ],
+      "signaux_demandes": 95,
+      "trades": 91,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.04074722592026412,
+      "profit_factor": 1.1221542140936154,
+      "total_R_execution": 3.707997558744035
+    },
+    {
+      "tirage": 47,
+      "graine": [
+        3,
+        46
+      ],
+      "signaux_demandes": 95,
+      "trades": 92,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.0003206790861653702,
+      "profit_factor": 0.9990105166711356,
+      "total_R_execution": -0.029502475927214056
+    },
+    {
+      "tirage": 48,
+      "graine": [
+        3,
+        47
+      ],
+      "signaux_demandes": 95,
+      "trades": 87,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.1798153165164986,
+      "profit_factor": 1.8536267539056037,
+      "total_R_execution": 15.643932536935377
+    },
+    {
+      "tirage": 49,
+      "graine": [
+        3,
+        48
+      ],
+      "signaux_demandes": 95,
+      "trades": 89,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.03424589074637378,
+      "profit_factor": 0.8715394751488957,
+      "total_R_execution": -3.0478842764272667
+    },
+    {
+      "tirage": 50,
+      "graine": [
+        3,
+        49
+      ],
+      "signaux_demandes": 95,
+      "trades": 93,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.008557117067412436,
+      "profit_factor": 1.0295624639405465,
+      "total_R_execution": 0.7958118872693566
+    },
+    {
+      "tirage": 51,
+      "graine": [
+        3,
+        50
+      ],
+      "signaux_demandes": 95,
+      "trades": 91,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.155690230744571,
+      "profit_factor": 1.693677885936081,
+      "total_R_execution": 14.16781099775596
+    },
+    {
+      "tirage": 52,
+      "graine": [
+        3,
+        51
+      ],
+      "signaux_demandes": 95,
+      "trades": 92,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.05412925084627875,
+      "profit_factor": 0.8480727009691436,
+      "total_R_execution": -4.979891077857645
+    },
+    {
+      "tirage": 53,
+      "graine": [
+        3,
+        52
+      ],
+      "signaux_demandes": 95,
+      "trades": 92,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.07471582883461869,
+      "profit_factor": 0.780637176671936,
+      "total_R_execution": -6.87385625278492
+    },
+    {
+      "tirage": 54,
+      "graine": [
+        3,
+        53
+      ],
+      "signaux_demandes": 95,
+      "trades": 88,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.1210342531743228,
+      "profit_factor": 1.5166052399830405,
+      "total_R_execution": 10.651014279340407
+    },
+    {
+      "tirage": 55,
+      "graine": [
+        3,
+        54
+      ],
+      "signaux_demandes": 95,
+      "trades": 90,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.019074392891324524,
+      "profit_factor": 0.9399062678232283,
+      "total_R_execution": -1.7166953602192072
+    },
+    {
+      "tirage": 56,
+      "graine": [
+        3,
+        55
+      ],
+      "signaux_demandes": 95,
+      "trades": 90,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.16288000367253125,
+      "profit_factor": 1.7962601873715593,
+      "total_R_execution": 14.659200330527812
+    },
+    {
+      "tirage": 57,
+      "graine": [
+        3,
+        56
+      ],
+      "signaux_demandes": 95,
+      "trades": 92,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.045701448029489444,
+      "profit_factor": 0.8496372105172916,
+      "total_R_execution": -4.204533218713029
+    },
+    {
+      "tirage": 58,
+      "graine": [
+        3,
+        57
+      ],
+      "signaux_demandes": 95,
+      "trades": 92,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.010269699451605835,
+      "profit_factor": 0.9638320242538461,
+      "total_R_execution": -0.9448123495477367
+    },
+    {
+      "tirage": 59,
+      "graine": [
+        3,
+        58
+      ],
+      "signaux_demandes": 95,
+      "trades": 89,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.03871648605567098,
+      "profit_factor": 1.1596188600664807,
+      "total_R_execution": 3.4457672589547172
+    },
+    {
+      "tirage": 60,
+      "graine": [
+        3,
+        59
+      ],
+      "signaux_demandes": 95,
+      "trades": 90,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.10980131115457736,
+      "profit_factor": 1.451460341003438,
+      "total_R_execution": 9.882118003911962
+    },
+    {
+      "tirage": 61,
+      "graine": [
+        3,
+        60
+      ],
+      "signaux_demandes": 95,
+      "trades": 91,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.004823391867122812,
+      "profit_factor": 1.0166356177905231,
+      "total_R_execution": 0.43892865990817587
+    },
+    {
+      "tirage": 62,
+      "graine": [
+        3,
+        61
+      ],
+      "signaux_demandes": 95,
+      "trades": 94,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.046928233405104255,
+      "profit_factor": 1.1894417267468027,
+      "total_R_execution": 4.4112539400798
+    },
+    {
+      "tirage": 63,
+      "graine": [
+        3,
+        62
+      ],
+      "signaux_demandes": 95,
+      "trades": 94,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.024765025334690816,
+      "profit_factor": 0.9233652224388376,
+      "total_R_execution": -2.3279123814609366
+    },
+    {
+      "tirage": 64,
+      "graine": [
+        3,
+        63
+      ],
+      "signaux_demandes": 95,
+      "trades": 89,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.049195204973403656,
+      "profit_factor": 1.1933237239549443,
+      "total_R_execution": 4.378373242632925
+    },
+    {
+      "tirage": 65,
+      "graine": [
+        3,
+        64
+      ],
+      "signaux_demandes": 95,
+      "trades": 94,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.12974435923459865,
+      "profit_factor": 0.5667632589575747,
+      "total_R_execution": -12.195969768052272
+    },
+    {
+      "tirage": 66,
+      "graine": [
+        3,
+        65
+      ],
+      "signaux_demandes": 95,
+      "trades": 93,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.0014711470561339754,
+      "profit_factor": 1.0050417439071992,
+      "total_R_execution": 0.1368166762204597
+    },
+    {
+      "tirage": 67,
+      "graine": [
+        3,
+        66
+      ],
+      "signaux_demandes": 95,
+      "trades": 91,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.050489590835259564,
+      "profit_factor": 0.8381782546165916,
+      "total_R_execution": -4.59455276600862
+    },
+    {
+      "tirage": 68,
+      "graine": [
+        3,
+        67
+      ],
+      "signaux_demandes": 95,
+      "trades": 89,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.0019434980564009764,
+      "profit_factor": 1.0085127302659411,
+      "total_R_execution": 0.1729713270196869
+    },
+    {
+      "tirage": 69,
+      "graine": [
+        3,
+        68
+      ],
+      "signaux_demandes": 95,
+      "trades": 92,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.008586551400536165,
+      "profit_factor": 1.0318789724759112,
+      "total_R_execution": 0.7899627288493272
+    },
+    {
+      "tirage": 70,
+      "graine": [
+        3,
+        69
+      ],
+      "signaux_demandes": 95,
+      "trades": 91,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.00905982621387045,
+      "profit_factor": 0.9709593501726387,
+      "total_R_execution": -0.8244441854622111
+    },
+    {
+      "tirage": 71,
+      "graine": [
+        3,
+        70
+      ],
+      "signaux_demandes": 95,
+      "trades": 89,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.015103789270083788,
+      "profit_factor": 0.9478103895931869,
+      "total_R_execution": -1.3442372450374571
+    },
+    {
+      "tirage": 72,
+      "graine": [
+        3,
+        71
+      ],
+      "signaux_demandes": 95,
+      "trades": 90,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.0890254781483118,
+      "profit_factor": 0.6854267710111469,
+      "total_R_execution": -8.012293033348062
+    },
+    {
+      "tirage": 73,
+      "graine": [
+        3,
+        72
+      ],
+      "signaux_demandes": 95,
+      "trades": 89,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.08078557382779997,
+      "profit_factor": 0.748589868438813,
+      "total_R_execution": -7.1899160706741965
+    },
+    {
+      "tirage": 74,
+      "graine": [
+        3,
+        73
+      ],
+      "signaux_demandes": 95,
+      "trades": 90,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.01918385033196917,
+      "profit_factor": 1.0770103733887941,
+      "total_R_execution": 1.7265465298772251
+    },
+    {
+      "tirage": 75,
+      "graine": [
+        3,
+        74
+      ],
+      "signaux_demandes": 95,
+      "trades": 92,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.17279352301214349,
+      "profit_factor": 1.789516977106541,
+      "total_R_execution": 15.8970041171172
+    },
+    {
+      "tirage": 76,
+      "graine": [
+        3,
+        75
+      ],
+      "signaux_demandes": 95,
+      "trades": 85,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.06917695935439166,
+      "profit_factor": 1.28763161890738,
+      "total_R_execution": 5.880041545123292
+    },
+    {
+      "tirage": 77,
+      "graine": [
+        3,
+        76
+      ],
+      "signaux_demandes": 95,
+      "trades": 94,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.07758987803898605,
+      "profit_factor": 0.7578723078767081,
+      "total_R_execution": -7.293448535664689
+    },
+    {
+      "tirage": 78,
+      "graine": [
+        3,
+        77
+      ],
+      "signaux_demandes": 95,
+      "trades": 92,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.0683390414836215,
+      "profit_factor": 0.7582482848671123,
+      "total_R_execution": -6.287191816493177
+    },
+    {
+      "tirage": 79,
+      "graine": [
+        3,
+        78
+      ],
+      "signaux_demandes": 95,
+      "trades": 94,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.13419115230347015,
+      "profit_factor": 1.582999957614575,
+      "total_R_execution": 12.613968316526194
+    },
+    {
+      "tirage": 80,
+      "graine": [
+        3,
+        79
+      ],
+      "signaux_demandes": 95,
+      "trades": 92,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.01904999656855053,
+      "profit_factor": 1.074098454831141,
+      "total_R_execution": 1.7525996843066487
+    },
+    {
+      "tirage": 81,
+      "graine": [
+        3,
+        80
+      ],
+      "signaux_demandes": 95,
+      "trades": 87,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.11306537539276665,
+      "profit_factor": 1.4949114408592223,
+      "total_R_execution": 9.836687659170698
+    },
+    {
+      "tirage": 82,
+      "graine": [
+        3,
+        81
+      ],
+      "signaux_demandes": 95,
+      "trades": 84,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.0415055114334081,
+      "profit_factor": 0.8743158392175294,
+      "total_R_execution": -3.4864629604062807
+    },
+    {
+      "tirage": 83,
+      "graine": [
+        3,
+        82
+      ],
+      "signaux_demandes": 95,
+      "trades": 91,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.03072279941041552,
+      "profit_factor": 0.9050729219058584,
+      "total_R_execution": -2.795774746347812
+    },
+    {
+      "tirage": 84,
+      "graine": [
+        3,
+        83
+      ],
+      "signaux_demandes": 95,
+      "trades": 92,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.04049544854560215,
+      "profit_factor": 0.8655599802317799,
+      "total_R_execution": -3.7255812661953978
+    },
+    {
+      "tirage": 85,
+      "graine": [
+        3,
+        84
+      ],
+      "signaux_demandes": 95,
+      "trades": 92,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.0701045869995297,
+      "profit_factor": 1.2580911460045872,
+      "total_R_execution": 6.449622003956733
+    },
+    {
+      "tirage": 86,
+      "graine": [
+        3,
+        85
+      ],
+      "signaux_demandes": 95,
+      "trades": 91,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.0011992546611042287,
+      "profit_factor": 1.0044299847621911,
+      "total_R_execution": 0.1091321741604848
+    },
+    {
+      "tirage": 87,
+      "graine": [
+        3,
+        86
+      ],
+      "signaux_demandes": 95,
+      "trades": 91,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.010162324989187807,
+      "profit_factor": 0.9651286895276132,
+      "total_R_execution": -0.9247715740160904
+    },
+    {
+      "tirage": 88,
+      "graine": [
+        3,
+        87
+      ],
+      "signaux_demandes": 95,
+      "trades": 89,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.10983813080584257,
+      "profit_factor": 1.4674659081839634,
+      "total_R_execution": 9.775593641719988
+    },
+    {
+      "tirage": 89,
+      "graine": [
+        3,
+        88
+      ],
+      "signaux_demandes": 95,
+      "trades": 90,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.019095790915086557,
+      "profit_factor": 1.0621519768743655,
+      "total_R_execution": 1.71862118235779
+    },
+    {
+      "tirage": 90,
+      "graine": [
+        3,
+        89
+      ],
+      "signaux_demandes": 95,
+      "trades": 89,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.07746655381257644,
+      "profit_factor": 1.3638496996838763,
+      "total_R_execution": 6.894523289319303
+    },
+    {
+      "tirage": 91,
+      "graine": [
+        3,
+        90
+      ],
+      "signaux_demandes": 95,
+      "trades": 89,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.007060558481714895,
+      "profit_factor": 0.9712538518721363,
+      "total_R_execution": -0.6283897048726257
+    },
+    {
+      "tirage": 92,
+      "graine": [
+        3,
+        91
+      ],
+      "signaux_demandes": 95,
+      "trades": 92,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.0598502992987135,
+      "profit_factor": 0.7964300663555112,
+      "total_R_execution": -5.506227535481642
+    },
+    {
+      "tirage": 93,
+      "graine": [
+        3,
+        92
+      ],
+      "signaux_demandes": 95,
+      "trades": 90,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.04463460121065806,
+      "profit_factor": 0.8571340360450177,
+      "total_R_execution": -4.017114108959226
+    },
+    {
+      "tirage": 94,
+      "graine": [
+        3,
+        93
+      ],
+      "signaux_demandes": 95,
+      "trades": 90,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.10713109577654094,
+      "profit_factor": 1.443329525062987,
+      "total_R_execution": 9.641798619888684
+    },
+    {
+      "tirage": 95,
+      "graine": [
+        3,
+        94
+      ],
+      "signaux_demandes": 95,
+      "trades": 87,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.05612250098431543,
+      "profit_factor": 1.2286443819773827,
+      "total_R_execution": 4.882657585635442
+    },
+    {
+      "tirage": 96,
+      "graine": [
+        3,
+        95
+      ],
+      "signaux_demandes": 95,
+      "trades": 92,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.014190721253696416,
+      "profit_factor": 1.0576772064021729,
+      "total_R_execution": 1.3055463553400704
+    },
+    {
+      "tirage": 97,
+      "graine": [
+        3,
+        96
+      ],
+      "signaux_demandes": 95,
+      "trades": 91,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.05542297939050377,
+      "profit_factor": 0.8366794967468475,
+      "total_R_execution": -5.043491124535843
+    },
+    {
+      "tirage": 98,
+      "graine": [
+        3,
+        97
+      ],
+      "signaux_demandes": 95,
+      "trades": 94,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.04341982650793077,
+      "profit_factor": 0.8645842548276429,
+      "total_R_execution": -4.081463691745492
+    },
+    {
+      "tirage": 99,
+      "graine": [
+        3,
+        98
+      ],
+      "signaux_demandes": 95,
+      "trades": 92,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.0016978122864748392,
+      "profit_factor": 0.9943105257477537,
+      "total_R_execution": -0.1561987303556852
+    },
+    {
+      "tirage": 100,
+      "graine": [
+        3,
+        99
+      ],
+      "signaux_demandes": 95,
+      "trades": 89,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.10615618305241065,
+      "profit_factor": 0.6822108568899315,
+      "total_R_execution": -9.447900291664547
+    },
+    {
+      "tirage": 101,
+      "graine": [
+        3,
+        100
+      ],
+      "signaux_demandes": 95,
+      "trades": 93,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.04816084439304551,
+      "profit_factor": 0.8231870981712525,
+      "total_R_execution": -4.478958528553232
+    },
+    {
+      "tirage": 102,
+      "graine": [
+        3,
+        101
+      ],
+      "signaux_demandes": 95,
+      "trades": 92,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.2427115049596999,
+      "profit_factor": 0.40641083049961285,
+      "total_R_execution": -22.32945845629239
+    },
+    {
+      "tirage": 103,
+      "graine": [
+        3,
+        102
+      ],
+      "signaux_demandes": 95,
+      "trades": 90,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.08240761197175019,
+      "profit_factor": 0.7048961498078443,
+      "total_R_execution": -7.416685077457517
+    },
+    {
+      "tirage": 104,
+      "graine": [
+        3,
+        103
+      ],
+      "signaux_demandes": 95,
+      "trades": 85,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.02419952976986262,
+      "profit_factor": 1.0866945930578378,
+      "total_R_execution": 2.0569600304383227
+    },
+    {
+      "tirage": 105,
+      "graine": [
+        3,
+        104
+      ],
+      "signaux_demandes": 95,
+      "trades": 91,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.04842788616389352,
+      "profit_factor": 1.1686636640703822,
+      "total_R_execution": 4.40693764091431
+    },
+    {
+      "tirage": 106,
+      "graine": [
+        3,
+        105
+      ],
+      "signaux_demandes": 95,
+      "trades": 91,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.019591997407730658,
+      "profit_factor": 1.0756315965283307,
+      "total_R_execution": 1.78287176410349
+    },
+    {
+      "tirage": 107,
+      "graine": [
+        3,
+        106
+      ],
+      "signaux_demandes": 95,
+      "trades": 90,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.021521408207098844,
+      "profit_factor": 0.9229674430442487,
+      "total_R_execution": -1.936926738638896
+    },
+    {
+      "tirage": 108,
+      "graine": [
+        3,
+        107
+      ],
+      "signaux_demandes": 95,
+      "trades": 93,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.018706110106408023,
+      "profit_factor": 1.0680636628475633,
+      "total_R_execution": 1.7396682398959462
+    },
+    {
+      "tirage": 109,
+      "graine": [
+        3,
+        108
+      ],
+      "signaux_demandes": 95,
+      "trades": 88,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.08126851384206747,
+      "profit_factor": 1.2802656587602954,
+      "total_R_execution": 7.151629218101938
+    },
+    {
+      "tirage": 110,
+      "graine": [
+        3,
+        109
+      ],
+      "signaux_demandes": 95,
+      "trades": 89,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.13942724012476265,
+      "profit_factor": 1.5724947696648601,
+      "total_R_execution": 12.409024371103875
+    },
+    {
+      "tirage": 111,
+      "graine": [
+        3,
+        110
+      ],
+      "signaux_demandes": 95,
+      "trades": 92,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.015218259692133519,
+      "profit_factor": 0.9505109776321023,
+      "total_R_execution": -1.4000798916762838
+    },
+    {
+      "tirage": 112,
+      "graine": [
+        3,
+        111
+      ],
+      "signaux_demandes": 95,
+      "trades": 90,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.09329858383573594,
+      "profit_factor": 1.4384382636368105,
+      "total_R_execution": 8.396872545216235
+    },
+    {
+      "tirage": 113,
+      "graine": [
+        3,
+        112
+      ],
+      "signaux_demandes": 95,
+      "trades": 92,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.0789924889520562,
+      "profit_factor": 1.3191240867811855,
+      "total_R_execution": 7.26730898358917
+    },
+    {
+      "tirage": 114,
+      "graine": [
+        3,
+        113
+      ],
+      "signaux_demandes": 95,
+      "trades": 91,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.1238544899655784,
+      "profit_factor": 0.6352671036200976,
+      "total_R_execution": -11.270758586867634
+    },
+    {
+      "tirage": 115,
+      "graine": [
+        3,
+        114
+      ],
+      "signaux_demandes": 95,
+      "trades": 89,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.02080360160486819,
+      "profit_factor": 0.9254996851190096,
+      "total_R_execution": -1.851520542833269
+    },
+    {
+      "tirage": 116,
+      "graine": [
+        3,
+        115
+      ],
+      "signaux_demandes": 95,
+      "trades": 91,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.11085550335582817,
+      "profit_factor": 0.6972619542441585,
+      "total_R_execution": -10.087850805380363
+    },
+    {
+      "tirage": 117,
+      "graine": [
+        3,
+        116
+      ],
+      "signaux_demandes": 95,
+      "trades": 90,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.014966234285108675,
+      "profit_factor": 1.0568153922416266,
+      "total_R_execution": 1.3469610856597807
+    },
+    {
+      "tirage": 118,
+      "graine": [
+        3,
+        117
+      ],
+      "signaux_demandes": 95,
+      "trades": 90,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.05549042293770855,
+      "profit_factor": 1.2018422216707934,
+      "total_R_execution": 4.994138064393769
+    },
+    {
+      "tirage": 119,
+      "graine": [
+        3,
+        118
+      ],
+      "signaux_demandes": 95,
+      "trades": 89,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.06365360979721027,
+      "profit_factor": 1.218410006140827,
+      "total_R_execution": 5.665171271951714
+    },
+    {
+      "tirage": 120,
+      "graine": [
+        3,
+        119
+      ],
+      "signaux_demandes": 95,
+      "trades": 93,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.05425973754109825,
+      "profit_factor": 0.847101711888265,
+      "total_R_execution": -5.046155591322138
+    },
+    {
+      "tirage": 121,
+      "graine": [
+        3,
+        120
+      ],
+      "signaux_demandes": 95,
+      "trades": 92,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.018493913931532973,
+      "profit_factor": 0.9417015137054392,
+      "total_R_execution": -1.7014400817010336
+    },
+    {
+      "tirage": 122,
+      "graine": [
+        3,
+        121
+      ],
+      "signaux_demandes": 95,
+      "trades": 89,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.00655643004422036,
+      "profit_factor": 1.020666231820571,
+      "total_R_execution": 0.5835222739356121
+    },
+    {
+      "tirage": 123,
+      "graine": [
+        3,
+        122
+      ],
+      "signaux_demandes": 95,
+      "trades": 90,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.1250661081748257,
+      "profit_factor": 0.6375910237792538,
+      "total_R_execution": -11.255949735734312
+    },
+    {
+      "tirage": 124,
+      "graine": [
+        3,
+        123
+      ],
+      "signaux_demandes": 95,
+      "trades": 91,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.006252554323632018,
+      "profit_factor": 0.980659293212638,
+      "total_R_execution": -0.5689824434505136
+    },
+    {
+      "tirage": 125,
+      "graine": [
+        3,
+        124
+      ],
+      "signaux_demandes": 95,
+      "trades": 89,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.0027660367451447297,
+      "profit_factor": 1.0103045520012237,
+      "total_R_execution": 0.24617727031788095
+    },
+    {
+      "tirage": 126,
+      "graine": [
+        3,
+        125
+      ],
+      "signaux_demandes": 95,
+      "trades": 89,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.0297410725228959,
+      "profit_factor": 0.9015445561587755,
+      "total_R_execution": -2.646955454537735
+    },
+    {
+      "tirage": 127,
+      "graine": [
+        3,
+        126
+      ],
+      "signaux_demandes": 95,
+      "trades": 87,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.04720031378506817,
+      "profit_factor": 0.8164863067060961,
+      "total_R_execution": -4.106427299300931
+    },
+    {
+      "tirage": 128,
+      "graine": [
+        3,
+        127
+      ],
+      "signaux_demandes": 95,
+      "trades": 90,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.05536812224941874,
+      "profit_factor": 0.8132018695938569,
+      "total_R_execution": -4.983131002447687
+    },
+    {
+      "tirage": 129,
+      "graine": [
+        3,
+        128
+      ],
+      "signaux_demandes": 95,
+      "trades": 90,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.029872517120620865,
+      "profit_factor": 1.1126435068121767,
+      "total_R_execution": 2.688526540855878
+    },
+    {
+      "tirage": 130,
+      "graine": [
+        3,
+        129
+      ],
+      "signaux_demandes": 95,
+      "trades": 91,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.04320324347345088,
+      "profit_factor": 0.839774666525675,
+      "total_R_execution": -3.9314951560840297
+    },
+    {
+      "tirage": 131,
+      "graine": [
+        3,
+        130
+      ],
+      "signaux_demandes": 95,
+      "trades": 92,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.008848372335075233,
+      "profit_factor": 1.0313344657281307,
+      "total_R_execution": 0.8140502548269215
+    },
+    {
+      "tirage": 132,
+      "graine": [
+        3,
+        131
+      ],
+      "signaux_demandes": 95,
+      "trades": 92,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.04429349295096524,
+      "profit_factor": 1.1852253977193181,
+      "total_R_execution": 4.075001351488802
+    },
+    {
+      "tirage": 133,
+      "graine": [
+        3,
+        132
+      ],
+      "signaux_demandes": 95,
+      "trades": 88,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.09816466071375633,
+      "profit_factor": 0.7088224190237988,
+      "total_R_execution": -8.638490142810557
+    },
+    {
+      "tirage": 134,
+      "graine": [
+        3,
+        133
+      ],
+      "signaux_demandes": 95,
+      "trades": 94,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.046317863651716154,
+      "profit_factor": 0.847930996802042,
+      "total_R_execution": -4.353879183261318
+    },
+    {
+      "tirage": 135,
+      "graine": [
+        3,
+        134
+      ],
+      "signaux_demandes": 95,
+      "trades": 91,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.029796937152460363,
+      "profit_factor": 1.1038284264047054,
+      "total_R_execution": 2.711521280873893
+    },
+    {
+      "tirage": 136,
+      "graine": [
+        3,
+        135
+      ],
+      "signaux_demandes": 95,
+      "trades": 88,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.06864067745704135,
+      "profit_factor": 1.269846362513802,
+      "total_R_execution": 6.040379616219639
+    },
+    {
+      "tirage": 137,
+      "graine": [
+        3,
+        136
+      ],
+      "signaux_demandes": 95,
+      "trades": 90,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.17083811633368767,
+      "profit_factor": 1.7781408162488594,
+      "total_R_execution": 15.37543047003189
+    },
+    {
+      "tirage": 138,
+      "graine": [
+        3,
+        137
+      ],
+      "signaux_demandes": 95,
+      "trades": 90,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.035667527348632995,
+      "profit_factor": 1.150264140242726,
+      "total_R_execution": 3.2100774613769696
+    },
+    {
+      "tirage": 139,
+      "graine": [
+        3,
+        138
+      ],
+      "signaux_demandes": 95,
+      "trades": 92,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.044129312616181714,
+      "profit_factor": 0.8520198218655016,
+      "total_R_execution": -4.0598967606887175
+    },
+    {
+      "tirage": 140,
+      "graine": [
+        3,
+        139
+      ],
+      "signaux_demandes": 95,
+      "trades": 91,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.014077262257250804,
+      "profit_factor": 1.0521298290579966,
+      "total_R_execution": 1.2810308654098232
+    },
+    {
+      "tirage": 141,
+      "graine": [
+        3,
+        140
+      ],
+      "signaux_demandes": 95,
+      "trades": 90,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.04097563794369906,
+      "profit_factor": 0.8381993896617149,
+      "total_R_execution": -3.6878074149329154
+    },
+    {
+      "tirage": 142,
+      "graine": [
+        3,
+        141
+      ],
+      "signaux_demandes": 95,
+      "trades": 90,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.030915649085432595,
+      "profit_factor": 1.1119499219499192,
+      "total_R_execution": 2.7824084176889334
+    },
+    {
+      "tirage": 143,
+      "graine": [
+        3,
+        142
+      ],
+      "signaux_demandes": 95,
+      "trades": 92,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.04889511180633146,
+      "profit_factor": 0.8135042680207663,
+      "total_R_execution": -4.498350286182494
+    },
+    {
+      "tirage": 144,
+      "graine": [
+        3,
+        143
+      ],
+      "signaux_demandes": 95,
+      "trades": 90,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.07295050801986729,
+      "profit_factor": 0.7790818066167263,
+      "total_R_execution": -6.565545721788055
+    },
+    {
+      "tirage": 145,
+      "graine": [
+        3,
+        144
+      ],
+      "signaux_demandes": 95,
+      "trades": 88,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.05991013245119985,
+      "profit_factor": 1.2463159717218184,
+      "total_R_execution": 5.272091655705587
+    },
+    {
+      "tirage": 146,
+      "graine": [
+        3,
+        145
+      ],
+      "signaux_demandes": 95,
+      "trades": 89,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.14207177647741115,
+      "profit_factor": 0.6140709383209946,
+      "total_R_execution": -12.644388106489592
+    },
+    {
+      "tirage": 147,
+      "graine": [
+        3,
+        146
+      ],
+      "signaux_demandes": 95,
+      "trades": 94,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.06794409765299544,
+      "profit_factor": 1.2295087376557818,
+      "total_R_execution": 6.386745179381571
+    },
+    {
+      "tirage": 148,
+      "graine": [
+        3,
+        147
+      ],
+      "signaux_demandes": 95,
+      "trades": 91,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.04276230058757383,
+      "profit_factor": 1.1728626977770844,
+      "total_R_execution": 3.891369353469219
+    },
+    {
+      "tirage": 149,
+      "graine": [
+        3,
+        148
+      ],
+      "signaux_demandes": 95,
+      "trades": 90,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.026641472610698772,
+      "profit_factor": 1.095129832219173,
+      "total_R_execution": 2.3977325349628895
+    },
+    {
+      "tirage": 150,
+      "graine": [
+        3,
+        149
+      ],
+      "signaux_demandes": 95,
+      "trades": 89,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.14630843271250282,
+      "profit_factor": 0.5759095885905058,
+      "total_R_execution": -13.021450511412752
+    },
+    {
+      "tirage": 151,
+      "graine": [
+        3,
+        150
+      ],
+      "signaux_demandes": 95,
+      "trades": 89,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.021614911030618335,
+      "profit_factor": 1.08610623829487,
+      "total_R_execution": 1.9237270817250318
+    },
+    {
+      "tirage": 152,
+      "graine": [
+        3,
+        151
+      ],
+      "signaux_demandes": 95,
+      "trades": 91,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.054376752688031035,
+      "profit_factor": 0.8169636059310076,
+      "total_R_execution": -4.948284494610824
+    },
+    {
+      "tirage": 153,
+      "graine": [
+        3,
+        152
+      ],
+      "signaux_demandes": 95,
+      "trades": 92,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.049439604307007466,
+      "profit_factor": 1.1969684411334343,
+      "total_R_execution": 4.548443596244687
+    },
+    {
+      "tirage": 154,
+      "graine": [
+        3,
+        153
+      ],
+      "signaux_demandes": 95,
+      "trades": 93,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.05077074899891255,
+      "profit_factor": 0.8364497533940554,
+      "total_R_execution": -4.721679656898867
+    },
+    {
+      "tirage": 155,
+      "graine": [
+        3,
+        154
+      ],
+      "signaux_demandes": 95,
+      "trades": 86,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.004568373866347625,
+      "profit_factor": 0.9839232674545679,
+      "total_R_execution": -0.3928801525058958
+    },
+    {
+      "tirage": 156,
+      "graine": [
+        3,
+        155
+      ],
+      "signaux_demandes": 95,
+      "trades": 92,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.12430766086719104,
+      "profit_factor": 0.6011395364594473,
+      "total_R_execution": -11.436304799781576
+    },
+    {
+      "tirage": 157,
+      "graine": [
+        3,
+        156
+      ],
+      "signaux_demandes": 95,
+      "trades": 91,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.11889396714728939,
+      "profit_factor": 0.6566933591758072,
+      "total_R_execution": -10.819351010403334
+    },
+    {
+      "tirage": 158,
+      "graine": [
+        3,
+        157
+      ],
+      "signaux_demandes": 95,
+      "trades": 90,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.08181030772043675,
+      "profit_factor": 1.3547383987055364,
+      "total_R_execution": 7.362927694839307
+    },
+    {
+      "tirage": 159,
+      "graine": [
+        3,
+        158
+      ],
+      "signaux_demandes": 95,
+      "trades": 91,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.1740123218057542,
+      "profit_factor": 0.5154577627782685,
+      "total_R_execution": -15.835121284323634
+    },
+    {
+      "tirage": 160,
+      "graine": [
+        3,
+        159
+      ],
+      "signaux_demandes": 95,
+      "trades": 92,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.020688023596939865,
+      "profit_factor": 1.0781462232368542,
+      "total_R_execution": 1.9032981709184678
+    },
+    {
+      "tirage": 161,
+      "graine": [
+        3,
+        160
+      ],
+      "signaux_demandes": 95,
+      "trades": 88,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.13099625614991695,
+      "profit_factor": 1.6266420219566189,
+      "total_R_execution": 11.527670541192691
+    },
+    {
+      "tirage": 162,
+      "graine": [
+        3,
+        161
+      ],
+      "signaux_demandes": 95,
+      "trades": 88,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.007134998956336569,
+      "profit_factor": 1.0225857599585662,
+      "total_R_execution": 0.6278799081576181
+    },
+    {
+      "tirage": 163,
+      "graine": [
+        3,
+        162
+      ],
+      "signaux_demandes": 95,
+      "trades": 90,
+      "marches_avec_trades": 12,
+      "esperance_R": 5.498090964932947e-05,
+      "profit_factor": 1.0001812445225002,
+      "total_R_execution": 0.004948281868439652
+    },
+    {
+      "tirage": 164,
+      "graine": [
+        3,
+        163
+      ],
+      "signaux_demandes": 95,
+      "trades": 90,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.12143773233670267,
+      "profit_factor": 1.4095738171534569,
+      "total_R_execution": 10.92939591030324
+    },
+    {
+      "tirage": 165,
+      "graine": [
+        3,
+        164
+      ],
+      "signaux_demandes": 95,
+      "trades": 89,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.07755227396413863,
+      "profit_factor": 1.2537560479151617,
+      "total_R_execution": 6.902152382808338
+    },
+    {
+      "tirage": 166,
+      "graine": [
+        3,
+        165
+      ],
+      "signaux_demandes": 95,
+      "trades": 91,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.08939457243242048,
+      "profit_factor": 0.7168258268365381,
+      "total_R_execution": -8.134906091350263
+    },
+    {
+      "tirage": 167,
+      "graine": [
+        3,
+        166
+      ],
+      "signaux_demandes": 95,
+      "trades": 94,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.017980470486694818,
+      "profit_factor": 0.9343079444804782,
+      "total_R_execution": -1.6901642257493128
+    },
+    {
+      "tirage": 168,
+      "graine": [
+        3,
+        167
+      ],
+      "signaux_demandes": 95,
+      "trades": 84,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.07212936186278449,
+      "profit_factor": 0.7722765525455808,
+      "total_R_execution": -6.058866396473897
+    },
+    {
+      "tirage": 169,
+      "graine": [
+        3,
+        168
+      ],
+      "signaux_demandes": 95,
+      "trades": 93,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.0905945084465295,
+      "profit_factor": 0.7128589678514462,
+      "total_R_execution": -8.425289285527244
+    },
+    {
+      "tirage": 170,
+      "graine": [
+        3,
+        169
+      ],
+      "signaux_demandes": 95,
+      "trades": 89,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.13768602050992765,
+      "profit_factor": 1.5159842379319377,
+      "total_R_execution": 12.254055825383562
+    },
+    {
+      "tirage": 171,
+      "graine": [
+        3,
+        170
+      ],
+      "signaux_demandes": 95,
+      "trades": 92,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.12912993056548727,
+      "profit_factor": 1.5711144614533044,
+      "total_R_execution": 11.87995361202483
+    },
+    {
+      "tirage": 172,
+      "graine": [
+        3,
+        171
+      ],
+      "signaux_demandes": 95,
+      "trades": 90,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.018636005415059977,
+      "profit_factor": 0.9353479186732019,
+      "total_R_execution": -1.6772404873553979
+    },
+    {
+      "tirage": 173,
+      "graine": [
+        3,
+        172
+      ],
+      "signaux_demandes": 95,
+      "trades": 91,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.008743331266925187,
+      "profit_factor": 1.0302940548854784,
+      "total_R_execution": 0.795643145290192
+    },
+    {
+      "tirage": 174,
+      "graine": [
+        3,
+        173
+      ],
+      "signaux_demandes": 95,
+      "trades": 88,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.00015117895518076206,
+      "profit_factor": 1.0005481155257432,
+      "total_R_execution": 0.013303748055907061
+    },
+    {
+      "tirage": 175,
+      "graine": [
+        3,
+        174
+      ],
+      "signaux_demandes": 95,
+      "trades": 88,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.014319296352928036,
+      "profit_factor": 1.0488456696373676,
+      "total_R_execution": 1.2600980790576672
+    },
+    {
+      "tirage": 176,
+      "graine": [
+        3,
+        175
+      ],
+      "signaux_demandes": 95,
+      "trades": 92,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.05789680302362313,
+      "profit_factor": 0.8034329128104026,
+      "total_R_execution": -5.326505878173328
+    },
+    {
+      "tirage": 177,
+      "graine": [
+        3,
+        176
+      ],
+      "signaux_demandes": 95,
+      "trades": 92,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.07746830149494055,
+      "profit_factor": 1.3014753089475006,
+      "total_R_execution": 7.12708373753453
+    },
+    {
+      "tirage": 178,
+      "graine": [
+        3,
+        177
+      ],
+      "signaux_demandes": 95,
+      "trades": 93,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.09662218821448845,
+      "profit_factor": 0.6839212418957199,
+      "total_R_execution": -8.985863503947426
+    },
+    {
+      "tirage": 179,
+      "graine": [
+        3,
+        178
+      ],
+      "signaux_demandes": 95,
+      "trades": 93,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.09269460427861524,
+      "profit_factor": 0.6951466937711968,
+      "total_R_execution": -8.620598197911217
+    },
+    {
+      "tirage": 180,
+      "graine": [
+        3,
+        179
+      ],
+      "signaux_demandes": 95,
+      "trades": 93,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.1324406826999388,
+      "profit_factor": 1.5617930355283147,
+      "total_R_execution": 12.316983491094309
+    },
+    {
+      "tirage": 181,
+      "graine": [
+        3,
+        180
+      ],
+      "signaux_demandes": 95,
+      "trades": 88,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.033659327598928444,
+      "profit_factor": 0.8785930719580368,
+      "total_R_execution": -2.962020828705703
+    },
+    {
+      "tirage": 182,
+      "graine": [
+        3,
+        181
+      ],
+      "signaux_demandes": 95,
+      "trades": 92,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.05334930815695222,
+      "profit_factor": 1.2510279627374756,
+      "total_R_execution": 4.908136350439604
+    },
+    {
+      "tirage": 183,
+      "graine": [
+        3,
+        182
+      ],
+      "signaux_demandes": 95,
+      "trades": 89,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.0068372458967104885,
+      "profit_factor": 1.0227309927400778,
+      "total_R_execution": 0.6085148848072335
+    },
+    {
+      "tirage": 184,
+      "graine": [
+        3,
+        183
+      ],
+      "signaux_demandes": 95,
+      "trades": 91,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.08065268124540143,
+      "profit_factor": 1.3540507263014196,
+      "total_R_execution": 7.33939399333153
+    },
+    {
+      "tirage": 185,
+      "graine": [
+        3,
+        184
+      ],
+      "signaux_demandes": 95,
+      "trades": 92,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.03985827370030793,
+      "profit_factor": 0.8654997910685734,
+      "total_R_execution": -3.6669611804283293
+    },
+    {
+      "tirage": 186,
+      "graine": [
+        3,
+        185
+      ],
+      "signaux_demandes": 95,
+      "trades": 94,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.028226287312096435,
+      "profit_factor": 1.0898133696448347,
+      "total_R_execution": 2.653271007337065
+    },
+    {
+      "tirage": 187,
+      "graine": [
+        3,
+        186
+      ],
+      "signaux_demandes": 95,
+      "trades": 88,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.06230412231048376,
+      "profit_factor": 0.8194916090594491,
+      "total_R_execution": -5.482762763322571
+    },
+    {
+      "tirage": 188,
+      "graine": [
+        3,
+        187
+      ],
+      "signaux_demandes": 95,
+      "trades": 93,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.09961171043966249,
+      "profit_factor": 0.7186564270663655,
+      "total_R_execution": -9.263889070888611
+    },
+    {
+      "tirage": 189,
+      "graine": [
+        3,
+        188
+      ],
+      "signaux_demandes": 95,
+      "trades": 92,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.08732757815170188,
+      "profit_factor": 1.3435906882386162,
+      "total_R_execution": 8.034137189956573
+    },
+    {
+      "tirage": 190,
+      "graine": [
+        3,
+        189
+      ],
+      "signaux_demandes": 95,
+      "trades": 89,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.022547243080135358,
+      "profit_factor": 1.083676070291856,
+      "total_R_execution": 2.006704634132047
+    },
+    {
+      "tirage": 191,
+      "graine": [
+        3,
+        190
+      ],
+      "signaux_demandes": 95,
+      "trades": 90,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.04666200923920256,
+      "profit_factor": 0.843147774576683,
+      "total_R_execution": -4.19958083152823
+    },
+    {
+      "tirage": 192,
+      "graine": [
+        3,
+        191
+      ],
+      "signaux_demandes": 95,
+      "trades": 93,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.03565291872919789,
+      "profit_factor": 0.8680389597968029,
+      "total_R_execution": -3.3157214418154037
+    },
+    {
+      "tirage": 193,
+      "graine": [
+        3,
+        192
+      ],
+      "signaux_demandes": 95,
+      "trades": 89,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.1534041207286571,
+      "profit_factor": 0.5552450579887781,
+      "total_R_execution": -13.652966744850483
+    },
+    {
+      "tirage": 194,
+      "graine": [
+        3,
+        193
+      ],
+      "signaux_demandes": 95,
+      "trades": 91,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.12773670020513433,
+      "profit_factor": 1.5328952841253074,
+      "total_R_execution": 11.624039718667223
+    },
+    {
+      "tirage": 195,
+      "graine": [
+        3,
+        194
+      ],
+      "signaux_demandes": 95,
+      "trades": 90,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.06345230312152945,
+      "profit_factor": 0.8169676582963322,
+      "total_R_execution": -5.710707280937651
+    },
+    {
+      "tirage": 196,
+      "graine": [
+        3,
+        195
+      ],
+      "signaux_demandes": 95,
+      "trades": 88,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.022356417943972827,
+      "profit_factor": 0.9243522733794919,
+      "total_R_execution": -1.9673647790696087
+    },
+    {
+      "tirage": 197,
+      "graine": [
+        3,
+        196
+      ],
+      "signaux_demandes": 95,
+      "trades": 89,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.036150351698782196,
+      "profit_factor": 1.1324705258180157,
+      "total_R_execution": 3.2173813011916153
+    },
+    {
+      "tirage": 198,
+      "graine": [
+        3,
+        197
+      ],
+      "signaux_demandes": 95,
+      "trades": 91,
+      "marches_avec_trades": 12,
+      "esperance_R": -0.08537505785112125,
+      "profit_factor": 0.7129171266209433,
+      "total_R_execution": -7.769130264452033
+    },
+    {
+      "tirage": 199,
+      "graine": [
+        3,
+        198
+      ],
+      "signaux_demandes": 95,
+      "trades": 91,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.039938956415433643,
+      "profit_factor": 1.1436884242147165,
+      "total_R_execution": 3.6344450338044614
+    },
+    {
+      "tirage": 200,
+      "graine": [
+        3,
+        199
+      ],
+      "signaux_demandes": 95,
+      "trades": 92,
+      "marches_avec_trades": 12,
+      "esperance_R": 0.1276928376933657,
+      "profit_factor": 1.507600183059569,
+      "total_R_execution": 11.747741067789645
+    }
+  ]
+}

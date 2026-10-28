@@ -1,0 +1,125 @@
+{
+  "experience": "003",
+  "strategie": "reversion_seance_extreme",
+  "grille": [
+    {
+      "z": 1.5,
+      "H": 3
+    },
+    {
+      "z": 1.5,
+      "H": 5
+    },
+    {
+      "z": 2.0,
+      "H": 3
+    },
+    {
+      "z": 2.0,
+      "H": 5
+    },
+    {
+      "z": 2.5,
+      "H": 3
+    },
+    {
+      "z": 2.5,
+      "H": 5
+    }
+  ],
+  "stop_atr": 2.0,
+  "retournement": false,
+  "protocole": "v0.4.2",
+  "benchmark": {
+    "nom": "entrées randomisées à sorties identiques",
+    "mesure": "information apportée par le timing d'entrée (pas une stratégie indépendante)",
+    "tirages": 200,
+    "graine_tirage": "numpy default_rng([graine, k]) pour le tirage k",
+    "methode_centile": "linear",
+    "centile_seuil": 95,
+    "percentile_strategie": "% des tirages (avec trades) dont l'espérance est strictement inférieure",
+    "graine": 3
+  },
+  "periodes_evaluees": {
+    "entrainement": [
+      "2012-08-06",
+      "2019-12-31"
+    ],
+    "validation": [
+      "2020-01-01",
+      "2022-12-31"
+    ]
+  },
+  "oos": {
+    "periode": [
+      "2023-01-01",
+      "2026-10-27"
+    ],
+    "etat": "FERMÉ, données tronquées au chargement"
+  },
+  "criteres": {
+    "trades_min": {
+      "entrainement": 150,
+      "validation": 60,
+      "oos": 0
+    },
+    "trades_min_marche": 5,
+    "trades_bien_echantillonne": 15,
+    "pf_min": 1.1,
+    "marches_positifs_min": 5,
+    "part_marches_positifs_min": 0.5,
+    "contribution_max": 0.4,
+    "annees_positives_min": 0.6,
+    "dd_max": 0.25,
+    "serie_pertes_max": 20,
+    "centile_benchmark": 95,
+    "marge_revue": 0.1,
+    "pf_min_oos": 1.05
+  },
+  "risque_par_trade": 0.0025,
+  "capital": 10000,
+  "spread_plancher_points": {
+    "EURUSD": 2.0,
+    "GBPUSD": 5.0,
+    "USDJPY": 3.0,
+    "USDCHF": 3.0,
+    "USDCAD": 3.0,
+    "AUDUSD": 3.0,
+    "NZDUSD": 7.0,
+    "US500": 40.0,
+    "US30": 200.0,
+    "DE40": 100.0,
+    "XAUUSD": 18.0,
+    "XAGUSD": 26.0
+  },
+  "slippage_stress_points": {
+    "EURUSD": 2.0,
+    "GBPUSD": 5.0,
+    "USDJPY": 3.0,
+    "USDCHF": 3.0,
+    "USDCAD": 3.0,
+    "AUDUSD": 3.0,
+    "NZDUSD": 7.0,
+    "US500": 40.0,
+    "US30": 200.0,
+    "DE40": 100.0,
+    "XAUUSD": 18.0,
+    "XAGUSD": 26.0
+  },
+  "commit": "72eb025f132ee8608e52504cef92451195ac1740",
+  "variantes_registre_total": 18,
+  "marches": [
+    "EURUSD",
+    "GBPUSD",
+    "USDJPY",
+    "USDCHF",
+    "USDCAD",
+    "AUDUSD",
+    "NZDUSD",
+    "US500",
+    "US30",
+    "DE40",
+    "XAUUSD",
+    "XAGUSD"
+  ]
+}
