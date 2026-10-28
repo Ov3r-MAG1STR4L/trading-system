@@ -19,6 +19,12 @@ Règles d'exécution (CLAUDE.md, règles du projet) :
     décidée à la clôture de i-1 coïncide avec un signal de sens OPPOSÉ à la même clôture, la position est fermée à
     l'ouverture de i et la position inverse est ouverte à cette même ouverture, avec son propre stop
     (stop_dist[i-1]) et son propre état. Jamais après un stop, un objectif, ni sur une bougie de reprise après un trou.
+  - durée maximale de détention, seulement si duree_max=H (entier >= 1, activé par la stratégie) : une position
+    ouverte à l'ouverture de la bougie i est fermée à l'ouverture de la bougie i+H (motif « duree ») si elle est
+    encore ouverte, c'est-à-dire après H séances complètes (i .. i+H-1). Les séances sont les bougies RÉELLEMENT
+    disponibles (une bougie de reprise après un trou compte comme la séance suivante). La sortie à l'ouverture passe
+    avant le stop intra-bougie de i+H. Jamais de retournement ni de nouvelle entrée sur cette bougie. Si les données
+    s'arrêtent avant i+H, la position est fermée en « fin_donnees ».
 
 DATA_GAP / NON_TRADABLE (décision 2026-10-28) :
   - aucune bougie inventée pendant le trou ;
@@ -45,8 +51,11 @@ class Params:
 def backtest(df: pd.DataFrame, signal: pd.Series, stop_dist: pd.Series,
              params: Params = Params(), sortie: pd.Series | None = None,
              sortie_long: pd.Series | None = None, sortie_short: pd.Series | None = None,
-             retournement: bool = False) -> tuple[pd.DataFrame, pd.DataFrame]:
+             retournement: bool = False, duree_max: int | None = None) -> tuple[pd.DataFrame, pd.DataFrame]:
     """Renvoie (trades, evenements). df doit venir de src.data (colonne gap_avant)."""
+    if duree_max is not None and (isinstance(duree_max, bool) or not isinstance(duree_max, (int, np.integer))
+                                  or duree_max < 1):
+        raise ValueError(f"duree_max doit être un entier >= 1 ou None (reçu {duree_max!r})")
     n = len(df)
     for nom, s in (("signal", signal), ("stop_dist", stop_dist)):
         if len(s) != n:
@@ -85,6 +94,8 @@ def backtest(df: pd.DataFrame, signal: pd.Series, stop_dist: pd.Series,
             if sort[i - 1] or (sort_l[i - 1] if d == 1 else sort_s[i - 1]):  # décidée à la clôture de i-1
                 fermer(i, o[i], "signal")
                 inverse = retournement and sig[i - 1] == -d  # sortie sur signal + signal opposé : retournement
+            elif duree_max is not None and i - pos["i"] >= duree_max:  # H séances complètes : sortie à l'ouverture
+                fermer(i, o[i], "duree")
             elif (d == 1 and l[i] <= stop) or (d == -1 and h[i] >= stop):
                 prix = min(o[i], stop) if d == 1 else max(o[i], stop)
                 fermer(i, prix, "stop_gap" if prix == o[i] and o[i] != stop else "stop")

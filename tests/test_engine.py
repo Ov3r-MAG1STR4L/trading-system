@@ -382,3 +382,102 @@ def test_retournement_sans_lookahead():
     assert t1["retournement"].any()
     pd.testing.assert_frame_equal(t1[t1["exit_time"] <= coupure].reset_index(drop=True),
                                   t2[t2["exit_time"] <= coupure].reset_index(drop=True))
+
+
+# ---------------- durée maximale de détention (désactivée par défaut) ----------------
+
+def run_duree(ohlc, sig_idx, duree_max, direction=1, stop=5.0, gaps_avant=(), sl=None):
+    df = bougies(ohlc, gaps_avant=gaps_avant)
+    n = len(df)
+    vide = pd.Series(False, index=range(n))
+    sig = serie(n, **{str(k): direction for k in sig_idx})
+    return df, backtest(df, sig, pd.Series(stop, index=range(n)), Params(None), None,
+                        vide if sl is None else sl, vide, duree_max=duree_max)[0]
+
+
+@pytest.mark.parametrize("H", [3, 5])
+def test_duree_sortie_exactement_a_l_ouverture_i_plus_H(H):
+    ohlc = [PLAT] * 3 + [(100 + k, 101 + k, 99 + k, 100 + k) for k in range(10)]
+    df, t = run_duree(ohlc, [2], H)            # signal clôture 2 -> entrée ouverture 3 (= i)
+    e = t.iloc[0]
+    assert e["entry_time"] == df["time"][3] and e["raison"] == "duree"
+    assert e["exit_time"] == df["time"][3 + H] and e["exit"] == df["open"][3 + H]  # séances 3..3+H-1 complètes
+    assert e["bougies"] == H + 1
+
+
+def test_duree_compteur_repart_pour_chaque_position():
+    df, t = run_duree([PLAT] * 14, [1, 6], 3)
+    assert t["raison"].tolist() == ["duree", "duree"]
+    pos = {v: k for k, v in df["time"].items()}  # compte en SÉANCES (bougies), pas en jours calendaires
+    assert [pos[s] - pos[e] for e, s in zip(t["entry_time"], t["exit_time"])] == [3, 3]
+    assert t["entry_time"].iloc[1] == df["time"][7] and t["exit_time"].iloc[1] == df["time"][10]
+
+
+def test_stop_avant_H_aucune_sortie_temporelle():
+    ohlc = [PLAT, PLAT, PLAT, (99, 100, 94, 96), PLAT, PLAT, PLAT, PLAT]
+    _, t = run_duree(ohlc, [1], 3)
+    assert t["raison"].tolist() == ["stop"] and len(t) == 1
+
+
+def test_sortie_temporelle_sans_reentree_ni_retournement():
+    ohlc = [PLAT] * 10
+    df = bougies(ohlc)
+    sig = serie(10, **{"1": 1, "4": -1})  # signal opposé à la clôture qui précède la sortie temporelle (ouverture 5)
+    vide = pd.Series(False, index=range(10))
+    t, _ = backtest(df, sig, pd.Series(5.0, index=range(10)), Params(None), None, vide, vide,
+                    retournement=True, duree_max=3)
+    assert t["raison"].iloc[0] == "duree" and t["exit_time"].iloc[0] == df["time"][5]
+    assert len(t) == 1 and not t["retournement"].any()  # ni retournement ni entrée sur la bougie de sortie
+
+
+def test_nouvelle_position_seulement_sur_un_nouveau_signal():
+    df, t = run_duree([PLAT] * 12, [1], 3)
+    assert len(t) == 1  # après la sortie temporelle, rien sans nouveau signal
+    df, t = run_duree([PLAT] * 12, [1, 5], 3)
+    assert len(t) == 2 and t["entry_time"].iloc[1] == df["time"][6]  # signal clôture 5 -> entrée ouverture 6
+
+
+def test_duree_sans_lookahead():
+    """La sortie ne dépend que de la bougie d'entrée : changer les prix après l'entrée ne la déplace pas."""
+    ohlc = [PLAT] * 10
+    _, t1 = run_duree(ohlc, [1], 4)
+    ohlc2 = ohlc[:3] + [(100, 104, 96, 103), (103, 104.5, 96, 98), (98, 104, 96, 97)] + ohlc[6:]
+    _, t2 = run_duree(ohlc2, [1], 4)
+    assert t1["exit_time"].iloc[0] == t2["exit_time"].iloc[0]
+    assert t2["raison"].iloc[0] == "duree"
+
+
+def test_duree_desactivee_moteur_strictement_inchange():
+    df = marche_aleatoire(300, seed=13)
+    s = strategie_honnete(df)
+    s["signal"] = s["signal"].diff().fillna(0).clip(-1, 1)
+    for target in (None, 2.0):
+        t0, e0 = backtest(df, s["signal"], s["stop_dist"], Params(target), s["signal"] != 0)
+        t1, e1 = backtest(df, s["signal"], s["stop_dist"], Params(target), s["signal"] != 0, duree_max=None)
+        pd.testing.assert_frame_equal(t0, t1)
+        pd.testing.assert_frame_equal(e0, e1)
+        assert "duree" not in set(t0["raison"])
+
+
+def test_donnees_insuffisantes_avant_i_plus_H():
+    df, t = run_duree([PLAT] * 6, [3], 5)  # entrée ouverture 4, i+H = 9 n'existe pas
+    assert t["raison"].iloc[0] == "fin_donnees" and t["exit_time"].iloc[0] == df["time"][5]
+
+
+def test_duree_compte_les_bougies_reelles_a_travers_un_trou():
+    df, t = run_duree([PLAT] * 10, [1], 3, gaps_avant=(4,))  # entrée 2 ; séances 2, 3, puis 4 = reprise après le trou
+    assert t["raison"].iloc[0] == "duree" and t["exit_time"].iloc[0] == df["time"][5] and t["traverse_gap"].iloc[0]
+
+
+def test_sortie_sur_signal_avant_la_duree_reste_prioritaire():
+    sl = pd.Series(False, index=range(10))
+    sl[3] = True
+    _, t = run_duree([PLAT] * 10, [1], 5, sl=sl)
+    assert t["raison"].iloc[0] == "signal"
+
+
+@pytest.mark.parametrize("mauvais", [0, -1, 2.5, True, "3"])
+def test_duree_invalide_refusee(mauvais):
+    df = bougies([PLAT] * 4)
+    with pytest.raises(ValueError, match="duree_max"):
+        backtest(df, serie(4), pd.Series(5.0, index=range(4)), duree_max=mauvais)

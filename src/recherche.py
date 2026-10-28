@@ -186,6 +186,7 @@ def benchmark_entrees_randomisees(marches: dict, fonction_signal, infos: dict, h
         serie = lambda cle: None if sig.get(cle) is None else sig[cle].iloc[k0:].reset_index(drop=True)  # noqa: E731
         prep[s] = {"d": d, "stop": serie("stop_dist"), "sortie": serie("sortie"), "sl": serie("sortie_long"),
                    "ss": serie("sortie_short"), "rt": bool(sig.get("retournement", False)),
+                   "duree": sig.get("duree_max"),
                    "dedans": np.flatnonzero(dans(d["time"], periode).to_numpy()[:-1])}  # signal j -> entrée j+1
     tirages = []
     for k in range(n_tirages):
@@ -198,7 +199,8 @@ def benchmark_entrees_randomisees(marches: dict, fonction_signal, infos: dict, h
                 continue
             signal = pd.Series(0.0, index=p["d"].index)
             signal.iloc[rng.choice(p["dedans"], n, replace=False)] = rng.choice([-1.0, 1.0], n)
-            t, _ = backtest(p["d"], signal, p["stop"], params, p["sortie"], p["sl"], p["ss"], retournement=p["rt"])
+            t, _ = backtest(p["d"], signal, p["stop"], params, p["sortie"], p["sl"], p["ss"], retournement=p["rt"],
+                            duree_max=p["duree"])
             t = t[dans(t["entry_time"], periode)]
             if len(t):
                 rs.append(couts.appliquer(t, p["d"], infos[s], hyp[s])["R_execution"].to_numpy())

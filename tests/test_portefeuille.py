@@ -324,3 +324,28 @@ def test_retournement_plusieurs_marches_risques_independants():
             (CAP + al.loc[al["exit_time"] < e0, "pnl"].sum()) * PCT)
     for _, g in t.groupby("symbol"):  # jamais deux positions ouvertes en même temps sur un marché
         assert (g["exit_time"].to_numpy()[:-1] <= g["entry_time"].to_numpy()[1:]).all()
+
+
+def test_duree_max_plusieurs_marches_compteurs_independants_et_couts():
+    """La stratégie déclare duree_max : chaque marché compte ses propres séances ; les coûts s'appliquent à la sortie
+    temporelle comme à toute sortie."""
+    a = bougies([PLAT] * 15)
+    b = bougies([PLAT] * 15)
+    b.loc[6, "gap_avant"] = True
+
+    def strat_pour(decalage):
+        def f(df):
+            s = pd.Series(0.0, index=df.index)
+            s[decalage] = 1
+            return {"signal": s, "stop_dist": pd.Series(5.0, index=df.index), "duree_max": 3}
+        return f
+
+    infos = {k: {**INFO, "symbol": k} for k in "AB"}
+    ta, _ = pf.executer({"A": a}, strat_pour(1), Params(None), infos, Hypotheses("fixe", 50, 10, swaps=True))
+    tb, _ = pf.executer({"B": b}, strat_pour(4), Params(None), infos, Hypotheses("fixe", 50, 10, swaps=True))
+    assert ta["raison"].iloc[0] == tb["raison"].iloc[0] == "duree"
+    assert ta["exit_time"].iloc[0] == a["time"][5] and tb["exit_time"].iloc[0] == b["time"][8]
+    for t in (ta, tb):
+        r = t.iloc[0]
+        assert r["entree_exec"] == pytest.approx(100.5 + 0.1) and r["sortie_exec"] == pytest.approx(100 - 0.1)
+        assert r["R_execution"] < r["R"] and r["nuits_swap"] > 0 and r["swap_R"] < 0

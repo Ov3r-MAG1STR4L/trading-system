@@ -268,9 +268,10 @@ def test_benchmark_memes_regles_que_la_strategie(univers, monkeypatch):
     vus, couts_vus = [], []
     vrai_bt, vrai_ap = rc.backtest, rc.couts.appliquer
 
-    def espion_bt(d, signal, stop, p, sortie, sl, ss, retournement):
+    def espion_bt(d, signal, stop, p, sortie, sl, ss, retournement, duree_max=None):
         vus.append((d, signal, stop, p, sortie, sl, ss, retournement))
-        return vrai_bt(d, signal, stop, p, sortie, sl, ss, retournement=retournement)
+        assert duree_max is None  # momentum ne déclare pas de durée maximale
+        return vrai_bt(d, signal, stop, p, sortie, sl, ss, retournement=retournement, duree_max=duree_max)
 
     def espion_ap(t, d, info, h):
         couts_vus.append((info, h))
@@ -360,3 +361,15 @@ def test_ancien_benchmark_historique_inchange(univers):
     b = rc.benchmark_aleatoire(marches, donchian.variante(donchian.GRILLE[2]), infos, hyp, "validation",
                                {"A": 20, "B": 20}, n_tirages=2, seed=1)
     assert isinstance(b, np.ndarray) and b.shape == (2,)
+
+
+def test_benchmark_v042_transmet_la_duree_max(univers, monkeypatch):
+    marches, infos, hyp = univers
+    vus = []
+    vrai = rc.backtest
+    monkeypatch.setattr(rc, "backtest", lambda *a, **k: vus.append(k.get("duree_max")) or vrai(*a, **k))
+
+    def strat(df):
+        return {"signal": pd.Series(0.0, index=df.index), "stop_dist": pd.Series(1.0, index=df.index), "duree_max": 3}
+    tirages = rc.benchmark_entrees_randomisees(marches, strat, infos, hyp, "validation", {"A": 5, "B": 5}, n_tirages=1)
+    assert vus == [3, 3] and tirages[0]["trades"] > 0
