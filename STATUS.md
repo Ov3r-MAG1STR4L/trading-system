@@ -8,7 +8,19 @@
 
 ## Objectif actuel
 
-v0.4 en cours : laboratoire de recherche prêt (210 tests). Expérience 001 (Donchian baseline) **rejetée** — voir `experiments/001-donchian-baseline/`. Variantes testées au total : 6. Aucune stratégie retenue.
+v0.4 en cours, protocole **v0.4.1**, 276 tests.
+
+| Expérience | Protocole | Variantes | Décision | OOS |
+|---|---|---|---|---|
+| 001 Donchian baseline | v0.4 (historique) | 6 | 6/6 REJECT | non ouvert |
+| **002 momentum série temporelle** (dernière terminée) | v0.4.1 | 6 | 6/6 REJECT, `VALIDATION_COMPLETE — OOS_LOCKED` | non ouvert |
+
+- Variantes testées au total : **12** (`experiments/registre_variantes.csv`). Aucune stratégie retenue.
+- **OOS 2023-01-01 → 2026-10-27 : vierge.**
+- Revue de 002 : [`docs/revue-experience-002.md`](docs/revue-experience-002.md). Aucune des six variantes ne démontre un
+  avantage suffisamment robuste selon le protocole v0.4.1 (ce n'est pas une preuve que le momentum ne marche pas).
+- 001 et 002 sont **historiques et immuables** (leurs scripts refusent de les rejouer).
+- **Expérience 003 : aucune préparation ni exécution** avant décision sur les constats de la revue (benchmark).
 
 ## Prochaine étape
 

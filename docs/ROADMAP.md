@@ -35,7 +35,12 @@ Chaque version correspond à un tag Git (`git tag v0.x`).
 - [x] Protocole anti-surapprentissage (`docs/protocole-recherche-v0.4.md`)
 - [x] Laboratoire : périodes, OOS verrouillé, registre, benchmark aléatoire (`src/recherche.py`)
 - [x] Expérience 001 Donchian baseline : REJETÉE
-- [ ] Revoir le seuil « 15 trades par marché » en validation avant l'expérience 002
+- [x] Protocole v0.4.1 : éligibilité des marchés à 5 trades, majorité des éligibles
+- [x] Moteur : retournement de position optionnel (activé par la stratégie)
+- [x] Expérience 002 momentum en série temporelle : REJETÉE (6/6), OOS non ouvert
+- [x] Revue de 002 (`docs/revue-experience-002.md`)
+- [ ] Décider du traitement du benchmark aléatoire (distribution conservée, benchmark à sorties indépendantes du signal)
+- [ ] Seulement ensuite : réflexion sur l'expérience 003
 
 ## v0.5 — Validation hors échantillon
 - [ ] Découpage entraînement / validation / test fixé à l'avance
